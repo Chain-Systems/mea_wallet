@@ -14,7 +14,7 @@ import SvgIcon from "../components/SvgIcon";
 import { TokenBalances } from "@/src/types/balance";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
-import { truncateAddress } from "@/utils/ui";
+import { parseNumberForView, truncateAddress } from "@/utils/ui";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
 import useWithdrawl from "@/hooks/api/useWithdrawl";
 import { BackButton } from "../components/BackButton";
@@ -38,14 +38,14 @@ const ConfirmWithdraw = () => {
   }, [symbol]);
 
   const withdrawFees = useSelector(
-    (state: RootState) => state.token.withdrawFees[symbol]
+    (state: RootState) => state.token.withdrawFees[symbol],
   );
   const minWithdrawl = useSelector(
-    (state: RootState) => state.token.minWithdraw[symbol]
+    (state: RootState) => state.token.minWithdraw[symbol],
   );
   const [infoAlertVisible, setInfoAlertVisible] = useState(false);
   const [infoAlertState, setInfoAlertState] = useState<Partial<InfoAlertProps>>(
-    {}
+    {},
   );
   const [withdrawlSuccess, setWithdrawlSuccess] = useState(false);
   const dispatch = useDispatch();
@@ -74,7 +74,7 @@ const ConfirmWithdraw = () => {
     // Example error handling:
     // setInfoAlertState({ type: "error", text: "Withdrawal failed. Try again." });
     // setInfoAlertVisible(true);
-    dispatch(showLoading())
+    dispatch(showLoading());
     let result = await useWithdrawl.initiate({
       address,
       amount,
@@ -83,7 +83,7 @@ const ConfirmWithdraw = () => {
       symbol: symbol.toUpperCase(),
       WithdrawFee: withdrawFees,
     });
-    dispatch(hideLoading())
+    dispatch(hideLoading());
 
     if (typeof result === "string") {
       setInfoAlertState({
@@ -150,7 +150,7 @@ const ConfirmWithdraw = () => {
                     {t("withdrawal.total_withdrawal")}
                   </Text>
                   <Text className="text-[17px] font-medium leading-[22px] tracking-[-0.34px] text-white">
-                    {amount}{" "}
+                    {parseNumberForView(amount)}{" "}
                     <Text className="text-[15px] text-gray-400">
                       {displaySymbol}
                     </Text>
