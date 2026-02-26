@@ -1,6 +1,7 @@
 // src/store/stakingSlice.ts
 
 import { StakingPlan } from "@/hooks/api/useStaking";
+import { StakingConfig } from "@/src/api/types/staking";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface StakingState {
@@ -9,6 +10,7 @@ export interface StakingState {
   totalPages: number;
   loading: boolean;
   error: string | null;
+  config: StakingConfig;
 }
 
 const initialState: StakingState = {
@@ -17,6 +19,10 @@ const initialState: StakingState = {
   totalPages: 1,
   loading: false,
   error: null,
+  config: {
+    stakingDisabled: true,
+    strict: true,
+  },
 };
 
 const stakingSlice = createSlice({
@@ -38,10 +44,17 @@ const stakingSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    setStakingConfig(state, action: PayloadAction<StakingConfig>) {
+      state.config = action.payload;
+    },
   },
 });
 
-export const { setStakingPlans, addStakingPlans, clearStakingData } =
-  stakingSlice.actions;
+export const {
+  setStakingPlans,
+  addStakingPlans,
+  clearStakingData,
+  setStakingConfig,
+} = stakingSlice.actions;
 
 export default stakingSlice.reducer;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -6,6 +6,7 @@ import FeatureComingSoon from "../components/FeatureComingSoon";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
 import { Platform } from "react-native";
+import useStaking from "@/hooks/api/useStaking";
 
 export default function Staking() {
   const { t } = useTranslation();
@@ -16,6 +17,15 @@ export default function Staking() {
     }
     return true;
   });
+  
+  async function syncData() {
+    let config = await useStaking.getConfig();
+    console.log(config);
+  }
+
+  useEffect(() => {
+    syncData();
+  }, []);
 
   return (
     <View className="bg-black-1000">

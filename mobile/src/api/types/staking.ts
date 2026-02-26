@@ -32,23 +32,23 @@ export interface RawUserStaking {
 }
 
 export interface UserStaking {
-id: number;
-tokenSymbol: string;
-registeredAt: Date;
-planName: string;
-expectedWithdrawalDate: Date;
-depositAmount: string;
-usdtValue: string;
-krwValue: string;
-interestRate: string;
-interestAtMaturity: string;
-unstakingFee: string;
-lockupDays: string;
-maturityState: string;
-expectedFinalAmount: string;
-lockupDate: string;
-stateStr: string;
-state: string;
+  id: number;
+  tokenSymbol: string;
+  registeredAt: Date;
+  planName: string;
+  expectedWithdrawalDate: Date;
+  depositAmount: string;
+  usdtValue: string;
+  krwValue: string;
+  interestRate: string;
+  interestAtMaturity: string;
+  unstakingFee: string;
+  lockupDays: string;
+  maturityState: string;
+  expectedFinalAmount: string;
+  lockupDate: string;
+  stateStr: string;
+  state: string;
 }
 
 export interface StakingHistoryItem {
@@ -59,7 +59,7 @@ export interface StakingHistoryItem {
   amount: string;
   newBalance: string;
   note: string;
-  state : string;
+  state: string;
 }
 
 export interface StakingHistoryApiItem {
@@ -81,4 +81,15 @@ export interface StakingHistoryApiResponse {
   block_num: number;
   total_block: number;
   data: StakingHistoryApiItem[];
+}
+
+export interface RawStakingConfig {
+  isStaking: boolean;
+  stakingState: boolean;
+}
+
+export interface StakingConfig {
+  stakingDisabled: boolean;
+  //disable for all users
+  strict: boolean;
 }

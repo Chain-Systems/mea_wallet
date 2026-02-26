@@ -10,13 +10,16 @@ import { setUserEmail } from "@/src/features/user/userSlice";
 import { router } from "expo-router";
 import { useCheckForUpdates } from "@/hooks/app/useCheckForUpdate";
 import React from "react";
+import { useStakingConfig } from "@/hooks/app/useStakingConfig";
 
 export default function TabLayout() {
   const { t } = useTranslation();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const dispatch = useDispatch();
   const { isUpdateRequired, isLoading } = useCheckForUpdates();
+  const { config } = useStakingConfig();
 
+  //configloading check ignored to prevent app start delays
   useFocusEffect(
     React.useCallback(() => {
       if (isLoading) return;
@@ -24,7 +27,7 @@ export default function TabLayout() {
         router.dismissTo("/app-update");
       }
       return;
-    }, [isLoading, isUpdateRequired])
+    }, [isLoading, isUpdateRequired]),
   );
 
   const checkAuthenticated = async () => {
@@ -89,6 +92,7 @@ export default function TabLayout() {
               />
             ),
             tabBarLabel: () => null,
+            ...(config.stakingDisabled ? { href: null } : {}),
           }}
         />
 

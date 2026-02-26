@@ -36,7 +36,7 @@ export default function HomeScreen() {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };
-    }, [])
+    }, []),
   );
 
   return (
