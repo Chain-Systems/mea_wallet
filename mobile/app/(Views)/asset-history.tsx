@@ -15,7 +15,7 @@ import useAsset from "@/hooks/api/useAsset";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
-import { TokenBalances } from "@/src/types/balance";
+import { TokenBalances, TokenQuotes } from "@/src/types/balance";
 import {
   getDisplaySymbol,
   parseNumberForView,
@@ -32,7 +32,7 @@ import {
 
 const AssetHistory = () => {
   const { t } = useTranslation();
-  const { symbol } = useLocalSearchParams<{ symbol: string }>();
+  const { symbol } = useLocalSearchParams<{ symbol: keyof TokenQuotes }>();
 
   const freeBalances = useSelector((state: RootState) => state.balance.free);
 
@@ -79,7 +79,7 @@ const AssetHistory = () => {
     if (!symbol) return;
 
     setLoading(true);
-    const res = await useAsset.getAssetHistory(symbol.toUpperCase(), page);
+    const res = await useAsset.getAssetHistory(symbol, page);
 
     if (typeof res === "string") {
       setInfoAlertState({

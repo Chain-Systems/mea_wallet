@@ -1,3 +1,5 @@
+import { TokenQuotes } from "@/src/types/balance";
+
 export interface DepositRecord {
   id: string;
   token: string;
@@ -7,7 +9,7 @@ export interface DepositRecord {
 }
 
 export interface InitiateDepositPayload {
-  symbol: string;
+  symbol: keyof TokenQuotes;
   manager_deposit_address: string;
   min_deposit_coin: string;
   amount: string;

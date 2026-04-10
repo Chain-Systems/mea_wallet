@@ -16,6 +16,7 @@ export const tokenImageMap: Record<string, any> = {
   usdt: require("@/assets/images/currency/usdt.png"),
   aon: require("@/assets/images/currency/aon.png"),
   alton: require("@/assets/images/currency/alton.png"),
+  mea_gopax : require("@/assets/images/currency/mea.png"),
 };
 /**
  * Trims trailing zeroes from a decimal string (but retains it as a string).
@@ -37,26 +38,35 @@ export function trimTrailingZeros(value: string): string {
 
 export function parseNumberForView(value: string, maxLength: number = 12) {
   value = trimTrailingZeros(value);
+
   if (value.length <= maxLength) {
     return value;
   }
 
-  let prefix = value.substring(0, 12);
-  let suffix = value.substring(12);
+  const prefix = value.substring(0, maxLength);
+  const suffix = value.substring(maxLength);
 
+  // If decimal exists inside prefix
   if (prefix.includes(".")) {
-    if (prefix[11] === ".") {
-      return prefix.substring(0, 11);
+    // Avoid ending with a trailing dot
+    if (prefix[maxLength - 1] === ".") {
+      return prefix.substring(0, maxLength - 1);
     }
     return prefix;
   }
 
+  // If decimal starts right after prefix → avoid splitting number
   if (suffix.at(0) === ".") {
     return prefix;
   }
 
-  //can use math notaions 1e9+xyx;
-  return prefix + "..";
+  // Fallback: use scientific notation for large numbers
+  const num = Number(value);
+  if (!isNaN(num)) {
+    return num.toExponential(4); // tweak precision if needed
+  }
+
+  return prefix; // safe fallback
 }
 
 /**
@@ -165,6 +175,9 @@ export const updateIfValid = (
 export const getDisplaySymbol = (symbol: string) => {
   if (symbol === "usdt_savings") {
     return "USDT";
+  }
+  if (symbol === "mea_gopax") {
+    return "MEA(PAX)"
   }
   return symbol?.toUpperCase() || "";
 };

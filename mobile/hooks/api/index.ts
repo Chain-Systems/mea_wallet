@@ -108,6 +108,8 @@ export const mapToApiSymbol = (symbol: SupportedSymbol): string => {
       return "AON";
     case "alton":
       return "ALTON";
+    case "mea_gopax":
+      return "MEA(PAX)";
     default:
       throw new Error(`Unsupported symbol: ${symbol}`);
   }

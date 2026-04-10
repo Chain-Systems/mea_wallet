@@ -76,7 +76,7 @@ const Deposit2 = () => {
       min_deposit_coin: minDeposit,
       manager_deposit_address: tokenDepositAddress[symbol],
       wallet_address: selectedWalletAddress,
-      symbol: displaySymbol,
+      symbol: symbol,
       txid,
     });
     dispath(hideLoading());

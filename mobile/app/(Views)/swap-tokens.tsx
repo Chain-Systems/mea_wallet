@@ -400,7 +400,7 @@ const SwapTokens = () => {
                   <View className="flex flex-row items-center h-20">
                     <TextInput
                       keyboardType="numeric"
-                      placeholder={"minimum : " + minDeposit.toString()}
+                      placeholder={"Min : " + minDeposit.toString()}
                       value={payAmount}
                       onChangeText={(text) => {
                         updateIfValid(text, setPayAmount);
@@ -409,7 +409,7 @@ const SwapTokens = () => {
                         fontSize: getFontSize(
                           payAmount.length > 0
                             ? payAmount
-                            : "Minimum " + minDeposit.toString()
+                            : "min " + minDeposit.toString()
                         ),
                       }}
                       className="!placeholder:text-[12px] flex-1 text-[28px] font-medium text-pink-1200 placeholder:text-gray-500 bg-transparent border-0"

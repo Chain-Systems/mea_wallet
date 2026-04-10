@@ -22,6 +22,7 @@ const initialState: TokenState = {
     usdt_savings: "0",
     aon: "0",
     alton: "0",
+    mea_gopax : "0",
   },
   minDeposit: {
     mea: "0",
@@ -30,6 +31,7 @@ const initialState: TokenState = {
     usdt: "0",
     aon: "0",
     alton: "0",
+    mea_gopax : "0",
   },
   withdrawFees: {
     mea: "0",
@@ -39,6 +41,7 @@ const initialState: TokenState = {
     usdt_savings: "0",
     aon: "0",
     alton: "0",
+    mea_gopax : "0",
   },
   minWithdraw: {
     mea: "0",
@@ -48,6 +51,7 @@ const initialState: TokenState = {
     usdt_savings: "0",
     aon: "0",
     alton: "0",
+    mea_gopax : "0",
   },
   swapFee: "0",
 };

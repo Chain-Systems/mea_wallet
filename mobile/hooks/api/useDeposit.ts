@@ -1,5 +1,5 @@
 import { apiBaseUrl } from "@/lib/constants";
-import { networkRequest } from ".";
+import { mapToApiSymbol, networkRequest } from ".";
 import {
   DepositRecord,
   InitiateDepositPayload,
@@ -27,7 +27,7 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams({
-          symbol,
+          symbol : mapToApiSymbol(symbol),
           manager_deposit_address,
           min_deposit_coin,
           amount,
@@ -144,6 +144,7 @@ export default {
         usdt: trimTrailingZeros(raw.usdt_min_deposit_coin),
         aon: trimTrailingZeros(raw.aon_min_deposit_coin),
         alton: trimTrailingZeros(raw.alton_min_deposit_coin),
+        mea_gopax: trimTrailingZeros(raw.mea_gopax_min_deposit_coin),
       },
       managerDepositAddresses: [
         raw.manager_deposit_address,
@@ -168,6 +169,7 @@ export default {
         sol: raw.manager_deposit_address,
         usdt: raw.manager_deposit_address,
         usdt_savings: raw.manager_deposit_address,
+        mea_gopax: raw.manager_deposit_address,
       },
     };
   },

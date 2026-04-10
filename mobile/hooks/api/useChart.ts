@@ -33,7 +33,7 @@ async function getChartData(
     const apiSymbol = mapToApiSymbol(symbol);
     const apiPeriod = periodMap[period];
 
-    if (apiSymbol === "MEA") {
+    if (["MEA", "MEA(PAX)"].includes(apiSymbol)) {
       const params = new URLSearchParams();
       params.append("gubn", apiPeriod);
 
@@ -209,7 +209,7 @@ async function getTokenOverview(
       };
     }
 
-    if (apiSymbol === "MEA") {
+    if (["MEA", "MEA(PAX)"].includes(apiSymbol)) {
       const raw = await networkRequest<any>(`${apiBaseUrl}/api/bingx/price`, {
         method: "GET",
       });

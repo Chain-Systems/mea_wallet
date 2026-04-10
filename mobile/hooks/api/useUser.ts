@@ -1,4 +1,4 @@
-import { apiBaseUrl, imageBucket } from "@/lib/constants";
+import { apiBaseUrl } from "@/lib/constants";
 import { networkRequest } from ".";
 import {
   LockUpBalances,
@@ -108,6 +108,7 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
       usdt_savings: trimTrailingZeros(raw.usdt_temp_balance),
       aon: trimTrailingZeros(raw.aon_balance),
       alton: trimTrailingZeros(raw.alton_balance),
+      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance),
     },
     lockup: {
       mea: trimTrailingZeros(raw.mea_lockup),
@@ -124,6 +125,7 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
     usdt_savings: trimTrailingZeros(raw.usdt_quote.toString()),
     aon: trimTrailingZeros(raw.aon_quote.toString()),
     alton: trimTrailingZeros(raw.alton_quote.toString()),
+    mea_gopax : trimTrailingZeros(raw.mea_gopax_balance.toString()),
   };
 
   const withdrawSettings: WithdrawSettings = {
@@ -135,6 +137,7 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
       usdt_savings: trimTrailingZeros(raw.usdt_temp_min_withdraw_coin),
       aon: trimTrailingZeros(raw.aon_min_withdraw_coin),
       alton: trimTrailingZeros(raw.alton_min_withdraw_coin),
+      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance.toString()),
     },
     withdrawFees: {
       mea: trimTrailingZeros(raw.mea_WithdrawFee),
@@ -144,6 +147,7 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
       usdt_savings: "0",
       aon: trimTrailingZeros(raw.aon_WithdrawFee),
       alton: trimTrailingZeros(raw.alton_WithdrawFee),
+      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance.toString()),
     },
   };
 

@@ -1,5 +1,5 @@
 import { apiBaseUrl } from "@/lib/constants";
-import { networkRequest } from ".";
+import { mapToApiSymbol, networkRequest } from ".";
 import {
   AssetHistoryResponse,
   AssetHistoryResponseRaw,
@@ -10,6 +10,7 @@ import {
   LockupHistoryResponse,
   LockupHistoryResponseRaw,
 } from "@/src/api/types/lockup";
+import { TokenQuotes } from "@/src/types/balance";
 
 const url = apiBaseUrl + "/asset";
 
@@ -158,9 +159,9 @@ export default {
     };
     return parsed;
   },
-  getAssetHistory: async (symbol: string, page: number) => {
+  getAssetHistory: async (symbol: keyof TokenQuotes, page: number) => {
     const params = new URLSearchParams();
-    params.append("symbol", symbol);
+    params.append("symbol", mapToApiSymbol(symbol));
     params.append("page", page.toString());
 
     const raw = await networkRequest<AssetHistoryResponseRaw>(

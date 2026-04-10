@@ -15,8 +15,9 @@ const initialState: BalanceState = {
     usdt_savings: "0",
     aon: "0",
     alton: "0",
+    mea_gopax : '0',
   },
-  lockup: { mea: "0", fox9: "0" },
+  lockup: { mea: "0", fox9: "0"   },
 };
 
 const balanceSlice = createSlice({

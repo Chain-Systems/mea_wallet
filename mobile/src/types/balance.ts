@@ -6,6 +6,7 @@ export interface TokenBalances {
   usdt_savings: string;
   aon: string;
   alton: string;
+  mea_gopax : string;
 }
 export type TokenType = keyof TokenBalances;
 
@@ -25,6 +26,7 @@ export interface TokenQuotes {
   usdt_savings: string;
   aon: string;
   alton: string;
+  mea_gopax : string;
 }
 
 export interface ParsedBalance {
