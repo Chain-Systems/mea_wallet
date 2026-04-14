@@ -1,6 +1,7 @@
 export interface BalanceResponseRaw {
   status: string;
   mea_balance: string;
+  mea_gopax_balance : string;
   sol_balance: string;
   recon_balance: string;
   fox9_balance: string;
@@ -8,7 +9,6 @@ export interface BalanceResponseRaw {
   usdt_temp_balance: string;
   aon_balance: string;
   alton_balance: string;
-  mea_gopax_balance : string;
 
   mea_lockup: string;
   recon_lockup: string;

@@ -1,12 +1,12 @@
 export interface TokenBalances {
   mea: string;
+  mea_gopax: string;
   sol: string;
   fox9: string;
   usdt: string;
   usdt_savings: string;
   aon: string;
   alton: string;
-  mea_gopax : string;
 }
 export type TokenType = keyof TokenBalances;
 
@@ -19,6 +19,7 @@ export interface LockUpBalances {
 
 export interface TokenQuotes {
   mea: string;
+  mea_gopax : string;
   sol: string;
   fox9: string;
   usd: string;
@@ -26,7 +27,6 @@ export interface TokenQuotes {
   usdt_savings: string;
   aon: string;
   alton: string;
-  mea_gopax : string;
 }
 
 export interface ParsedBalance {

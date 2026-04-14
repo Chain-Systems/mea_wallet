@@ -102,13 +102,13 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
   const balance: BalanceResult = {
     free: {
       mea: trimTrailingZeros(raw.mea_balance),
+      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance),
       sol: trimTrailingZeros(raw.sol_balance),
       fox9: trimTrailingZeros(raw.fox9_balance),
       usdt: trimTrailingZeros(raw.usdt_balance),
       usdt_savings: trimTrailingZeros(raw.usdt_temp_balance),
       aon: trimTrailingZeros(raw.aon_balance),
       alton: trimTrailingZeros(raw.alton_balance),
-      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance),
     },
     lockup: {
       mea: trimTrailingZeros(raw.mea_lockup),

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ping Wallet",
     "slug": "mecca",
-    "version": "1.0.38",
+    "version": "1.0.39",
     "orientation": "portrait",
     "icon": "./assets/images/app_icon.png",
     "scheme": "mecca",                                                                                                                                                                                                                                                          

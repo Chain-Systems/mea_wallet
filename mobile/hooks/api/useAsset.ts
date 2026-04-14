@@ -99,8 +99,8 @@ export default {
   swapTokens: async (payload: SwapPayload) => {
     console.log("swap start ", Date.now());
     const parsedPayload = new URLSearchParams({
-      buyCoin: payload.buyCoin, //to symbol
-      sel_coin: payload.sellCoin, //from symbol
+      buyCoin: mapToApiSymbol(payload.buyCoin), //to symbol
+      sel_coin: mapToApiSymbol(payload.sellCoin), //from symbol
       fee: payload.platformFeePercent, //fee percentage
       WithdrawFee: payload.adminComission, //admin commission receivable token absolute
       amount: payload.sellAmount, //amount of from token

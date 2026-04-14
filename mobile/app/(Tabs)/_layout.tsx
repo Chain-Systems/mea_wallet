@@ -1,5 +1,5 @@
 import { Tabs, useFocusEffect } from "expo-router";
-import { View, Image } from "react-native";
+import { View, Image, Platform } from "react-native";
 import SvgIcon from "../components/SvgIcon";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
@@ -125,6 +125,7 @@ export default function TabLayout() {
               />
             ),
             tabBarLabel: () => null,
+            ...(!__DEV__ && Platform.OS !== "android" ? { href: null } : {}),
           }}
         /> */}
 
