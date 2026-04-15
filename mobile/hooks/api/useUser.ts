@@ -102,7 +102,7 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
   const balance: BalanceResult = {
     free: {
       mea: trimTrailingZeros(raw.mea_balance),
-      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance),
+      mea_gopax: trimTrailingZeros(raw.mea_gopax_balance),
       sol: trimTrailingZeros(raw.sol_balance),
       fox9: trimTrailingZeros(raw.fox9_balance),
       usdt: trimTrailingZeros(raw.usdt_balance),
@@ -118,6 +118,7 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
 
   const quotes: TokenQuotes = {
     mea: trimTrailingZeros(raw.mea_quote.toString()),
+    mea_gopax: trimTrailingZeros(raw.mea_gopax_quote.toString()),
     sol: trimTrailingZeros(raw.sol_quote.toString()),
     fox9: trimTrailingZeros(raw.fox9_quote.toString()),
     usd: trimTrailingZeros(raw.usd_quote.toString()),
@@ -125,29 +126,28 @@ const parseBalanceResponse = (raw: BalanceResponseRaw) => {
     usdt_savings: trimTrailingZeros(raw.usdt_quote.toString()),
     aon: trimTrailingZeros(raw.aon_quote.toString()),
     alton: trimTrailingZeros(raw.alton_quote.toString()),
-    mea_gopax : trimTrailingZeros(raw.mea_gopax_balance.toString()),
   };
 
   const withdrawSettings: WithdrawSettings = {
     minWithdraw: {
       mea: trimTrailingZeros(raw.mea_min_withdraw_coin),
+      mea_gopax: trimTrailingZeros(raw.mea_gopax_min_withdraw_coin),
       fox9: trimTrailingZeros(raw.fox9_min_withdraw_coin),
       sol: trimTrailingZeros(raw.sol_min_withdraw_coin),
       usdt: trimTrailingZeros(raw.usdt_min_withdraw_coin),
       usdt_savings: trimTrailingZeros(raw.usdt_temp_min_withdraw_coin),
       aon: trimTrailingZeros(raw.aon_min_withdraw_coin),
       alton: trimTrailingZeros(raw.alton_min_withdraw_coin),
-      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance.toString()),
     },
     withdrawFees: {
       mea: trimTrailingZeros(raw.mea_WithdrawFee),
+      mea_gopax: trimTrailingZeros(raw.mea_gopax_WithdrawFee),
       fox9: trimTrailingZeros(raw.fox9_WithdrawFee),
       sol: trimTrailingZeros(raw.sol_WithdrawFee),
       usdt: trimTrailingZeros(raw.usdt_WithdrawFee),
       usdt_savings: "0",
       aon: trimTrailingZeros(raw.aon_WithdrawFee),
       alton: trimTrailingZeros(raw.alton_WithdrawFee),
-      mea_gopax : trimTrailingZeros(raw.mea_gopax_balance.toString()),
     },
   };
 
