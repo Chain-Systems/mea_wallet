@@ -16,7 +16,7 @@ export const tokenImageMap: Record<string, any> = {
   usdt: require("@/assets/images/currency/usdt.png"),
   aon: require("@/assets/images/currency/aon.png"),
   alton: require("@/assets/images/currency/alton.png"),
-  mea_gopax : require("@/assets/images/currency/mea.png"),
+  mea_gopax: require("@/assets/images/currency/mea.png"),
 };
 /**
  * Trims trailing zeroes from a decimal string (but retains it as a string).
@@ -69,15 +69,6 @@ export function parseNumberForView(value: string, maxLength: number = 12) {
   return prefix; // safe fallback
 }
 
-/**
- * Truncates a wallet address to a viewable format.
- * Example: 0x123456...abcd
- *
- * @param {string} address - Full wallet address
- * @param {number} startLength - Number of characters to keep at start (default: 6)
- * @param {number} endLength - Number of characters to keep at end (default: 4)
- * @returns {string} Truncated address
- */
 /**
  * Truncates a wallet address to a viewable format.
  * Example: 0x123456...abcd
