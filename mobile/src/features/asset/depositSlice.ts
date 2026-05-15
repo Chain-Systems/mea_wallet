@@ -10,17 +10,14 @@ export interface DepositState {
 
 const initialState: DepositState = {
   depositAddresses: [
-    "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
-    "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
   ],
   tokenDepositAddress: {
-    aon: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
-    alton: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     fox9: "meo9SCFkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     mea: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     sol: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     usdt: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     usdt_savings: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
+    mea_gopax: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo"
   },
   registeredAddresses: [],
   loading: false,

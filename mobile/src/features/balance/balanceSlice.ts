@@ -14,8 +14,6 @@ const initialState: BalanceState = {
     fox9: "0",
     usdt: "0",
     usdt_savings: "0",
-    aon: "0",
-    alton: "0",
   },
   lockup: { mea: "0", fox9: "0"   },
 };
