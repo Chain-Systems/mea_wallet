@@ -21,17 +21,36 @@ jobs:
       build_id: ${{ needs.build_android.outputs.build_id }}
       profile: production
 
-  notify_slack:
-    name: Notify Slack
+  notify_slack_success:
+    name: Notify Slack (Success)
     after: [build_android, submit_android]
     environment: production
+    if: ${{ after.build_android.status == 'finished' && after.submit_android.status == 'finished' }}
     steps:
       - uses: eas/send_slack_message
         with:
           message: |
-            Android production deploy finished.
+            Android production deploy succeeded.
             Workflow: ${{ workflow.name }}
             Build status: ${{ after.build_android.status }}
             Submit status: ${{ after.submit_android.status }}
             Build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
             Workflow URL: ${{ workflow.url }}
+          url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
+
+  notify_slack_failure:
+    name: Notify Slack (Failure)
+    after: [build_android, submit_android]
+    environment: production
+    if: ${{ after.build_android.status != 'finished' || after.submit_android.status != 'finished' }}
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          message: |
+            Android production deploy failed.
+            Workflow: ${{ workflow.name }}
+            Build status: ${{ after.build_android.status }}
+            Submit status: ${{ after.submit_android.status }}
+            Build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
+            Workflow URL: ${{ workflow.url }}
+          url: ${{ env.SLACK_HOOK_URL_FAILURE }}

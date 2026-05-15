@@ -12,18 +12,35 @@ jobs:
       platform: android
       profile: preview
 
-  notify_slack:
-    name: Share Android Preview Build
+  notify_slack_success:
+    name: Notify Slack (Success)
     after: [build_android_preview]
     environment: preview
+    if: ${{ after.build_android_preview.status == 'finished' }}
     steps:
       - uses: eas/send_slack_message
         with:
           message: |
-            Android preview build finished.
+            Android preview build succeeded.
             Workflow: ${{ workflow.name }}
             Build status: ${{ after.build_android_preview.status }}
             App: ${{ after.build_android_preview.outputs.app_identifier }}
             Version: ${{ after.build_android_preview.outputs.app_version }}
             Build URL: https://expo.dev/builds/${{ after.build_android_preview.outputs.build_id }}
             Workflow URL: ${{ workflow.url }}
+          url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
+
+  notify_slack_failure:
+    name: Notify Slack (Failure)
+    after: [build_android_preview]
+    environment: preview
+    if: ${{ after.build_android_preview.status != 'finished' }}
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          message: |
+            Android preview build failed.
+            Workflow: ${{ workflow.name }}
+            Build status: ${{ after.build_android_preview.status }}
+            Workflow URL: ${{ workflow.url }}
+          url: ${{ env.SLACK_HOOK_URL_FAILURE }}

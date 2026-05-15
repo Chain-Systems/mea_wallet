@@ -4,17 +4,22 @@
 
 1. Create a Slack app at https://api.slack.com/apps.
 2. Enable Incoming Webhooks for the app.
-3. Add the webhook to the deploy channel, for example `#merchant-deploys`.
-4. Store the webhook URL in EAS as `SLACK_HOOK_URL` for the environments used by these workflows:
+3. Add two webhooks — one for a success channel (e.g. `#deploys`) and one for a failure/alerts channel (e.g. `#deploy-alerts`).
+4. Store the webhook URLs in EAS for each environment used by these workflows:
 
    ```sh
-   eas env:create --environment production --name SLACK_HOOK_URL --value 'https://hooks.slack.com/services/...'
-   eas env:create --environment preview --name SLACK_HOOK_URL --value 'https://hooks.slack.com/services/...'
+   # Production
+   eas env:create --environment production --name SLACK_HOOK_URL_SUCCESS --value 'https://hooks.slack.com/services/...'
+   eas env:create --environment production --name SLACK_HOOK_URL_FAILURE --value 'https://hooks.slack.com/services/...'
+
+   # Preview
+   eas env:create --environment preview --name SLACK_HOOK_URL_SUCCESS --value 'https://hooks.slack.com/services/...'
+   eas env:create --environment preview --name SLACK_HOOK_URL_FAILURE --value 'https://hooks.slack.com/services/...'
    ```
 
 5. Confirm the app has working EAS credentials for Android Play Store and iOS App Store submissions before running production deploy workflows.
 
-The workflows use Expo's `eas/send_slack_message` action. It reads `SLACK_HOOK_URL` by default, so the webhook is not committed to source control.
+The workflows use Expo's `eas/send_slack_message` action with explicit `url` set to `SLACK_HOOK_URL_SUCCESS` or `SLACK_HOOK_URL_FAILURE` depending on outcome. Neither webhook URL is committed to source control.
 
 ## Workflows
 

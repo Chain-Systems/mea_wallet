@@ -1,7 +1,7 @@
 {
   "name": "mecca-native",
   "main": "expo-router/entry",
-  "version": "1.0.41",
+  "version": "1.0.43",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -9,10 +9,10 @@
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=media expo start --web",
     "lint": "expo lint",
-    "bump": "npx tsx ./scripts/bump.ts patch",
-    "bump:patch": "npx tsx ./scripts/bump.ts patch",
-    "bump:minor": "npx tsx ./scripts/bump.ts minor",
-    "bump:major": "npx tsx ./scripts/bump.ts major"
+    "bump": "npx tsx ./scripts/bump.ts --level",
+    "bump:patch": "npx tsx ./scripts/bump.ts --level patch",
+    "bump:minor": "npx tsx ./scripts/bump.ts --level minor",
+    "bump:major": "npx tsx ./scripts/bump.ts --level major"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
