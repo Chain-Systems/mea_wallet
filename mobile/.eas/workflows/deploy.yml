@@ -1,7 +1,12 @@
 name: Deploy
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        description: Branch to build from
+        default: master
 
 jobs:
   build_android:
@@ -31,6 +36,7 @@ jobs:
           message: |
             Production build succeeded.
             Workflow: ${{ workflow.name }}
+            Branch: ${{ inputs.branch }}
             Android version: ${{ after.build_android.outputs.app_version }}
             Android build: ${{ after.build_android.status }}
             Android build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
@@ -51,6 +57,7 @@ jobs:
           message: |
             Production build failed.
             Workflow: ${{ workflow.name }}
+            Branch: ${{ inputs.branch }}
             Android build: ${{ after.build_android.status }}
             Android build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
             iOS build: ${{ after.build_ios.status }}
