@@ -5,8 +5,8 @@ export interface TokenBalances {
   fox9: string;
   usdt: string;
   usdt_savings: string;
-  aon: string;
-  alton: string;
+  // aon: string;
+  // alton: string;
 }
 export type TokenType = keyof TokenBalances;
 
@@ -25,8 +25,8 @@ export interface TokenQuotes {
   usd: string;
   usdt: string;
   usdt_savings: string;
-  aon: string;
-  alton: string;
+  // aon: string;
+  // alton: string;
 }
 
 export interface ParsedBalance {

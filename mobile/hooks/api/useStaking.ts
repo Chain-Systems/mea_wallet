@@ -63,8 +63,8 @@ let tokenBalance: TokenBalances = {
   sol: "0",
   usdt: "0",
   usdt_savings: "0",
-  aon: "0",
-  alton: "0",
+  // aon: "0",
+  // alton: "0",
   mea_gopax: "0"
 };
 
