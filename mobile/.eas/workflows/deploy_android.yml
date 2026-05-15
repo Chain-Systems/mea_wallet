@@ -1,0 +1,37 @@
+name: Deploy Android
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build_android:
+    name: Build Android Production
+    type: build
+    environment: production
+    params:
+      platform: android
+      profile: production
+
+  submit_android:
+    name: Submit Android to Play Store
+    type: submit
+    needs: [build_android]
+    environment: production
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      profile: production
+
+  notify_slack:
+    name: Notify Slack
+    after: [build_android, submit_android]
+    environment: production
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          message: |
+            Android production deploy finished.
+            Workflow: ${{ workflow.name }}
+            Build status: ${{ after.build_android.status }}
+            Submit status: ${{ after.submit_android.status }}
+            Build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
+            Workflow URL: ${{ workflow.url }}

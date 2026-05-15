@@ -1,0 +1,57 @@
+# Slack
+
+## Presetup
+
+1. Create a Slack app at https://api.slack.com/apps.
+2. Enable Incoming Webhooks for the app.
+3. Add the webhook to the deploy channel, for example `#merchant-deploys`.
+4. Store the webhook URL in EAS as `SLACK_HOOK_URL` for the environments used by these workflows:
+
+   ```sh
+   eas env:create --environment production --name SLACK_HOOK_URL --value 'https://hooks.slack.com/services/...'
+   eas env:create --environment preview --name SLACK_HOOK_URL --value 'https://hooks.slack.com/services/...'
+   ```
+
+5. Confirm the app has working EAS credentials for Android Play Store and iOS App Store submissions before running production deploy workflows.
+
+The workflows use Expo's `eas/send_slack_message` action. It reads `SLACK_HOOK_URL` by default, so the webhook is not committed to source control.
+
+## Workflows
+
+### Android Production Deploy
+
+Builds the Android app with the `production` build profile, submits it with the `production` submit profile, then posts build and submit status to Slack.
+
+```sh
+eas workflow:run .eas/workflows/deploy_android.yml
+```
+
+### iOS Production Deploy
+
+Builds the iOS app with the `production` build profile, submits it with the `production` submit profile, then posts build and submit status to Slack.
+
+```sh
+eas workflow:run .eas/workflows/deploy_ios.yml
+```
+
+### Full Production Deploy
+
+Runs Android and iOS production build and submit chains, then posts both platform statuses and build links to Slack.
+
+```sh
+eas workflow:run .eas/workflows/deploy.yml
+```
+
+### Android Preview Build
+
+Builds Android with the `preview` build profile and posts the EAS build link to Slack.
+
+```sh
+eas workflow:run .eas/workflows/preview_android.yml
+```
+
+## References
+
+- EAS workflow syntax: https://docs.expo.dev/eas/workflows/syntax/
+- EAS pre-packaged build and submit jobs: https://docs.expo.dev/eas/workflows/pre-packaged-jobs/
+- Slack incoming webhooks: https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks

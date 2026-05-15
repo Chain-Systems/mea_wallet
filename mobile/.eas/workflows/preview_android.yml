@@ -1,0 +1,29 @@
+name: Android Preview Build
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build_android_preview:
+    name: Build Android Preview
+    type: build
+    environment: preview
+    params:
+      platform: android
+      profile: preview
+
+  notify_slack:
+    name: Share Android Preview Build
+    after: [build_android_preview]
+    environment: preview
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          message: |
+            Android preview build finished.
+            Workflow: ${{ workflow.name }}
+            Build status: ${{ after.build_android_preview.status }}
+            App: ${{ after.build_android_preview.outputs.app_identifier }}
+            Version: ${{ after.build_android_preview.outputs.app_version }}
+            Build URL: https://expo.dev/builds/${{ after.build_android_preview.outputs.build_id }}
+            Workflow URL: ${{ workflow.url }}
