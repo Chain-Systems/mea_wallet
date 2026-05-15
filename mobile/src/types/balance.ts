@@ -1,6 +1,6 @@
 export interface TokenBalances {
   mea: string;
-  mea_gopax: string;
+  // mea_gopax: string;
   sol: string;
   fox9: string;
   usdt: string;
@@ -19,7 +19,7 @@ export interface LockUpBalances {
 
 export interface TokenQuotes {
   mea: string;
-  mea_gopax: string;
+  // mea_gopax: string;
   sol: string;
   fox9: string;
   usd: string;

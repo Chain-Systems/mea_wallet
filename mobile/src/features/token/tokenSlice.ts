@@ -15,7 +15,7 @@ export interface TokenState {
 const initialState: TokenState = {
   quotes: {
     mea: "0",
-    mea_gopax: "0",
+    // mea_gopax: "0",
     sol: "0",
     fox9: "0",
     usd: "0",
@@ -24,14 +24,14 @@ const initialState: TokenState = {
   },
   minDeposit: {
     mea: "0",
-    mea_gopax: "0",
+    // mea_gopax: "0",
     sol: "0",
     fox9: "0",
     usdt: "0",
   },
   withdrawFees: {
     mea: "0",
-    mea_gopax: "0",
+    // mea_gopax: "0",
     sol: "0",
     fox9: "0",
     usdt: "0",
@@ -39,7 +39,7 @@ const initialState: TokenState = {
   },
   minWithdraw: {
     mea: "0",
-    mea_gopax: "0",
+    // mea_gopax: "0",
     sol: "0",
     fox9: "0",
     usdt: "0",

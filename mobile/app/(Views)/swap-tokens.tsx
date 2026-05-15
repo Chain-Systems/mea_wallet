@@ -117,7 +117,7 @@ const SwapTokens = () => {
 
   // Available tokens
   const availableTokens: Array<{ value: TokenType; label: string }> = [
-    { value: "mea_gopax", label: "MEA_PAX" },
+    // { value: "mea_gopax", label: "MEA_PAX" },
     { value: "sol", label: "SOL" },
     { value: "mea", label: "MEA" },
     { value: "fox9", label: "FOX9" },

@@ -17,7 +17,7 @@ const initialState: DepositState = {
     sol: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     usdt: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
     usdt_savings: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo",
-    mea_gopax: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo"
+    // mea_gopax: "meo9SCkSiViD3qKvnY2fmGuW3Vi4PNhDKtswwTPVvbo"
   },
   registeredAddresses: [],
   loading: false,

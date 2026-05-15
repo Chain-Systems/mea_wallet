@@ -65,7 +65,7 @@ let tokenBalance: TokenBalances = {
   usdt_savings: "0",
   // aon: "0",
   // alton: "0",
-  mea_gopax: "0"
+  // mea_gopax: "0"
 };
 
 const TOKEN_SYMBOLS = Object.keys(tokenBalance) as (keyof TokenBalances)[];

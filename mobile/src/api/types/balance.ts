@@ -1,7 +1,7 @@
 export interface BalanceResponseRaw {
   status: string;
   mea_balance: string;
-  mea_gopax_balance : string;
+  // mea_gopax_balance : string;
   sol_balance: string;
   recon_balance: string;
   fox9_balance: string;
@@ -23,7 +23,7 @@ export interface BalanceResponseRaw {
   recon_quote: string;
   // aon_quote: string;
   // alton_quote: string;
-  mea_gopax_quote: string;
+  // mea_gopax_quote: string;
 
   mea_min_deposit_coin: string;
   recon_min_deposit_coin: string;
@@ -32,7 +32,7 @@ export interface BalanceResponseRaw {
   usdt_min_deposit_coin: string;
   // aon_min_deposit_coin: string;
   // alton_min_deposit_coin: string;
-  mea_gopax_min_deposit_coin:string;
+  // mea_gopax_min_deposit_coin:string;
 
   mea_min_withdraw_coin: string;
   recon_min_withdraw_coin: string;
@@ -42,7 +42,7 @@ export interface BalanceResponseRaw {
   usdt_temp_min_withdraw_coin: string;
   // aon_min_withdraw_coin: string;
   // alton_min_withdraw_coin: string;
-  mea_gopax_min_withdraw_coin:string;
+  // mea_gopax_min_withdraw_coin:string;
 
   mea_WithdrawFee: string;
   recon_WithdrawFee: string;
@@ -51,7 +51,7 @@ export interface BalanceResponseRaw {
   usdt_WithdrawFee: string;
   // aon_WithdrawFee: string;
   // alton_WithdrawFee: string;
-  mea_gopax_WithdrawFee:string;
+  // mea_gopax_WithdrawFee:string;
 
   manager_deposit_address: string;
   manager_deposit_address_2: string;

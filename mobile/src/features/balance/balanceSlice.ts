@@ -9,7 +9,7 @@ interface BalanceState {
 const initialState: BalanceState = {
   free: {
     mea: "0",
-    mea_gopax : '0',
+    // mea_gopax : '0',
     sol: "0",
     fox9: "0",
     usdt: "0",
