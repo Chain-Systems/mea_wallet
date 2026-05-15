@@ -121,8 +121,6 @@ const SwapTokens = () => {
     { value: "sol", label: "SOL" },
     { value: "mea", label: "MEA" },
     { value: "fox9", label: "FOX9" },
-    { value: "aon", label: "AON" },
-    { value: "alton", label: "ALTON" },
   ];
 
   // Fetch quotes and balance

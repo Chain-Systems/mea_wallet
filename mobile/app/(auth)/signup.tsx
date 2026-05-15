@@ -442,6 +442,9 @@ const Signup: React.FC = () => {
                   {t("auth.signup.wallet_address")}{" "}
                   <Text className="text-pink-1200">*</Text>
                 </Text>
+                <View className="bg-purple-950 rounded-full px-2 py-0.5 border border-purple-700">
+                  <Text className="text-xs text-purple-400">Solana Network</Text>
+                </View>
               </View>
               <View className="w-full relative">
                 <TextInput
