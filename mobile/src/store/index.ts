@@ -6,6 +6,7 @@ import tokenSlice from "@/src/features/token/tokenSlice";
 import depositSlice from "@/src/features/asset/depositSlice";
 import loadingSlice from "@/src/features/loadingSlice";
 import popUpSlice from "@/src/features/infoOverLaySlice";
+import stakingSlice from "@/src/features/asset/stakingSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
@@ -14,7 +15,8 @@ export const store = configureStore({
     token: tokenSlice,
     deposit: depositSlice,
     progress: loadingSlice,
-    popup: popUpSlice
+    popup: popUpSlice,
+    staking: stakingSlice,
   },
 });
 

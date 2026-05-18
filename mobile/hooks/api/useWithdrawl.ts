@@ -1,12 +1,13 @@
 import { apiBaseUrl } from "@/lib/constants";
-import { networkRequest } from ".";
+import { mapToApiSymbol, networkRequest } from ".";
 import { StatusResponse } from "@/src/api/types/auth";
+import { TokenQuotes } from "@/src/types/balance";
 
 /**
  * Payload type for initiating a withdrawal request
  */
 export interface InitiateWithdrawPayload {
-  symbol: string; // e.g. "MEA"
+  symbol: keyof TokenQuotes; // e.g. "MEA"
   address: string; // destination address
   amount: string; // amount as string to preserve precision
   WithdrawFee: string; // withdrawal fee
@@ -25,7 +26,10 @@ export default {
       `${apiBaseUrl}/api/withdraw-save`,
       {
         method: "POST",
-        body: new URLSearchParams(payload).toString(),
+        body: new URLSearchParams({
+          ...payload,
+          symbol : mapToApiSymbol(payload.symbol)
+        }).toString(),
       }
     );
   },

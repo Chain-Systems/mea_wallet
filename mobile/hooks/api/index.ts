@@ -104,10 +104,12 @@ export const mapToApiSymbol = (symbol: SupportedSymbol): string => {
       return "FOX9";
     case "usdt_savings":
       return "USDT Savings";
-    case "aon":
-      return "AON";
-    case "alton":
-      return "ALTON";
+    // case "aon":
+    //   return "AON";
+    // case "alton":
+    //   return "ALTON";
+    // case "mea_gopax":
+    //   return "MEA(PAX)";
     default:
       throw new Error(`Unsupported symbol: ${symbol}`);
   }

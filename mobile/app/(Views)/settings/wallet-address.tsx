@@ -4,7 +4,6 @@ import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import SvgIcon from "@/app/components/SvgIcon";
 import useDeposit from "@/hooks/api/useDeposit";
 import {
-  setDepositAddresses,
   setRegisteredAddresses,
   setTokenDepositAddress,
 } from "@/src/features/asset/depositSlice";
@@ -31,7 +30,7 @@ import { useSelector } from "react-redux";
 const WalletAddress = () => {
   const { t } = useTranslation();
   const registeredAddresses = useSelector(
-    (store: RootState) => store.deposit.depositAddresses
+    (store: RootState) => store.deposit.registeredAddresses
   );
   const [modalState, setModalState] = useState<Partial<InfoAlertProps>>({
     text: "",
@@ -53,6 +52,7 @@ const WalletAddress = () => {
       setModalVisible(true);
       return;
     }
+    setNewAddress('')
     setModalState({
       ...modalState,
       type: "success",
@@ -139,12 +139,11 @@ const WalletAddress = () => {
               {/* Input with Copy Button */}
               <View className="relative my-8">
                 <TextInput
+                  value={newAddress}
                   placeholder={t("settings.enter_wallet_address")}
                   placeholderTextColor="#6b7280"
-                  className="text-base pr-20 text-white font-semibold px-4 border border-gray-1000 w-full  h-[53px] rounded-[6px]"
-                  onChangeText={(text) => {
-                    setNewAddress(text);
-                  }}
+                  className="text-base pr-20 text-white font-semibold px-4 border border-gray-1000 w-full h-[53px] rounded-[6px]"
+                  onChangeText={setNewAddress}
                 />
                 <TouchableOpacity
                   onPress={addWalletAddress}

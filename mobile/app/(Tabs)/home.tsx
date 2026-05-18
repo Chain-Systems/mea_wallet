@@ -148,7 +148,7 @@ export default function HomeScreen() {
 
   const getPrice = (token: string) => {
     //@ts-expect-error here
-    return parseNumberForView(quotes[token]);
+    return parseNumberForView(quotes[token],8);
   };
 
   const getTokensValue = (token: string, balance: string) => {

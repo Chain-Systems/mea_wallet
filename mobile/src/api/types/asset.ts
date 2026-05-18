@@ -1,6 +1,8 @@
+import { TokenType } from "@/src/types/balance";
+
 export interface SwapPayload {
-  buyCoin: string; // Coin to buy (e.g. MEA)
-  sellCoin: string; // Coin to sell (e.g. RECON)
+  buyCoin: TokenType; // Coin to buy (e.g. MEA)
+  sellCoin: TokenType; // Coin to sell (e.g. RECON)
   platformFeePercent: string; // Platform fee as percent
   adminComission: string; // Withdrawal fee in sell coin
   sellAmount: string; // Amount user is selling

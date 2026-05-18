@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import GoogleSSOButton from "../components/auth/google-sso";
+import { useStakingConfig } from "@/hooks/app/useStakingConfig";
 const GetStarted = () => {
   const { t } = useTranslation();
   const { isUpdateRequired, isLoading } = useCheckForUpdates();
@@ -15,8 +16,9 @@ const GetStarted = () => {
         router.dismissTo("/app-update");
       }
       return;
-    }, [isLoading, isUpdateRequired])
+    }, [isLoading, isUpdateRequired]),
   );
+
   return (
     <View className="w-full h-full max-w-5xl mx-auto items-center justify-center bg-pink-1000">
       <View className="bg-black-1000 rounded-[15px] min-h-[451px] max-w-[392px] w-11/12 flex-col items-center justify-end p-5 gap-[88px]">

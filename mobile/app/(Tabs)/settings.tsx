@@ -7,7 +7,7 @@ import DialogAlert from "../components/DialogAlert";
 import storage from "@/storage";
 import { STORAGE_KEYS } from "@/storage/keys";
 import useAuth from "@/hooks/api/useAuth";
-import { DeleteIcon, UserX } from "lucide-react-native";
+import { UserX } from "lucide-react-native";
 import Constants from "expo-constants";
 import { resetAuthToken } from "@/hooks/api";
 

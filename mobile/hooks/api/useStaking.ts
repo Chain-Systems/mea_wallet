@@ -6,6 +6,8 @@ import { trimTrailingZeros } from "@/utils/ui";
 import { TokenBalances } from "@/src/types/balance";
 import { StatusResponse } from "@/src/api/types/auth";
 import {
+  RawStakingConfig,
+  StakingConfig,
   StakingHistoryApiResponse,
   StakingHistoryItem,
   UserStaking,
@@ -61,8 +63,9 @@ let tokenBalance: TokenBalances = {
   sol: "0",
   usdt: "0",
   usdt_savings: "0",
-  aon: "0",
-  alton: "0",
+  // aon: "0",
+  // alton: "0",
+  // mea_gopax: "0"
 };
 
 const TOKEN_SYMBOLS = Object.keys(tokenBalance) as (keyof TokenBalances)[];
@@ -81,7 +84,7 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams(payload).toString(),
-      }
+      },
     );
 
     if (typeof raw === "string") return raw;
@@ -89,7 +92,7 @@ export default {
 
     const plans: StakingPlan[] = raw.data.map((item) => {
       const supportedTokens = TOKEN_SYMBOLS.filter(
-        (symbol) => item[symbol] === "Y"
+        (symbol) => item[symbol] === "Y",
       );
       if (
         item["btc"] === "Y" &&
@@ -129,14 +132,14 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams(data as any).toString(),
-      }
+      },
     );
   },
 
   getUserStakings: async (
     page = 1,
     state = "",
-    sort = ""
+    sort = "",
   ): Promise<{ items: UserStaking[]; totalPages: number } | string> => {
     const payload = {
       page: String(page),
@@ -149,7 +152,7 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams(payload).toString(),
-      }
+      },
     );
 
     if (typeof raw === "string") return raw;
@@ -184,7 +187,7 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams({}).toString(),
-      }
+      },
     );
   },
   closeStaking: async (id: number) => {
@@ -197,7 +200,7 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams(payload).toString(),
-      }
+      },
     );
   },
   getStakingHistory: async (page = 1, sort = "날짜별", gubn = "스테이킹") => {
@@ -212,7 +215,7 @@ export default {
       {
         method: "POST",
         body: new URLSearchParams(payload).toString(),
-      }
+      },
     );
     console.log("awaitng");
 
@@ -233,6 +236,25 @@ export default {
       totalPages: raw.total_block,
       blockStart: raw.block_start,
       blockEnd: raw.block_end,
+    };
+  },
+
+  getConfig: async (): Promise<string | StakingConfig> => {
+    const payload = {};
+    const raw = await networkRequest<RawStakingConfig>(
+      `${apiBaseUrl}/api/stakingState`,
+      {
+        method: "POST",
+        body: new URLSearchParams(payload).toString(),
+      },
+    );
+    if (typeof raw === "string") return raw;
+    console.log("Raw response", raw);
+
+    return {
+      stakingDisabled: !raw.isStaking,
+      //TODO : use from api
+      strict: true,
     };
   },
 };

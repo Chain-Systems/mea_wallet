@@ -1,14 +1,18 @@
 {
   "name": "mecca-native",
   "main": "expo-router/entry",
-  "version": "1.0.0",
+  "version": "1.0.43",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "DARK_MODE=media expo start --android",
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=media expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "bump": "npx tsx ./scripts/bump.ts --level",
+    "bump:patch": "npx tsx ./scripts/bump.ts --level patch",
+    "bump:minor": "npx tsx ./scripts/bump.ts --level minor",
+    "bump:major": "npx tsx ./scripts/bump.ts --level major"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -62,6 +66,7 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.10",
     "expo-toast": "^1.0.3",
+    "expo-updates": "~0.28.18",
     "expo-web-browser": "~14.2.0",
     "i18next": "^25.2.1",
     "lucide-react-native": "^0.511.0",

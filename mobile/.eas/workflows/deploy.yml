@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        description: Branch to build from
+        default: master
+
+jobs:
+  build_android:
+    name: Build Android Production
+    type: build
+    environment: production
+    params:
+      platform: android
+      profile: production
+
+  build_ios:
+    name: Build iOS Production
+    type: build
+    environment: production
+    params:
+      platform: ios
+      profile: production
+
+  notify_slack_success:
+    name: Notify Slack (Success)
+    after: [build_android, build_ios]
+    environment: production
+    if: ${{ after.build_android.status == 'finished' && after.build_ios.status == 'finished' }}
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          message: |
+            Production build succeeded.
+            Workflow: ${{ workflow.name }}
+            Branch: ${{ inputs.branch }}
+            Android version: ${{ after.build_android.outputs.app_version }}
+            Android build: ${{ after.build_android.status }}
+            Android build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
+            iOS version: ${{ after.build_ios.outputs.app_version }}
+            iOS build: ${{ after.build_ios.status }}
+            iOS build URL: https://expo.dev/builds/${{ after.build_ios.outputs.build_id }}
+            Workflow URL: ${{ workflow.url }}
+          url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
+
+  notify_slack_failure:
+    name: Notify Slack (Failure)
+    after: [build_android, build_ios]
+    environment: production
+    if: ${{ after.build_android.status != 'finished' || after.build_ios.status != 'finished' }}
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          message: |
+            Production build failed.
+            Workflow: ${{ workflow.name }}
+            Branch: ${{ inputs.branch }}
+            Android build: ${{ after.build_android.status }}
+            Android build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
+            iOS build: ${{ after.build_ios.status }}
+            iOS build URL: https://expo.dev/builds/${{ after.build_ios.outputs.build_id }}
+            Workflow URL: ${{ workflow.url }}
+          url: ${{ env.SLACK_HOOK_URL_FAILURE }}

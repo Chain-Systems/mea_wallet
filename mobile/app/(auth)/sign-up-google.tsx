@@ -62,55 +62,6 @@ const GoogleSignUp: React.FC = () => {
     setUniqueAddressValidated(true);
     return true;
   };
-
-  const signUp = async (token: string) => {
-    try {
-      //try login
-      let signUpResult = await useAuth.signUpWithGoogle(
-        token,
-        wallet,
-        Platform.OS === "android" ? "android" : "ios"
-      );
-      let response =
-        typeof signUpResult === "string" ? signUpResult : signUpResult.status;
-
-      if (response === "succ" && typeof signUpResult !== "string") {
-        resetAuthToken()
-        await storage.save(STORAGE_KEYS.AUTH.TOKEN, signUpResult.token);
-        if (router.canDismiss()) {
-          router.dismissAll();
-        }
-        router.replace("/(Tabs)/home");
-        return;
-      }
-
-      if (response === "need_link") {
-        // setPopUpVisible(true);
-        // setPopupText(
-        //   "Account uses email login , please continue with email login"
-        // );
-        return;
-      }
-
-      if (response === "need_signup") {
-        //todo : collect deposit address and proceed sign up
-        router.navigate({
-          pathname: "/(auth)/sign-up-google",
-          params: {
-            token: token,
-          },
-        });
-        return;
-      }
-
-      // setPopupText(t("auth.signin.login_error"));
-      // setPopUpVisible(true);
-      return;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleContinue = async () => {
     if (!wallet) {
       setInfoAlertState({

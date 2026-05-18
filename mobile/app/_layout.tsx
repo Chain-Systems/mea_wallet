@@ -48,7 +48,7 @@ export default function RootLayout() {
     checkTokenExists();
   }, []);
 
-  useEffect(() => { }, [pathname]);
+  useEffect(() => {}, [pathname]);
   if (!fontsLoaded || isAuthenticated === null) {
     return null;
   }
