@@ -1,7 +1,12 @@
 name: Deploy iOS
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        description: Branch to build from
+        default: master
 
 jobs:
   build_ios:
@@ -32,6 +37,8 @@ jobs:
           message: |
             iOS production deploy succeeded.
             Workflow: ${{ workflow.name }}
+            Branch: ${{ inputs.branch }}
+            Version: ${{ after.build_ios.outputs.app_version }}
             Build status: ${{ after.build_ios.status }}
             Submit status: ${{ after.submit_ios.status }}
             Build URL: https://expo.dev/builds/${{ after.build_ios.outputs.build_id }}
@@ -49,6 +56,7 @@ jobs:
           message: |
             iOS production deploy failed.
             Workflow: ${{ workflow.name }}
+            Branch: ${{ inputs.branch }}
             Build status: ${{ after.build_ios.status }}
             Submit status: ${{ after.submit_ios.status }}
             Build URL: https://expo.dev/builds/${{ after.build_ios.outputs.build_id }}
