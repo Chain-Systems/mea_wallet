@@ -1,0 +1,3 @@
+[submodule "mobile/memory"]
+	path = mobile/memory
+	url = https://github.com/Shaik-Sirajuddin/mea_wallet_memory.git
