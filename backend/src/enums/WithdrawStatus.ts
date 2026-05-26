@@ -1,7 +1,0 @@
-export enum WithdrawStatus {
-  PENDING_VERIFICATION,
-  PENDING_PROCESSING,
-  APPROVED,
-  REJECTED,
-  CANCELLED,
-}
