@@ -31,7 +31,8 @@ import {
 import { setQuotes } from "@/src/features/token/tokenSlice";
 import Decimal from "decimal.js";
 import { useNavigation } from "@react-navigation/native";
-import { setUserDetails } from "@/src/features/user/userSlice";
+import { setKycCompleted, setUserDetails } from "@/src/features/user/userSlice";
+import useKyc from "@/hooks/api/useKyc";
 import InfoAlert from "../components/InfoAlert";
 import { showLoading } from "@/src/features/loadingSlice";
 import { requestNotificationPermission } from "@/lib/notifications/requestPermissions";
@@ -61,6 +62,9 @@ export default function HomeScreen() {
   const email = useSelector((state: RootState) => state.user.email);
   const details = useSelector((state: RootState) => state.user.details);
   const [showAlert, setShowAlert] = useState(false);
+  const [showKycAlert, setShowKycAlert] = useState(false);
+  const [kycFetched, setKycFetched] = useState(false);
+  const kycCompleted = useSelector((state: RootState) => state.user.kycCompleted);
   const featuresEnabled = useSelector((state: RootState) => {
     if (Platform.OS === "ios") {
       return state.user.details?.swapFeatureEnabled;
@@ -71,17 +75,6 @@ export default function HomeScreen() {
   const loandEnabled = useSelector((state: RootState) => {
     return state.settings.settings?.loanEnabled || false;
   });
-
-  const syncData = async () => {
-    setRefreshing(true);
-    await Promise.all([
-      fetchBalance(),
-      fetchQuotes(),
-      fetchProfile(),
-      fetchSettings(),
-    ]);
-    setRefreshing(false);
-  };
 
   const fetchQuotes = async () => {
     const res = await useUser.getQuotes();
@@ -119,8 +112,34 @@ export default function HomeScreen() {
     }
     dispatch(setUserDetails(data));
   };
+
+  const fetchKycStatus = async () => {
+    try {
+      const res = await useKyc.getKycInfo();
+      if (typeof res !== "string") {
+        dispatch(setKycCompleted(res.kyc_yn === "Y"));
+      }
+    } catch {
+      // silent — KYC is non-blocking
+    } finally {
+      setKycFetched(true);
+    }
+  };
+
   const onRefresh = async () => {
     syncData();
+  };
+
+  const syncData = async () => {
+    setRefreshing(true);
+    fetchKycStatus(); // fire-and-forget — does not block refreshing
+    await Promise.all([
+      fetchBalance(),
+      fetchQuotes(),
+      fetchProfile(),
+      fetchSettings(),
+    ]);
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -129,9 +148,18 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (details && !details.twoFACompleted) {
-      setShowAlert(true); // show the alert
+      setShowAlert(true);
     }
   }, [details]);
+
+  useEffect(() => {
+    if (!kycFetched) return;
+    if (kycCompleted === false && details?.twoFACompleted) {
+      setShowKycAlert(true);
+    } else {
+      setShowKycAlert(false);
+    }
+  }, [kycCompleted, details, kycFetched]);
 
   const totalAssetValue = useMemo(() => {
     let totalValue = new Decimal(0);
@@ -478,6 +506,14 @@ export default function HomeScreen() {
         onDismiss={() => {
           router.push("/settings/google-otp"); // navigate after OK
         }}
+      />
+      <InfoAlert
+        visible={showKycAlert}
+        setVisible={setShowKycAlert}
+        text="Complete KYC verification to enable withdrawals."
+        type="info"
+        primaryButtonText="Verify Now"
+        onDismiss={() => router.push("/(Views)/kyc")}
       />
       <BalanceYieldGuide
         visible={showGuide}

@@ -20,6 +20,7 @@ import { isValidPublicKey } from "@/utils/web3";
 import { useAppDispatch } from "@/src/store/hooks";
 import { RootState } from "@/src/store";
 import { useSelector } from "react-redux";
+import { RootState as RS } from "@/src/store";
 import useAsset from "@/hooks/api/useAsset";
 import useUser from "@/hooks/api/useUser";
 import {
@@ -38,6 +39,7 @@ import {
 
 const WithDrawal = () => {
   const navigation = useNavigation();
+  const kycCompleted = useSelector((state: RS) => state.user.kycCompleted);
   const { symbol } = useLocalSearchParams<{ symbol: keyof TokenBalances }>();
   const freeBalance = useSelector(
     (state: RootState) => state.balance.free[symbol]
@@ -171,6 +173,12 @@ const WithDrawal = () => {
     syncData();
     syncBalance();
   }, []);
+
+  useEffect(() => {
+    if (kycCompleted === false) {
+      router.replace("/(Views)/kyc");
+    }
+  }, [kycCompleted]);
 
   return (
     <View className="bg-black-1000 h-full">

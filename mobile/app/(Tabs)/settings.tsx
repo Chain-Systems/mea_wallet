@@ -7,7 +7,7 @@ import DialogAlert from "../components/DialogAlert";
 import storage from "@/storage";
 import { STORAGE_KEYS } from "@/storage/keys";
 import useAuth from "@/hooks/api/useAuth";
-import { UserX } from "lucide-react-native";
+import { ShieldCheck, UserX } from "lucide-react-native";
 import Constants from "expo-constants";
 import { resetAuthToken } from "@/hooks/api";
 
@@ -99,6 +99,19 @@ export default function SettingsScreen() {
             </View>
             <Text className="text-base font-semibold text-white">
               {t("settings.customer_support")}
+            </Text>
+          </Pressable>
+
+          {/* KYC Verification */}
+          <Pressable
+            onPress={() => router.push("/(Views)/kyc")}
+            className="flex-row items-center gap-3 px-3 py-5 mb-2 rounded-2xl border-2 border-transparent active:border-pink-1200 bg-black-1200 transition-all duration-500"
+          >
+            <View className="w-8 h-8 rounded-full bg-gray-1500 flex items-center justify-center">
+              <ShieldCheck size={16} color="white" />
+            </View>
+            <Text className="text-base font-semibold text-white">
+              KYC Verification
             </Text>
           </Pressable>
 

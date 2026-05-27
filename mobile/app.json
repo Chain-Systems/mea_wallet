@@ -5,7 +5,10 @@
     "version": "1.0.43",
     "orientation": "portrait",
     "icon": "./assets/images/app_icon.png",
-    "scheme": "mecca",
+    "scheme": [
+      "mecca",
+      "pingwallet"
+    ],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -27,7 +30,22 @@
       "permissions": [
         "android.permission.CAMERA"
       ],
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "pingwallet",
+              "host": "app-kyc-return"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
