@@ -1,7 +1,10 @@
 import { apiKey } from "@/lib/constants";
 import storage from "@/storage";
 import { STORAGE_KEYS } from "@/storage/keys";
+import logger from "@/lib/logger";
 import { SupportedSymbol } from "./useChart";
+
+const log = logger.child({ module: "networkRequest" });
 /**
  * Wrapper around fetch
  * Performs fetch request and returns parsed response
@@ -35,14 +38,15 @@ export const networkRequestWithParser = async <T>(
   input: string | URL | globalThis.Request,
   init?: RequestInit,
 ): Promise<string | T> => {
+  const url = input.toString();
   try {
-    console.log(input);
     await fetchAuthToken();
     let headers = init?.headers;
     headers = {
       ...headers,
       authorization: "Bearer " + (bearerToken ?? ""),
     };
+    log.debug({ url, method: init?.method ?? "GET", body: init?.body ?? null }, "request");
     const response = await fetch(input, {
       ...init,
       headers: headers,
@@ -51,12 +55,13 @@ export const networkRequestWithParser = async <T>(
 
     let res = await response.json();
     if (!response.ok) {
-      console.log(res.status);
+      log.warn({ url, status: response.status, error: res.status, payload: res }, "response error");
       return res.status as string;
     }
+    log.debug({ url, status: response.status, payload: res }, "response ok");
     return res as T;
   } catch (error: any) {
-    console.log("Request failed at parser", error);
+    log.error({ url, error: error?.message }, "request failed");
     if (error.message && typeof error.message === "string") {
       return error.message as string;
     }
