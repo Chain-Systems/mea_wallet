@@ -47,6 +47,7 @@ export default {
     );
     if (typeof res !== "string" && res.session_id) {
       await storage.save(STORAGE_KEYS.KYC.SESSION_ID, res.session_id);
+      await storage.save(STORAGE_KEYS.KYC.SESSION_URL, res.session_url);
     }
     return res;
   },

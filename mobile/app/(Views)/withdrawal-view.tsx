@@ -23,6 +23,8 @@ import { useSelector } from "react-redux";
 import { RootState as RS } from "@/src/store";
 import useAsset from "@/hooks/api/useAsset";
 import useUser from "@/hooks/api/useUser";
+import useKyc from "@/hooks/api/useKyc";
+import { setKycCompleted, setKycFetched } from "@/src/features/user/userSlice";
 import {
   setMinWithdraw,
   setWithdrawFees,
@@ -172,13 +174,24 @@ const WithDrawal = () => {
   useEffect(() => {
     syncData();
     syncBalance();
+    checkKyc();
   }, []);
 
-  useEffect(() => {
-    if (kycCompleted === false) {
-      router.replace("/(Views)/kyc");
+  const checkKyc = async () => {
+    try {
+      const res = await useKyc.getKycInfo();
+      if (typeof res !== "string") {
+        const done = res.kyc_yn === "Y";
+        dispatch(setKycCompleted(done));
+        dispatch(setKycFetched(true));
+        if (!done) {
+          router.replace("/(Views)/kyc/ready");
+        }
+      }
+    } catch {
+      // silent — do not block withdrawal if KYC check fails
     }
-  }, [kycCompleted]);
+  };
 
   return (
     <View className="bg-black-1000 h-full">

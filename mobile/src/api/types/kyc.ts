@@ -11,8 +11,8 @@ export type KycPollStatus =
 
 export interface KycInfoResponse {
   kyc_yn: "Y" | "N";
-  mt_name_set: "Y" | "N";
-  mt_birth_set: "Y" | "N";
+  mt_name_set: boolean;
+  mt_birth_set: boolean;
   mt_name: string;
   mt_birth: string;
 }

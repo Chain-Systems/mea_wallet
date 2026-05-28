@@ -31,7 +31,7 @@ import {
 import { setQuotes } from "@/src/features/token/tokenSlice";
 import Decimal from "decimal.js";
 import { useNavigation } from "@react-navigation/native";
-import { setKycCompleted, setUserDetails } from "@/src/features/user/userSlice";
+import { setKycCompleted, setKycFetched, setUserDetails } from "@/src/features/user/userSlice";
 import useKyc from "@/hooks/api/useKyc";
 import InfoAlert from "../components/InfoAlert";
 import { showLoading } from "@/src/features/loadingSlice";
@@ -123,6 +123,7 @@ export default function HomeScreen() {
       // silent — KYC is non-blocking
     } finally {
       setKycFetched(true);
+      dispatch(setKycFetched(true));
     }
   };
 
@@ -513,7 +514,7 @@ export default function HomeScreen() {
         text="Complete KYC verification to enable withdrawals."
         type="info"
         primaryButtonText="Verify Now"
-        onDismiss={() => router.push("/(Views)/kyc")}
+        onDismiss={() => router.push("/(Views)/kyc/ready")}
       />
       <BalanceYieldGuide
         visible={showGuide}

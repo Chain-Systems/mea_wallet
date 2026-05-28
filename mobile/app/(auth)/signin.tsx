@@ -232,6 +232,13 @@ const Signin: React.FC = () => {
               </Link>
             </View>
             <View className="my-2">
+              <Link href="/account-unlock">
+                <Text className="text-[15px] text-gray-400">
+                  Account Unlock
+                </Text>
+              </Link>
+            </View>
+            <View className="my-2">
               <Link href="/get-started">
                 <Text className="text-[15px] text-gray-400">
                   {t("auth.info.other_ways_to_sign_in")}

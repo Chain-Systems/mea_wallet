@@ -4,5 +4,6 @@ export const STORAGE_KEYS = {
   },
   KYC: {
     SESSION_ID: "KYC_SESSION_ID",
+    SESSION_URL: "KYC_SESSION_URL",
   },
 };

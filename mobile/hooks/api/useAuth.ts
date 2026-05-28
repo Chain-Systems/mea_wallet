@@ -9,6 +9,8 @@ import {
   AuthResponse,
   GoogleSignUpResponse,
   GoogleLogInResponse,
+  UnlockSendResponse,
+  UnlockConfirmResponse,
 } from "@/src/api/types/auth";
 
 export default {
@@ -128,5 +130,32 @@ export default {
     return await networkRequest<LogoutResponse>(`${apiBaseUrl}/api/logout`, {
       method: "POST",
     });
+  },
+
+  sendUnlockCode: async (email: string) => {
+    return await networkRequest<UnlockSendResponse>(
+      `${apiBaseUrl}/api/login-unlock-email-verification-send`,
+      {
+        method: "POST",
+        body: new URLSearchParams({
+          UserEmail: email,
+          Country: "CN",
+        }).toString(),
+      }
+    );
+  },
+
+  confirmUnlock: async (email: string, country: string, otp_code: string) => {
+    return await networkRequest<UnlockConfirmResponse>(
+      `${apiBaseUrl}/api/login-unlock-confirm`,
+      {
+        method: "POST",
+        body: new URLSearchParams({
+          UserEmail: email,
+          Country: country,
+          otp_code,
+        }).toString(),
+      }
+    );
   },
 };

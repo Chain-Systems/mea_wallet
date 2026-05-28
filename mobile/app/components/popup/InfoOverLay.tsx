@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { View, Text, Animated, TouchableOpacity, Keyboard } from "react-native";
+import { View, Text, Animated, Keyboard } from "react-native";
+import PrimaryButton from "../PrimaryButton";
 import { Portal } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/src/store";
@@ -80,12 +81,11 @@ const InfoOverlay = () => {
                         {displayText}
                     </Text>
 
-                    <TouchableOpacity
+                    <PrimaryButton
+                        text="OK"
                         onPress={() => dispatch(hideInfo())}
-                        className="mt-6 bg-[#333] rounded-xl w-full py-3 items-center"
-                    >
-                        <Text className="text-white text-base font-semibold">OK</Text>
-                    </TouchableOpacity>
+                        className="mt-6"
+                    />
                 </Animated.View>
             </View>
         </Portal>

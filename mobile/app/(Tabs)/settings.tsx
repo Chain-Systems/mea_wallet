@@ -104,7 +104,7 @@ export default function SettingsScreen() {
 
           {/* KYC Verification */}
           <Pressable
-            onPress={() => router.push("/(Views)/kyc")}
+            onPress={() => router.push("/(Views)/kyc/ready")}
             className="flex-row items-center gap-3 px-3 py-5 mb-2 rounded-2xl border-2 border-transparent active:border-pink-1200 bg-black-1200 transition-all duration-500"
           >
             <View className="w-8 h-8 rounded-full bg-gray-1500 flex items-center justify-center">
