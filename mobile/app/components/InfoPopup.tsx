@@ -17,6 +17,8 @@ interface InfoPopupProps {
   title: string;
   content: string;
   type?: PopupType;
+  actionLabel?: string;
+  onAction?: () => void;
 }
 
 const TYPE_CONFIG: Record<PopupType, { icon: Parameters<typeof SvgIcon>[0]["name"]; color: string }> = {
@@ -31,6 +33,8 @@ const InfoPopup: React.FC<InfoPopupProps> = ({
   title,
   content,
   type,
+  actionLabel,
+  onAction,
 }) => {
   const typeConfig = type ? TYPE_CONFIG[type] : null;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -92,7 +96,15 @@ const InfoPopup: React.FC<InfoPopupProps> = ({
               {content}
             </Text>
 
-            <View className="mt-6 ml-auto">
+            <View className="mt-6 flex-row justify-end gap-3">
+              {actionLabel && onAction && (
+                <TouchableOpacity
+                  onPress={onAction}
+                  className="bg-pink-1100/20 border border-pink-1100 px-4 py-2 rounded-xl"
+                >
+                  <Text className="text-pink-1100 font-medium">{actionLabel}</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 onPress={onDismiss}
                 className="bg-black-1200 px-4 py-2 rounded-xl"

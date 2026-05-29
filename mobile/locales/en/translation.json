@@ -20,7 +20,8 @@
       "sign_up": "Sign Up",
       "email_required": "Email is required",
       "password_required": "Password is required",
-      "login_error": "Login Error"
+      "login_error": "Login Error",
+      "account_unlock": "Account Unlock"
     },
     "signup": {
       "title": "Sign Up",
@@ -398,7 +399,7 @@
       "google_otp_code": "Google OTP Code"
     },
     "info": {
-      "info" : "Info",
+      "info": "Info",
       "otp_required": "Please enter a valid 6-digit Google OTP code.",
       "activity_details": "The activity details are as follows"
     }
@@ -616,7 +617,6 @@
     "payment_completed": "Payment Completed",
     "overview_info_title": "Loan Overview Information",
     "overview_info_text": "View and manage your active loans. You can top up collateral, pay interest, and repay principal when eligible.",
-    "transaction_history": "Transaction History",
     "transaction_history_subtitle": "The activity details are as follows.",
     "division": "Division",
     "previous_amount": "Previous Amount",
@@ -657,12 +657,17 @@
     "collateral_quantity": "Collateral quantity",
     "token_price_usdt": "Token Price (USDT)",
     "collateral_valuation_usdt": "Collateral Valuation(USDT)",
-    "locked_collateral": "Locked Collateral",
-    "collateral_ratio": "Collateral ratio",
     "safety_buffer_quantity": "Safety Buffer Quantity",
     "loan_disbursement_amount_usdt": "Loan Disbursement Amount(USDT)",
     "precautions_for_loan": "Precautions for Loan",
     "price_refresh_notice": "The price is refreshed every minute based on real-time market price fluctuations.",
-    "status" : "Status"
+    "status": "Status"
+  },
+  "api": {
+    "response": {
+      "login": {
+        "account_locked": "Your account is locked. Please unlock your account first."
+      }
+    }
   }
 }

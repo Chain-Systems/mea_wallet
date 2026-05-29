@@ -1,7 +1,6 @@
 import { Link, router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  Alert,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -15,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import PrimaryButton from "../components/PrimaryButton";
 import useAuth from "@/hooks/api/useAuth";
 import InfoAlert from "../components/InfoAlert";
+import InfoPopup from "../components/InfoPopup";
 import storage from "@/storage";
 import { STORAGE_KEYS } from "@/storage/keys";
 import { useDispatch } from "react-redux";
@@ -35,6 +35,12 @@ const Signin: React.FC = () => {
   const [inputError, setInputError] = useState<string | null>(null);
   const [errorType, setErrorType] = useState<ErrorType | null>(null);
   const [popUpVisible, setPopUpVisible] = useState(false);
+
+  // Login error popup
+  const [loginPopupVisible, setLoginPopupVisible] = useState(false);
+  const [loginPopupTitle, setLoginPopupTitle] = useState("");
+  const [loginPopupContent, setLoginPopupContent] = useState("");
+  const [loginPopupAction, setLoginPopupAction] = useState<{ label: string; fn: () => void } | null>(null);
 
   const dispatch = useDispatch();
   const validateForm = () => {
@@ -68,14 +74,26 @@ const Signin: React.FC = () => {
       return;
     }
     dispatch(showLoading());
-    let result = await useAuth.login(email, password);
+    const result = await useAuth.login(email, password);
     dispatch(hideLoading());
-    //sign up failed
+
     if (typeof result === "string") {
-      Alert.alert(t("auth.signin.login_error"), result);
+      const msgKey = `api.response.login.${result}`;
+      const msg = t(msgKey, { defaultValue: result });
+      setLoginPopupTitle(t("auth.signin.login_error"));
+      setLoginPopupContent(msg);
+      if (result === "account_locked") {
+        setLoginPopupAction({
+          label: t("auth.signin.account_unlock"),
+          fn: () => router.push("/(auth)/account-unlock"),
+        });
+      } else {
+        setLoginPopupAction(null);
+      }
+      setLoginPopupVisible(true);
       return;
     }
-    //remove auth token from memory 
+
     resetAuthToken();
     await storage.save(STORAGE_KEYS.AUTH.TOKEN, result.token);
     if (router.canDismiss()) {
@@ -260,6 +278,15 @@ const Signin: React.FC = () => {
           text={inputError ?? ""}
         />
       </View>
+      <InfoPopup
+        visible={loginPopupVisible}
+        onDismiss={() => setLoginPopupVisible(false)}
+        title={loginPopupTitle}
+        content={loginPopupContent}
+        type="error"
+        actionLabel={loginPopupAction?.label}
+        onAction={loginPopupAction ? () => { setLoginPopupVisible(false); loginPopupAction.fn(); } : undefined}
+      />
     </KeyboardAvoidingView>
   );
 };

@@ -17,7 +17,8 @@
       "sign_up": "회원가입",
       "email_required": "이메일은 필수입니다.",
       "password_required": "비밀번호는 필수입니다.",
-      "login_error": "로그인 오류"
+      "login_error": "로그인 오류",
+      "account_unlock": "계정 잠금 해제"
     },
     "signup": {
       "title": "회원가입",
@@ -546,7 +547,6 @@
     "payment_completed": "납부 완료",
     "overview_info_title": "대출 개요 정보",
     "overview_info_text": "활성 대출을 확인하고 관리하세요. 담보 추가, 이자 납부, 원금 상환을 할 수 있습니다.",
-    "transaction_history": "거래 내역",
     "transaction_history_subtitle": "활동 세부 정보는 다음과 같습니다.",
     "division": "구분",
     "previous_amount": "이전 금액",
@@ -587,11 +587,16 @@
     "collateral_quantity": "담보 수량",
     "token_price_usdt": "토큰 가격 (USDT)",
     "collateral_valuation_usdt": "담보 평가액(USDT)",
-    "locked_collateral": "잠긴 담보",
-    "collateral_ratio": "담보 비율",
     "safety_buffer_quantity": "안전 버퍼 수량",
     "loan_disbursement_amount_usdt": "대출 지급 금액(USDT)",
     "precautions_for_loan": "대출 주의사항",
     "price_refresh_notice": "가격은 실시간 시장 가격 변동에 따라 매분 새로 고쳐집니다."
+  },
+  "api": {
+    "response": {
+      "login": {
+        "account_locked": "계정이 잠겨 있습니다. 먼저 계정 잠금을 해제해 주세요."
+      }
+    }
   }
 }
