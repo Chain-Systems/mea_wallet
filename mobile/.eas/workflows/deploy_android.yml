@@ -17,37 +17,34 @@ jobs:
       platform: android
       profile: production
 
-  notify_slack_success:
-    name: Notify Slack (Success)
-    after: [build_android]
+  notify_success:
+    name: Share Android Production Link
+    needs: [build_android]
+    if: ${{ success() }}
     environment: production
-    if: ${{ after.build_android.status == 'finished' }}
     steps:
       - uses: eas/send_slack_message
         with:
+          slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            Android production build succeeded.
-            Workflow: ${{ workflow.name }}
-            Branch: ${{ inputs.branch }}
-            Version: ${{ after.build_android.outputs.app_version }}
-            Build status: ${{ after.build_android.status }}
-            Build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
-            Workflow URL: ${{ workflow.url }}
-          url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
+            Android production build is ready.
 
-  notify_slack_failure:
-    name: Notify Slack (Failure)
+            App: ${{ needs.build_android.outputs.app_identifier }}
+            Version: ${{ needs.build_android.outputs.app_version }}
+            Build number: ${{ needs.build_android.outputs.app_build_version }}
+            Build link: https://expo.dev/builds/${{ needs.build_android.outputs.build_id }}
+
+  notify_failure:
+    name: Notify Android Production Failure
     after: [build_android]
+    if: ${{ failure() }}
     environment: production
-    if: ${{ after.build_android.status != 'finished' }}
     steps:
       - uses: eas/send_slack_message
         with:
+          slack_hook_url: ${{ env.SLACK_HOOK_URL_FAILURE }}
           message: |
             Android production build failed.
+
             Workflow: ${{ workflow.name }}
-            Branch: ${{ inputs.branch }}
-            Build status: ${{ after.build_android.status }}
-            Build URL: https://expo.dev/builds/${{ after.build_android.outputs.build_id }}
-            Workflow URL: ${{ workflow.url }}
-          url: ${{ env.SLACK_HOOK_URL_FAILURE }}
+            Details: ${{ workflow.url }}
