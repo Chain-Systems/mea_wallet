@@ -19,7 +19,7 @@
 
 5. Confirm the app has working EAS credentials for Android Play Store and iOS App Store submissions before running production deploy workflows.
 
-The workflows use Expo's `eas/send_slack_message` action with explicit `url` set to `SLACK_HOOK_URL_SUCCESS` or `SLACK_HOOK_URL_FAILURE` depending on outcome. Neither webhook URL is committed to source control.
+The workflows use Expo's `eas/send_slack_message` action with `slack_hook_url` set to `SLACK_HOOK_URL_SUCCESS` or `SLACK_HOOK_URL_FAILURE` depending on outcome. Success jobs use `needs:` + `if: ${{ success() }}`; failure jobs use `after:` + `if: ${{ failure() }}`. Neither webhook URL is committed to source control.
 
 ## Workflows
 
