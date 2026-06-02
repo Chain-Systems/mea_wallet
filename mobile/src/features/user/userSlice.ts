@@ -7,12 +7,16 @@ interface UserState {
   twoFA?: TwoFADetails;
   email: string;
   details?: UserDetails;
+  kycCompleted: boolean;
+  kycFetched: boolean;
 }
 
 const initialState: UserState = {
   isAuthenticated: false,
   authenticationVerified: false,
   email: "",
+  kycCompleted: false,
+  kycFetched: false,
 };
 
 const userSlice = createSlice({
@@ -34,6 +38,12 @@ const userSlice = createSlice({
     setUserDetails: (state, action: PayloadAction<UserDetails>) => {
       state.details = action.payload;
     },
+    setKycCompleted: (state, action: PayloadAction<boolean>) => {
+      state.kycCompleted = action.payload;
+    },
+    setKycFetched: (state, action: PayloadAction<boolean>) => {
+      state.kycFetched = action.payload;
+    },
   },
 });
 
@@ -43,6 +53,8 @@ export const {
   setTwoFAData,
   setUserEmail,
   setUserDetails,
+  setKycCompleted,
+  setKycFetched,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -20,8 +20,11 @@ import { isValidPublicKey } from "@/utils/web3";
 import { useAppDispatch } from "@/src/store/hooks";
 import { RootState } from "@/src/store";
 import { useSelector } from "react-redux";
+import { RootState as RS } from "@/src/store";
 import useAsset from "@/hooks/api/useAsset";
 import useUser from "@/hooks/api/useUser";
+import useKyc from "@/hooks/api/useKyc";
+import { setKycCompleted, setKycFetched } from "@/src/features/user/userSlice";
 import {
   setMinWithdraw,
   setWithdrawFees,
@@ -38,6 +41,7 @@ import {
 
 const WithDrawal = () => {
   const navigation = useNavigation();
+  const kycCompleted = useSelector((state: RS) => state.user.kycCompleted);
   const { symbol } = useLocalSearchParams<{ symbol: keyof TokenBalances }>();
   const freeBalance = useSelector(
     (state: RootState) => state.balance.free[symbol]
@@ -170,7 +174,24 @@ const WithDrawal = () => {
   useEffect(() => {
     syncData();
     syncBalance();
+    checkKyc();
   }, []);
+
+  const checkKyc = async () => {
+    try {
+      const res = await useKyc.getKycInfo();
+      if (typeof res !== "string") {
+        const done = res.kyc_yn === "Y";
+        dispatch(setKycCompleted(done));
+        dispatch(setKycFetched(true));
+        if (!done) {
+          router.replace("/(Views)/kyc/ready");
+        }
+      }
+    } catch {
+      // silent — do not block withdrawal if KYC check fails
+    }
+  };
 
   return (
     <View className="bg-black-1000 h-full">

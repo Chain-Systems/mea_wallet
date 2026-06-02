@@ -17,37 +17,34 @@ jobs:
       platform: android
       profile: preview
 
-  notify_slack_success:
-    name: Notify Slack (Success)
-    after: [build_android_preview]
+  notify_success:
+    name: Share Android Preview Link
+    needs: [build_android_preview]
+    if: ${{ success() }}
     environment: preview
-    if: ${{ after.build_android_preview.status == 'finished' }}
     steps:
       - uses: eas/send_slack_message
         with:
+          slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            Android preview build succeeded.
-            Workflow: ${{ workflow.name }}
-            Branch: ${{ inputs.branch }}
-            Build status: ${{ after.build_android_preview.status }}
-            App: ${{ after.build_android_preview.outputs.app_identifier }}
-            Version: ${{ after.build_android_preview.outputs.app_version }}
-            Build URL: https://expo.dev/builds/${{ after.build_android_preview.outputs.build_id }}
-            Workflow URL: ${{ workflow.url }}
-          url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
+            Android preview build is ready.
 
-  notify_slack_failure:
-    name: Notify Slack (Failure)
+            App: ${{ needs.build_android_preview.outputs.app_identifier }}
+            Version: ${{ needs.build_android_preview.outputs.app_version }}
+            Build number: ${{ needs.build_android_preview.outputs.app_build_version }}
+            Build link: https://expo.dev/builds/${{ needs.build_android_preview.outputs.build_id }}
+
+  notify_failure:
+    name: Notify Android Preview Failure
     after: [build_android_preview]
+    if: ${{ failure() }}
     environment: preview
-    if: ${{ after.build_android_preview.status != 'finished' }}
     steps:
       - uses: eas/send_slack_message
         with:
+          slack_hook_url: ${{ env.SLACK_HOOK_URL_FAILURE }}
           message: |
             Android preview build failed.
+
             Workflow: ${{ workflow.name }}
-            Branch: ${{ inputs.branch }}
-            Build status: ${{ after.build_android_preview.status }}
-            Workflow URL: ${{ workflow.url }}
-          url: ${{ env.SLACK_HOOK_URL_FAILURE }}
+            Details: ${{ workflow.url }}
