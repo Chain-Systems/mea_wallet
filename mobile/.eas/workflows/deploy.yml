@@ -1,16 +1,11 @@
 name: Deploy
 
-on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        type: string
-        description: Branch to build from
-        default: master
+"on":
+  workflow_dispatch: {}
 
 jobs:
   build_android:
-    name: Build Android Production
+    name: Build Android
     type: build
     environment: production
     params:
@@ -18,16 +13,25 @@ jobs:
       profile: production
 
   build_ios:
-    name: Build iOS Production
+    name: Build iOS
     type: build
     environment: production
     params:
       platform: ios
       profile: production
 
-  notify_success:
-    name: Share Production Build Links
-    needs: [build_android, build_ios]
+  submit_ios:
+    name: Submit iOS
+    needs: [build_ios]
+    type: submit
+    environment: production
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      profile: production
+
+  notify_android_success:
+    name: Notify Android Success
+    needs: [build_android]
     if: ${{ success() }}
     environment: production
     steps:
@@ -35,17 +39,14 @@ jobs:
         with:
           slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            Production builds are ready.
+            Android production build completed.
 
-            Android version: ${{ needs.build_android.outputs.app_version }}
-            Android build link: https://expo.dev/builds/${{ needs.build_android.outputs.build_id }}
+            Workflow: ${{ workflow.name }}
+            Details: ${{ workflow.url }}
 
-            iOS version: ${{ needs.build_ios.outputs.app_version }}
-            iOS build link: https://expo.dev/builds/${{ needs.build_ios.outputs.build_id }}
-
-  notify_failure:
-    name: Notify Production Build Failure
-    after: [build_android, build_ios]
+  notify_android_failure:
+    name: Notify Android Failure
+    after: [build_android]
     if: ${{ failure() }}
     environment: production
     steps:
@@ -53,7 +54,37 @@ jobs:
         with:
           slack_hook_url: ${{ env.SLACK_HOOK_URL_FAILURE }}
           message: |
-            Production build failed.
+            Android production build failed.
+
+            Workflow: ${{ workflow.name }}
+            Details: ${{ workflow.url }}
+
+  notify_ios_success:
+    name: Notify iOS Success
+    needs: [submit_ios]
+    if: ${{ success() }}
+    environment: production
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
+          message: |
+            iOS production deployment completed.
+
+            Workflow: ${{ workflow.name }}
+            Details: ${{ workflow.url }}
+
+  notify_ios_failure:
+    name: Notify iOS Failure
+    after: [build_ios, submit_ios]
+    if: ${{ failure() }}
+    environment: production
+    steps:
+      - uses: eas/send_slack_message
+        with:
+          slack_hook_url: ${{ env.SLACK_HOOK_URL_FAILURE }}
+          message: |
+            iOS production deployment failed.
 
             Workflow: ${{ workflow.name }}
             Details: ${{ workflow.url }}
