@@ -1,9 +1,11 @@
+import "react-native-get-random-values";
 import { config } from "@gluestack-ui/config";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
-import { Stack, usePathname } from "expo-router";
+import { router, Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useEffect, useState } from "react";
+import { Linking } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import "./global.css";
@@ -44,9 +46,24 @@ export default function RootLayout() {
     setIsAuthenticated(token !== null);
   };
   useEffect(() => {
-    //check if token is present
     checkTokenExists();
   }, []);
+
+  // useEffect(() => {
+  //   const sub = Linking.addEventListener("url", ({ url }) => {
+  //     if (!url.startsWith("pingwallet://app-kyc-return")) return;
+  //     const query = url.split("?")[1] ?? "";
+  //     const params = new URLSearchParams(query);
+  //     const sid =
+  //       params.get("session_id") ||
+  //       params.get("verificationSessionId") ||
+  //       params.get("verificationSessionID") ||
+  //       "";
+  //     if (sid) storage.save(STORAGE_KEYS.KYC.SESSION_ID, sid);
+  //     router.replace("/(Views)/kyc/certification");
+  //   });
+  //   return () => sub.remove();
+  // }, []);
 
   useEffect(() => {}, [pathname]);
   if (!fontsLoaded || isAuthenticated === null) {

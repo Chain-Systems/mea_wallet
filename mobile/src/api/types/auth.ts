@@ -36,3 +36,14 @@ export interface ForgetPasswordResponse {
   status: "Temporary password" | string;
   TemporaryPassword: string;
 }
+
+export interface UnlockSendResponse {
+  status: string;
+  expires_in?: number;
+  message?: string;
+}
+
+export interface UnlockConfirmResponse {
+  status: string;
+  message?: string;
+}

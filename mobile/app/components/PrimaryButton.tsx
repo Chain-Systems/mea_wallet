@@ -1,4 +1,4 @@
-import { Pressable, PressableProps, Text } from "react-native";
+import { Pressable, PressableProps, Text, View } from "react-native";
 
 interface PrimaryButtonProps extends PressableProps {
   text?: string;
@@ -11,37 +11,36 @@ const PrimaryButton = ({
   text,
   className = "",
   disabled = false,
-  ...props
 }: PrimaryButtonProps) => {
   return (
-    <Pressable
-      onPress={disabled ? undefined : onPress}
-      disabled={disabled}
-      className={`
-        text-center w-full group py-2.5 rounded-[15px] 
-        flex items-center justify-center transition-all duration-100 ease-in-out
-        ${
-          disabled
-            ? "bg-gray-300 border-gray-300 opacity-50"
-            : "bg-pink-1100 border-pink-1100 hover:text-pink-1100 hover:bg-transparent active:scale-[0.97] active:opacity-90"
-        }
-        ${className}
-      `}
-      {...props}
-    >
-      <Text
+    <View pointerEvents={disabled ? "none" : "auto"} style={{ width: "100%" }}>
+      <Pressable
+        onPress={onPress}
         className={`
-          text-base font-semibold transition-all duration-100 ease-in-out
+          text-center w-full group py-2.5 rounded-[15px]
+          flex items-center justify-center transition-all duration-100 ease-in-out
           ${
             disabled
-              ? "text-gray-300"
-              : "text-white group-pressed:text-pink-1100"
+              ? "bg-gray-300 border-gray-300 opacity-50"
+              : "bg-pink-1100 border-pink-1100 hover:text-pink-1100 hover:bg-transparent active:scale-[0.97] active:opacity-90"
           }
+          ${className}
         `}
       >
-        {text}
-      </Text>
-    </Pressable>
+        <Text
+          className={`
+            text-base font-semibold transition-all duration-100 ease-in-out
+            ${
+              disabled
+                ? "text-gray-300"
+                : "text-white group-pressed:text-pink-1100"
+            }
+          `}
+        >
+          {text}
+        </Text>
+      </Pressable>
+    </View>
   );
 };
 
