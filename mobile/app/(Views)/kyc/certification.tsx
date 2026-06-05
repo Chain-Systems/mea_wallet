@@ -36,7 +36,7 @@ export default function KycCertification() {
   const [screenState, setScreenState] = useState<ScreenState>("loading");
   const [mtName, setMtName] = useState("");
   const [mtBirth, setMtBirth] = useState("");
-  const [docType, setDocType] = useState<DocType>("");
+  const [docType, setDocType] = useState<DocType>("id_card");
 
   const [starting, setStarting] = useState(false);
 
