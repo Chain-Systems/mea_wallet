@@ -92,7 +92,8 @@
         "expo-build-properties",
         {
           "ios": {
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "extraPodfileConfig": "installer.pods_project.targets.each do |target|\n  target.build_configurations.each do |config|\n    config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'FMT_EXCEPTIONS=0']\n  end\nend"
           },
           "android": {
             "minSdkVersion": 29
