@@ -92,7 +92,8 @@
         "expo-build-properties",
         {
           "ios": {
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "extraPodfileConfig": "post_install do |installer|\n  installer.pods_project.targets.each do |target|\n    target.build_configurations.each do |config|\n      flags = config.build_settings['OTHER_CPLUSPLUSFLAGS'].to_s\n      config.build_settings['OTHER_CPLUSPLUSFLAGS'] = flags + ' -DFMT_USE_CONSTEVAL=0'\n    end\n  end\nend"
           },
           "android": {
             "minSdkVersion": 29
