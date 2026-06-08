@@ -38,6 +38,7 @@ import { showLoading } from "@/src/features/loadingSlice";
 import { requestNotificationPermission } from "@/lib/notifications/requestPermissions";
 import ReceiveInstant from "../components/earn/ReceiveInstant";
 import BalanceYieldGuide from "../components/BalanceYieldGuide";
+import LabelBadge from "../components/LabelBadge";
 import useSetting from "@/hooks/api/useSetting";
 import LoanIcon from "@/assets/images/hand-dollar.svg";
 import { setSettings } from "@/src/features/settings/settingsSlice";
@@ -269,31 +270,13 @@ export default function HomeScreen() {
                     {email}
                   </Text>
                 </Pressable>
-                <Pressable
+                <LabelBadge
+                  loading={!kycFetched}
+                  tone={kycCompleted ? "success" : "danger"}
+                  glyph={kycCompleted ? "✓" : "!"}
+                  label={kycCompleted ? "KYC Verified" : "KYC Required"}
                   onPress={() => router.push("/(Views)/kyc/ready")}
-                  className={`flex-row items-center gap-1.5 rounded-full border px-3 py-1 ${
-                    kycCompleted
-                      ? "bg-green-1000/15 border-green-1000/50"
-                      : "bg-red-1000/15 border-red-1000/50"
-                  }`}
-                >
-                  <View
-                    className={`w-4 h-4 rounded-full items-center justify-center ${
-                      kycCompleted ? "bg-green-1000" : "bg-red-1000"
-                    }`}
-                  >
-                    <Text className="text-[10px] font-bold text-white text-center">
-                      {kycCompleted ? "✓" : "!"}
-                    </Text>
-                  </View>
-                  <Text
-                    className={`text-[12px] font-bold tracking-[-0.2px] ${
-                      kycCompleted ? "text-green-1000" : "text-red-1000"
-                    }`}
-                  >
-                    {kycCompleted ? "KYC Verified" : "KYC Required"}
-                  </Text>
-                </Pressable>
+                />
               </View>
             </View>
 
