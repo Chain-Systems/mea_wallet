@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -15,7 +14,6 @@ import { BackButton } from "@/app/components/BackButton";
 
 const SelectAvatar = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
