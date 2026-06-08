@@ -55,3 +55,31 @@ machine:
 The legacy `@react-navigation/*` packages remain as (now indirect-only)
 dependencies; they can be pruned in a follow-up once confirmed unused by any
 transitive path.
+
+## Native Android build — verified ✅
+
+A full release build was produced locally on Linux:
+`expo prebuild` + `./gradlew :app:assembleRelease` →
+`app-release.apk` (compileSdk/targetSdk 36 / Android 16, versionName 1.0.44).
+
+Two repo changes were required to get there:
+
+1. **Removed `react-native-in-app-updates`.** It was an unused duplicate
+   (the app uses `sp-react-native-in-app-updates`) and its Android code
+   (`InAppUpdatesModule.kt` → `currentActivity`) no longer compiles against
+   RN 0.85. Expo autolinking compiles every native module in `node_modules`,
+   so an unused-but-installed module still breaks the build.
+2. **Removed `android.edgeToEdgeEnabled` from app.json.** Android 16 makes
+   edge-to-edge mandatory; the option is gone in SDK 56 and prebuild warns on it.
+
+### Local toolchain notes (machine setup, not repo changes)
+
+- Android SDK packages: `platforms;android-36`, `build-tools;36.0.0`,
+  `ndk;27.1.12297006`, `cmake;3.22.1`.
+- RN 0.85 ships Gradle 9.3.1 but its Gradle plugin pins
+  `foojay-resolver-convention` 0.5.0, which crashes on Gradle 9
+  (`NoSuchFieldError: JvmVendorSpec.IBM_SEMERU`) **if** Gradle has to
+  auto-download a JDK toolchain. Setting
+  `org.gradle.java.installations.auto-download=false` in
+  `~/.gradle/gradle.properties` makes Gradle use the local JDK and avoids it.
+  EAS build images ship the correct JDK, so this does not affect EAS/CI.

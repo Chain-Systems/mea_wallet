@@ -25,7 +25,6 @@
       }
     },
     "android": {
-      "edgeToEdgeEnabled": true,
       "package": "com.meccain.ping",
       "permissions": [
         "android.permission.CAMERA"
