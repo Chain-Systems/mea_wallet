@@ -45,7 +45,7 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ secrets.EXPO_ACCESS_TOKEN }}
 
       # Production deploy on merge to main.
       - name: Deploy (push to main)
