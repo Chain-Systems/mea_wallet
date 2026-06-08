@@ -38,6 +38,7 @@ import { showLoading } from "@/src/features/loadingSlice";
 import { requestNotificationPermission } from "@/lib/notifications/requestPermissions";
 import ReceiveInstant from "../components/earn/ReceiveInstant";
 import BalanceYieldGuide from "../components/BalanceYieldGuide";
+import LabelBadge from "../components/LabelBadge";
 import useSetting from "@/hooks/api/useSetting";
 import LoanIcon from "@/assets/images/hand-dollar.svg";
 import { setSettings } from "@/src/features/settings/settingsSlice";
@@ -247,19 +248,37 @@ export default function HomeScreen() {
           className="w-full pt-10"
         >
           <View className="pb-44 px-4">
-            <Pressable
-              onPress={() => setShowEditProfile(true)}
-              className="flex-row items-center gap-2"
-            >
-              <View className="bg-pink-1100 w-12 h-12 rounded-full items-center justify-center">
+            <View className="flex-row items-center gap-2">
+              <Pressable
+                onPress={() => setShowEditProfile(true)}
+                className="bg-pink-1100 w-12 h-12 rounded-full items-center justify-center"
+              >
                 <Text className="text-2xl font-medium text-white leading-[22px] tracking-[-0.36px]">
                   {details ? details.image : ""}
                 </Text>
+              </Pressable>
+              <View className="flex-1 items-start gap-2">
+                <Pressable
+                  onPress={() => setShowEditProfile(true)}
+                  className="max-w-full"
+                >
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    className="text-[22px] text-white font-medium tracking-[-0.44px]"
+                  >
+                    {email}
+                  </Text>
+                </Pressable>
+                <LabelBadge
+                  loading={!kycFetched}
+                  tone={kycCompleted ? "success" : "danger"}
+                  glyph={kycCompleted ? "✓" : "!"}
+                  label={kycCompleted ? "KYC Verified" : "KYC Required"}
+                  onPress={() => router.push("/(Views)/kyc/ready")}
+                />
               </View>
-              <Text className="text-[22px] text-white font-medium tracking-[-0.44px]">
-                {email}
-              </Text>
-            </Pressable>
+            </View>
 
             <View className="items-center mt-[46px] mb-10">
               {/* <SvgIcon name="spaceman" width="74" height="74" /> */}
