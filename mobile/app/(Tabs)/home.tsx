@@ -247,19 +247,55 @@ export default function HomeScreen() {
           className="w-full pt-10"
         >
           <View className="pb-44 px-4">
-            <Pressable
-              onPress={() => setShowEditProfile(true)}
-              className="flex-row items-center gap-2"
-            >
-              <View className="bg-pink-1100 w-12 h-12 rounded-full items-center justify-center">
+            <View className="flex-row items-center gap-2">
+              <Pressable
+                onPress={() => setShowEditProfile(true)}
+                className="bg-pink-1100 w-12 h-12 rounded-full items-center justify-center"
+              >
                 <Text className="text-2xl font-medium text-white leading-[22px] tracking-[-0.36px]">
                   {details ? details.image : ""}
                 </Text>
+              </Pressable>
+              <View className="flex-1 items-start gap-2">
+                <Pressable
+                  onPress={() => setShowEditProfile(true)}
+                  className="max-w-full"
+                >
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    className="text-[22px] text-white font-medium tracking-[-0.44px]"
+                  >
+                    {email}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => router.push("/(Views)/kyc/ready")}
+                  className={`flex-row items-center gap-1.5 rounded-full border px-3 py-1 ${
+                    kycCompleted
+                      ? "bg-green-1000/15 border-green-1000/50"
+                      : "bg-red-1000/15 border-red-1000/50"
+                  }`}
+                >
+                  <View
+                    className={`w-4 h-4 rounded-full items-center justify-center ${
+                      kycCompleted ? "bg-green-1000" : "bg-red-1000"
+                    }`}
+                  >
+                    <Text className="text-[10px] font-bold text-white text-center">
+                      {kycCompleted ? "✓" : "!"}
+                    </Text>
+                  </View>
+                  <Text
+                    className={`text-[12px] font-bold tracking-[-0.2px] ${
+                      kycCompleted ? "text-green-1000" : "text-red-1000"
+                    }`}
+                  >
+                    {kycCompleted ? "KYC Verified" : "KYC Required"}
+                  </Text>
+                </Pressable>
               </View>
-              <Text className="text-[22px] text-white font-medium tracking-[-0.44px]">
-                {email}
-              </Text>
-            </Pressable>
+            </View>
 
             <View className="items-center mt-[46px] mb-10">
               {/* <SvgIcon name="spaceman" width="74" height="74" /> */}
