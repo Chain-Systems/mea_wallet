@@ -164,7 +164,7 @@ const WithDrawal = () => {
     }
 
     if (amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
-      router.replace("/(Views)/kyc/ready");
+      router.replace("/(Views)/kyc/select");
       return;
     }
 
