@@ -363,20 +363,20 @@ const EnrollPlan = () => {
               </View>
             </Modal>
 
-            <InfoAlert
-              {...modalState}
-              visible={popupVisible}
-              setVisible={setPopupVisible}
-              onDismiss={() => {
-                if (enrollmentSucces) {
-                  router.dismiss();
-                  router.navigate("/(Tabs)/staking");
-                }
-              }}
-            />
-            <OtpModal visible={otpModalVisible} onClose={handleOtpSubmit} />
           </View>
         </ScrollView>
+        <InfoAlert
+          {...modalState}
+          visible={popupVisible}
+          setVisible={setPopupVisible}
+          onDismiss={() => {
+            if (enrollmentSucces) {
+              router.dismiss();
+              router.navigate("/(Tabs)/staking");
+            }
+          }}
+        />
+        <OtpModal visible={otpModalVisible} onClose={handleOtpSubmit} />
       </KeyboardAvoidingView>
     </View>
   );

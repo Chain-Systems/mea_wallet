@@ -62,7 +62,7 @@ export default function HomeScreen() {
   const details = useSelector((state: RootState) => state.user.details);
   const [showAlert, setShowAlert] = useState(false);
   const [showKycAlert, setShowKycAlert] = useState(false);
-  const [kycFetched, setKycFetched] = useState(false);
+  const [kycFetched, setLocalKycFetched] = useState(false);
   const kycCompleted = useSelector((state: RootState) => state.user.kycCompleted);
   const featuresEnabled = useSelector((state: RootState) => {
     if (Platform.OS === "ios") {
@@ -121,7 +121,7 @@ export default function HomeScreen() {
     } catch {
       // silent — KYC is non-blocking
     } finally {
-      setKycFetched(true);
+      setLocalKycFetched(true);
       dispatch(setKycFetched(true));
     }
   };
