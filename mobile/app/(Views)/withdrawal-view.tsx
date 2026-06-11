@@ -118,64 +118,64 @@ const WithDrawal = () => {
     setWithdrawAmount(amount.toString());
   };
 
+  const showError = (text: string) => {
+    setInfoAlertState({ type: "error", text });
+    setInfoAlertVisible(true);
+  };
+
   const handleNext = () => {
     if (!withdrawalAddress || !isValidPublicKey(withdrawalAddress)) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.invalid_address"),
-      });
-      setInfoAlertVisible(true);
+      showError(t("withdrawal.invalid_address"));
       return;
     }
 
     if (!withdrawAmount || isNaN(Number(withdrawAmount))) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.invalid_amount"),
+      showError(t("withdrawal.invalid_amount"));
+      return;
+    }
+
+    try {
+      const amount = new Decimal(withdrawAmount);
+
+      if (minWithdrawl != null && amount.lessThan(minWithdrawl)) {
+        showError(
+          t("withdrawal.min_amount_error", {
+            amount: minWithdrawl,
+            symbol: displaySymbol,
+          })
+        );
+        return;
+      }
+
+      if (freeBalance != null && amount.greaterThan(freeBalance)) {
+        showError(
+          t("withdrawal.insufficient_balance", {
+            balance: freeBalance,
+            symbol: displaySymbol,
+          })
+        );
+        return;
+      }
+
+      if (
+        amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) &&
+        !kycCompleted
+      ) {
+        router.replace("/(Views)/kyc/ready");
+        return;
+      }
+
+      router.push({
+        pathname: "/confirm-withdrawl",
+        params: {
+          symbol: symbol,
+          amount: amount.toString(),
+          address: withdrawalAddress,
+        },
       });
-      setInfoAlertVisible(true);
-      return;
+    } catch {
+      showError(t("withdrawal.invalid_amount"));
     }
-
-    const amount = new Decimal(withdrawAmount);
-
-    if (amount.lessThan(minWithdrawl)) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.min_amount_error", {
-          amount: minWithdrawl,
-          symbol: displaySymbol,
-        }),
-      });
-      setInfoAlertVisible(true);
-      return;
-    }
-
-    if (amount.greaterThan(freeBalance)) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.insufficient_balance", {
-          balance: freeBalance,
-          symbol: displaySymbol,
-        }),
-      });
-      setInfoAlertVisible(true);
-      return;
-    }
-
-    if (amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
-      router.replace("/(Views)/kyc/ready");
-      return;
-    }
-
-    router.push({
-      pathname: "/confirm-withdrawl",
-      params: {
-        symbol: symbol,
-        amount: amount.toString(),
-        address: withdrawalAddress,
-      },
-    });
   };
 
   useEffect(() => {
@@ -308,23 +308,25 @@ const WithDrawal = () => {
                 </View>
               </View>
 
-              <View className="mx-1 mb-3 px-4 py-3 rounded-[12px] bg-yellow-500/10 border border-yellow-500/30">
-                <Text className="text-yellow-400 text-sm text-center">
-                  {t("withdrawal.kyc_required_above")}
-                </Text>
-              </View>
+              {!kycCompleted && (
+                <View className="mx-1 mb-3 px-4 py-3 rounded-[12px] bg-yellow-500/10 border border-yellow-500/30">
+                  <Text className="text-yellow-400 text-sm text-center">
+                    {t("withdrawal.kyc_required_above")}
+                  </Text>
+                </View>
+              )}
 
               <PrimaryButton text={t("withdrawal.next")} onPress={handleNext} />
             </View>
           </View>
-          <QRModal visible={qrScanVisible} onClose={handleQRData} />
-          <InfoAlert
-            {...infoAlertState}
-            visible={infoAlertVisible}
-            setVisible={setInfoAlertVisible}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
+      <QRModal visible={qrScanVisible} onClose={handleQRData} />
+      <InfoAlert
+        {...infoAlertState}
+        visible={infoAlertVisible}
+        setVisible={setInfoAlertVisible}
+      />
     </View>
   );
 };

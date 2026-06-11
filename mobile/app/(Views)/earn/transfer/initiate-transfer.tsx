@@ -182,14 +182,13 @@ const InitiateTransfer = () => {
               </View>
             </View>
           </View>
-
-          <InfoAlert
-            {...infoAlertState}
-            visible={infoAlertVisible}
-            setVisible={setInfoAlertVisible}
-            onDismiss={() => {}}
-          />
         </ScrollView>
+        <InfoAlert
+          {...infoAlertState}
+          visible={infoAlertVisible}
+          setVisible={setInfoAlertVisible}
+          onDismiss={() => {}}
+        />
       </KeyboardAvoidingView>
     </View>
   );

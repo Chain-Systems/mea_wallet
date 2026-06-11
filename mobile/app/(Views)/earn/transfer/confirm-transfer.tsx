@@ -171,26 +171,25 @@ const ConfirmTransfer = () => {
               </View>
             </View>
           </View>
-
-          <InfoAlert
-            {...infoAlertState}
-            visible={infoAlertVisible}
-            setVisible={setInfoAlertVisible}
-            onDismiss={() => {
-              if (transferSuccess) {
-                if (router.canDismiss()) {
-                  router.dismissAll();
-                }
-                router.replace({
-                  pathname: "/(Views)/asset-history",
-                  params: {
-                    symbol: symbol,
-                  },
-                });
-              }
-            }}
-          />
         </ScrollView>
+        <InfoAlert
+          {...infoAlertState}
+          visible={infoAlertVisible}
+          setVisible={setInfoAlertVisible}
+          onDismiss={() => {
+            if (transferSuccess) {
+              if (router.canDismiss()) {
+                router.dismissAll();
+              }
+              router.replace({
+                pathname: "/(Views)/asset-history",
+                params: {
+                  symbol: symbol,
+                },
+              });
+            }
+          }}
+        />
       </KeyboardAvoidingView>
     </View>
   );

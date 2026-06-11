@@ -217,18 +217,18 @@ const ChangePassword: React.FC = () => {
             </View>
           </View>
 
-          <InfoAlert
-            {...modalState}
-            visible={popUpVisible}
-            setVisible={setPopUpVisible}
-            onDismiss={() => {
-              if (passwordUpdated) {
-                router.back();
-              }
-            }}
-          />
-          <OtpModal visible={otpModalVisible} onClose={handleOTPSubmit} />
         </ScrollView>
+        <InfoAlert
+          {...modalState}
+          visible={popUpVisible}
+          setVisible={setPopUpVisible}
+          onDismiss={() => {
+            if (passwordUpdated) {
+              router.back();
+            }
+          }}
+        />
+        <OtpModal visible={otpModalVisible} onClose={handleOTPSubmit} />
       </KeyboardAvoidingView>
     </View>
   );
