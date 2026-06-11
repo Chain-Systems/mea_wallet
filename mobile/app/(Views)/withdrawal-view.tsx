@@ -39,6 +39,8 @@ import {
   setLockupBalances,
 } from "@/src/features/balance/balanceSlice";
 
+const KYC_REQUIRED_THRESHOLD = 1000;
+
 const WithDrawal = () => {
   const navigation = useNavigation();
   const kycCompleted = useSelector((state: RS) => state.user.kycCompleted);
@@ -161,6 +163,11 @@ const WithDrawal = () => {
       return;
     }
 
+    if (amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
+      router.replace("/(Views)/kyc/ready");
+      return;
+    }
+
     router.push({
       pathname: "/confirm-withdrawl",
       params: {
@@ -181,15 +188,11 @@ const WithDrawal = () => {
     try {
       const res = await useKyc.getKycInfo();
       if (typeof res !== "string") {
-        const done = res.kyc_yn === "Y";
-        dispatch(setKycCompleted(done));
+        dispatch(setKycCompleted(res.kyc_yn === "Y"));
         dispatch(setKycFetched(true));
-        if (!done) {
-          router.replace("/(Views)/kyc/ready");
-        }
       }
     } catch {
-      // silent — do not block withdrawal if KYC check fails
+      // silent — do not block page load if KYC check fails
     }
   };
 
@@ -303,6 +306,12 @@ const WithDrawal = () => {
                     ))}
                   </View>
                 </View>
+              </View>
+
+              <View className="mx-1 mb-3 px-4 py-3 rounded-[12px] bg-yellow-500/10 border border-yellow-500/30">
+                <Text className="text-yellow-400 text-sm text-center">
+                  {t("withdrawal.kyc_required_above")}
+                </Text>
               </View>
 
               <PrimaryButton text={t("withdrawal.next")} onPress={handleNext} />
