@@ -37,4 +37,4 @@ class BirdEyeProvider implements ChartProvider {
   }
 }
 
-export default CoinGeckoProvider;
+export default BirdEyeProvider;
