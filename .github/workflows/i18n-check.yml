@@ -1,0 +1,20 @@
+name: i18n Key Check
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main, preview, release]
+    paths:
+      - mobile/locales/**
+  pull_request: {}
+
+jobs:
+  validate:
+    name: All locale keys present and non-empty
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate translation keys
+        run: node .github/scripts/check-i18n.js
