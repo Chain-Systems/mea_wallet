@@ -230,6 +230,7 @@
     "invalid_address": "유효한 출금 주소를 입력해주세요.",
     "invalid_amount": "유효한 출금 금액을 입력해주세요.",
     "insufficient_balance": "잔액 부족. 사용 가능: {{balance}} {{symbol}}",
+    "kyc_required_above": "$1,000 이상 출금 시 KYC 인증이 필요합니다.",
     "next": "다음"
   },
   "lockup": {
