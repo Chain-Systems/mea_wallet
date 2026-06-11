@@ -1,4 +1,4 @@
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Image, Text, View } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
@@ -20,14 +20,10 @@ const SuccessPage = () => {
           </Text>
         </View>
         <View className="w-full flex">
-          <Link href="/(Tabs)/home">
-            <PrimaryButton
-              text={t("auth.success.start")}
-              onPress={() => {
-                router.replace("/(Tabs)/home");
-              }}
-            />
-          </Link>
+          <PrimaryButton
+            text={t("auth.success.start")}
+            onPress={() => router.replace("/(Tabs)/home")}
+          />
         </View>
       </View>
     </View>
