@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import messaging from "@react-native-firebase/messaging";
 import { AppDispatch, RootState } from "@/src/store";
@@ -289,24 +289,20 @@ export default function HomeScreen() {
               } mx-auto gap-[7px]`}
             >
               <View className="bg-black-1300 rounded-2xl items-center  flex-1">
-                <Link href="/receive-items">
-                  <View className="w-full items-center p-[18px] py-[17px]">
-                    <SvgIcon name="receiceIcon" width="24" height="24" />
-                    <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
-                      {t("home.receive")}
-                    </Text>
-                  </View>
-                </Link>
+                <TouchableOpacity className="w-full items-center p-[18px] py-[17px]" onPress={() => router.push("/receive-items")}>
+                  <SvgIcon name="receiceIcon" width="24" height="24" />
+                  <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
+                    {t("home.receive")}
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View className="bg-black-1300 rounded-2xl items-center  flex-1">
-                <Link href="/transfer-token">
-                  <View className="w-full items-center p-[18px] py-[17px]">
-                    <SvgIcon name="sendIcon" width="24" height="24" />
-                    <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
-                      {t("home.send")}
-                    </Text>
-                  </View>
-                </Link>
+                <TouchableOpacity className="w-full items-center p-[18px] py-[17px]" onPress={() => router.push("/transfer-token")}>
+                  <SvgIcon name="sendIcon" width="24" height="24" />
+                  <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
+                    {t("home.send")}
+                  </Text>
+                </TouchableOpacity>
               </View>
               {featuresEnabled && (
                 <View className="bg-black-1300 rounded-2xl items-center  flex-1">
