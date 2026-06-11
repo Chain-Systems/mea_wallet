@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import "@/i18n/index";
-import { useRoute } from "@react-navigation/native";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { configureReanimatedLogger } from "react-native-reanimated";
 import React from "react";
 import * as SplashScreen from "expo-splash-screen";
@@ -16,9 +15,7 @@ GoogleSignin.configure({
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
 });
 export default function HomeScreen() {
-  const route = useRoute();
-  //@ts-expect-error this
-  const { sessionTokenExists } = route.params ?? {};
+  const { sessionTokenExists } = useLocalSearchParams();
   // Use the custom hook to check for updates
   useFocusEffect(
     React.useCallback(() => {

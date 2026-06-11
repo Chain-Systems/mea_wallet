@@ -30,7 +30,6 @@ import {
 } from "@/utils/ui";
 import { setQuotes } from "@/src/features/token/tokenSlice";
 import Decimal from "decimal.js";
-import { useNavigation } from "@react-navigation/native";
 import { setKycCompleted, setKycFetched, setUserDetails } from "@/src/features/user/userSlice";
 import useKyc from "@/hooks/api/useKyc";
 import InfoAlert from "../components/InfoAlert";
@@ -46,7 +45,6 @@ import { setSettings } from "@/src/features/settings/settingsSlice";
 export default function HomeScreen() {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigation();
   const [showLokcupBalance, setShowLockUpBalance] = useState(true);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
