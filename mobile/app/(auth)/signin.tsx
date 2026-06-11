@@ -238,7 +238,7 @@ const Signin: React.FC = () => {
           <View className="items-center mt-6">
             <PrimaryButton
               onPress={handleSignIn}
-              className="mb-[9px] w-full h-[45px] group bg-pink-1100 border border-pink-1100 active:text-pink-1100 active:bg-transparent hover:text-pink-1100 hover:bg-transparent rounded-[15px] flex items-center justify-center"
+              className="mb-[9px]"
               text={t("auth.signin.sign_in")}
               disabled={inputError !== null}
             />
