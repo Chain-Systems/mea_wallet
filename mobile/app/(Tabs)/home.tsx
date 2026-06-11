@@ -61,7 +61,6 @@ export default function HomeScreen() {
   const email = useSelector((state: RootState) => state.user.email);
   const details = useSelector((state: RootState) => state.user.details);
   const [showAlert, setShowAlert] = useState(false);
-  const [showKycAlert, setShowKycAlert] = useState(false);
   const [kycFetched, setLocalKycFetched] = useState(false);
   const kycCompleted = useSelector((state: RootState) => state.user.kycCompleted);
   const featuresEnabled = useSelector((state: RootState) => {
@@ -151,15 +150,6 @@ export default function HomeScreen() {
       setShowAlert(true);
     }
   }, [details]);
-
-  useEffect(() => {
-    if (!kycFetched) return;
-    if (kycCompleted === false && details?.twoFACompleted) {
-      setShowKycAlert(true);
-    } else {
-      setShowKycAlert(false);
-    }
-  }, [kycCompleted, details, kycFetched]);
 
   const totalAssetValue = useMemo(() => {
     let totalValue = new Decimal(0);
@@ -524,14 +514,6 @@ export default function HomeScreen() {
         onDismiss={() => {
           router.push("/settings/google-otp"); // navigate after OK
         }}
-      />
-      <InfoAlert
-        visible={showKycAlert}
-        setVisible={setShowKycAlert}
-        text="Complete KYC verification to enable withdrawals."
-        type="info"
-        primaryButtonText="Verify Now"
-        onDismiss={() => router.push("/(Views)/kyc/ready")}
       />
       <BalanceYieldGuide
         visible={showGuide}
