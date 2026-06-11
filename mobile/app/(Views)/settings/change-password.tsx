@@ -1,4 +1,5 @@
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
+import PrimaryButton from "@/app/components/PrimaryButton";
 import SvgIcon from "@/app/components/SvgIcon";
 import LabelInput from "@/app/components/LabeledInput";
 import { router, useNavigation } from "expo-router";
@@ -204,16 +205,11 @@ const ChangePassword: React.FC = () => {
             </View>
 
             {/* Bottom Button */}
-            <View className="items-center mt-6">
-              <TouchableOpacity
-                activeOpacity={0.7}
+            <View className="mt-6">
+              <PrimaryButton
+                text={t("common.ok")}
                 onPress={handleChangePassword}
-                className="mb-[9px]"
-              >
-                <Text className="text-base text-white font-semibold">
-                  {t("common.ok")}
-                </Text>
-              </TouchableOpacity>
+              />
             </View>
           </View>
 
