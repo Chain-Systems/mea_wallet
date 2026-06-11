@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - release
+      - release/*
+    paths:
+      - mobile/**
+
+jobs:
+  android:
+    name: Deploy Android
+    uses: ./.github/workflows/deploy_android.yml
+    secrets: inherit
+
+  ios:
+    name: Deploy iOS
+    uses: ./.github/workflows/deploy_ios.yml
+    secrets: inherit
