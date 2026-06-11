@@ -2,11 +2,6 @@ name: Deploy Android
 
 "on":
   workflow_dispatch: {}
-  push:
-    branches:
-      - release
-    paths:
-      - mobile/**
 
 jobs:
   build_android:
