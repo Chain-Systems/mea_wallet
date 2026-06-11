@@ -1,21 +1,19 @@
-// components/LoadingOverlay.tsx
 import { RootState } from "@/src/store";
 import React, { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  View,
-  Text,
-  Animated,
   ActivityIndicator,
+  Animated,
   Keyboard,
+  Modal,
+  Text,
+  View,
 } from "react-native";
-import { Portal } from "react-native-paper";
 import { useSelector } from "react-redux";
 
 const LoadingOverlay = () => {
   const { visible, text } = useSelector((state: RootState) => state.progress);
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const { t } = useTranslation();
 
   const displayText = useMemo(() => {
@@ -26,38 +24,26 @@ const LoadingOverlay = () => {
   useEffect(() => {
     if (visible) {
       Keyboard.dismiss();
-    }
-  }, [visible]);
-
-  useEffect(() => {
-    if (visible) {
-      Animated.parallel([
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      scaleAnim.setValue(0.95);
+      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, bounciness: 4 }).start();
     } else {
-      opacityAnim.setValue(0);
-      scaleAnim.setValue(0.8);
+      scaleAnim.setValue(0.95);
     }
   }, [visible]);
-
-  if (!visible) return null;
 
   return (
-    <Portal>
-      <View className="flex-1 items-center justify-center bg-[rgba(31,31,31,0.5)] absolute top-0 bottom-0 h-full w-full z-50">
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+    >
+      <View
+        className="flex-1 items-center justify-center"
+        style={{ backgroundColor: "rgba(31,31,31,0.5)" }}
+      >
         <Animated.View
-          style={{
-            transform: [{ scale: scaleAnim }],
-            opacity: opacityAnim,
-          }}
+          style={{ transform: [{ scale: scaleAnim }] }}
           className="bg-[#191919] rounded-[16px] px-6 py-10 w-[80%] items-center"
         >
           <ActivityIndicator size="large" color="#ffffff" />
@@ -66,7 +52,7 @@ const LoadingOverlay = () => {
           </Text>
         </Animated.View>
       </View>
-    </Portal>
+    </Modal>
   );
 };
 

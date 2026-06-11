@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import SvgIcon from "@/app/components/SvgIcon";
-import { Portal } from "react-native-paper";
 import InfoAlert from "@/app/components/InfoAlert";
 
 interface ActionPopupProps {

@@ -1,17 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
-  View,
+  Modal,
   Text,
   TextInput,
   TouchableOpacity,
-  Animated,
-  Dimensions,
+  View,
 } from "react-native";
 import PrimaryButton from "./PrimaryButton";
-import { Portal } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-
-const { height } = Dimensions.get("window");
 
 interface OtpModalProps {
   visible: boolean;
@@ -23,27 +19,6 @@ const OtpModal: React.FC<OtpModalProps> = ({ visible, onClose }) => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const translateY = useRef(new Animated.Value(height)).current;
-
-  useEffect(() => {
-    if (visible) {
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(translateY, {
-        toValue: height,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setOtp("");
-        setError(null);
-      });
-    }
-  }, [visible]);
-
   const handleClose = () => {
     onClose(null);
     setOtp("");
@@ -52,7 +27,7 @@ const OtpModal: React.FC<OtpModalProps> = ({ visible, onClose }) => {
 
   const onSubmit = () => {
     if (!otp || otp.length < 6) {
-      setError(t('components.otp_error'));
+      setError(t("components.otp_error"));
       return;
     }
     onClose(otp);
@@ -60,46 +35,49 @@ const OtpModal: React.FC<OtpModalProps> = ({ visible, onClose }) => {
     setError(null);
   };
 
-  if (!visible) return null;
-
   return (
-    <Portal>
-      <View className="absolute  top-0 bottom-0 left-0 right-0 bg-[rgba(31,31,31,0.5)] z-50">
-        <Animated.View
-          style={{
-            transform: [{ translateY }],
-          }}
-          className="flex-1 bg-black-1000 px-4 justify-center"
-        >
-          <View className="flex gap-4">
-            <Text className="text-xl text-white font-semibold text-center mb-4">
-              {t('components.enter_verification_code')}
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={handleClose}
+      statusBarTranslucent
+    >
+      <View
+        className="flex-1 justify-center px-4"
+        style={{ backgroundColor: "rgba(31,31,31,0.85)" }}
+      >
+        <View className="bg-black-1000 rounded-[16px] px-4 py-8 flex gap-4">
+          <Text className="text-xl text-white font-semibold text-center mb-4">
+            {t("components.enter_verification_code")}
+          </Text>
+
+          <TextInput
+            value={otp}
+            onChangeText={(text) => {
+              setOtp(text);
+              if (error) setError(null);
+            }}
+            placeholder={t("components.enter_otp")}
+            placeholderTextColor="#6b7280"
+            keyboardType="number-pad"
+            className="text-[17px] placeholder:text-gray-500 text-white font-medium px-4 bg-black-1200 w-full h-[55px] rounded-[10px] mb-2"
+          />
+
+          {error && (
+            <Text className="text-red-500 text-sm text-center">{error}</Text>
+          )}
+
+          <PrimaryButton text={t("components.submit")} onPress={onSubmit} />
+
+          <TouchableOpacity onPress={handleClose} className="mt-2">
+            <Text className="text-gray-400 text-center">
+              {t("common.cancel")}
             </Text>
-
-            <TextInput
-              value={otp}
-              onChangeText={(text) => {
-                setOtp(text);
-                if (error) setError(null);
-              }}
-              placeholder={t('components.enter_otp')}
-              keyboardType="number-pad"
-              className="text-[17px] placeholder:text-gray-500 text-white font-medium px-4 bg-black-1200 w-full h-[55px] rounded-[10px] mb-2"
-            />
-
-            {error && (
-              <Text className="text-red-500 text-sm text-center">{error}</Text>
-            )}
-
-            <PrimaryButton text={t('components.submit')} onPress={onSubmit} />
-
-            <TouchableOpacity onPress={handleClose} className="mt-2">
-              <Text className="text-gray-400 text-center">{t('common.cancel')}</Text>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </Portal>
+    </Modal>
   );
 };
 

@@ -180,10 +180,10 @@ const StakingPlans = () => {
           className="rounded-full flex-1 overflow-hidden" // Removed shadow-lg
         >
           <LinearGradient
-            colors={["#8B5CF6", "#9333EA", "#4F46E5"]} // from-purple-500, via-purple-600, to-indigo-600
+            colors={["#8B5CF6", "#9333EA", "#4F46E5"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            className="py-2 px-4 rounded-full items-center"
+            style={{ paddingVertical: 8, paddingHorizontal: 16, borderRadius: 999, alignItems: "center", justifyContent: "center" }}
           >
             <Text className="text-white font-bold text-base">
               {t("staking.staking").toUpperCase()}
@@ -200,10 +200,10 @@ const StakingPlans = () => {
           className="rounded-full transition-transform hover:scale-105 flex-1 overflow-hidden" // Removed shadow-lg
         >
           <LinearGradient
-            colors={["#D1D5DB", "#9CA3AF", "#6B7280"]} // from-gray-300, via-gray-400, to-gray-600
+            colors={["#D1D5DB", "#9CA3AF", "#6B7280"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            className="py-2 px-4 rounded-full items-center"
+            style={{ paddingVertical: 8, paddingHorizontal: 16, borderRadius: 999, alignItems: "center", justifyContent: "center" }}
           >
             <Text className="text-black font-bold text-base">
               {t("components.unstaking").toUpperCase()}
