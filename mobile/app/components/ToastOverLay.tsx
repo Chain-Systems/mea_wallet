@@ -1,13 +1,11 @@
-// components/ToastOverlay.tsx
 import React, { useEffect, useRef } from "react";
-import { View, Text, Animated } from "react-native";
-import { Portal } from "react-native-paper";
+import { Animated, Modal, Text, View } from "react-native";
 
 interface Props {
   visible: boolean;
   type?: "success" | "error";
   message: string;
-  duration?: number; // auto hide duration in ms
+  duration?: number;
   onHide?: () => void;
 }
 
@@ -18,35 +16,19 @@ const ToastOverlay: React.FC<Props> = ({
   duration = 2000,
   onHide,
 }) => {
-  const translateY = useRef(new Animated.Value(-50)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(-60)).current;
 
   useEffect(() => {
     if (visible) {
-      // Animate in
-      Animated.parallel([
-        Animated.spring(translateY, { toValue: 0, useNativeDriver: true }),
-        Animated.timing(opacityAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      translateY.setValue(-60);
+      Animated.spring(translateY, { toValue: 0, useNativeDriver: true, bounciness: 6 }).start();
 
-      // Auto hide
       const timer = setTimeout(() => {
-        Animated.parallel([
-          Animated.timing(opacityAnim, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(translateY, {
-            toValue: -50,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]).start(() => onHide && onHide());
+        Animated.timing(translateY, {
+          toValue: -60,
+          duration: 250,
+          useNativeDriver: true,
+        }).start(() => onHide && onHide());
       }, duration);
 
       return () => clearTimeout(timer);
@@ -56,21 +38,28 @@ const ToastOverlay: React.FC<Props> = ({
   if (!visible) return null;
 
   return (
-    <Portal>
-      <Animated.View
-        style={{
-          transform: [{ translateY }],
-          opacity: opacityAnim,
-        }}
-        className={`absolute top-16 left-1/2 -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg ${
-          type === "success" ? "bg-green-600" : "bg-red-600"
-        }`}
-      >
-        <Text className="text-white text-center font-MetropolisMedium">
-          {message}
-        </Text>
-      </Animated.View>
-    </Portal>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="none"
+      statusBarTranslucent
+    >
+      <View className="flex-1 items-start justify-start pt-16 px-4">
+        <Animated.View
+          style={{
+            transform: [{ translateY }],
+            alignSelf: "center",
+          }}
+          className={`px-6 py-4 rounded-lg shadow-lg ${
+            type === "success" ? "bg-green-600" : "bg-red-600"
+          }`}
+        >
+          <Text className="text-white text-center font-MetropolisMedium">
+            {message}
+          </Text>
+        </Animated.View>
+      </View>
+    </Modal>
   );
 };
 

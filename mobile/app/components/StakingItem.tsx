@@ -75,17 +75,13 @@ const StakingItem: React.FC<Props> = ({
       {item.state === "proceeding" && (
         <TouchableOpacity
           onPress={() => handleEarlyUnstake(item.id)}
-          // Keep only layout/positioning styles here
-          className="mt-4 w-28 rounded-2xl mx-auto overflow-hidden" // Removed rounded-xl and bg-white
+          className="mt-4 w-28 rounded-2xl mx-auto overflow-hidden"
         >
           <LinearGradient
-            // Colors matching the gray gradient
             colors={["#A0A0A0", "#808080", "#606060"]}
-            // Start and end points for a horizontal gradient
-            start={[0, 0]} // x:0, y:0 (top-left)
-            end={[1, 0]} // x:1, y:0 (top-right)
-            // Apply all visual styles including rounded corners, padding, and alignment
-            className="rounded-2xl py-2 items-center justify-center" // Added w-full h-full to fill parent
+            start={[0, 0]}
+            end={[1, 0]}
+            style={{ paddingVertical: 8, borderRadius: 16, alignItems: "center", justifyContent: "center" }}
           >
             <Text className="text-black font-bold text-base">
               {t("staking.unstake")}

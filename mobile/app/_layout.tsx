@@ -7,7 +7,6 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useEffect, useState } from "react";
 import { Linking } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import "./global.css";
 import MyStatusBar from "./components/AppStatusBar";
 import { Provider } from "react-redux";
@@ -103,7 +102,6 @@ export default function RootLayout() {
               </Stack>
               <LoadingOverlay />
               <InfoOverlay />
-              <Toast />
             </SafeAreaView>
           </SafeAreaProvider>
         </GluestackUIProvider>

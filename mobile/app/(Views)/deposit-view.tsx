@@ -68,11 +68,14 @@ const Deposit = () => {
   };
 
   const handleNext = () => {
-    if (!depositAmount || parseFloat(depositAmount) < parseFloat(minDeposit)) {
+    const parsed = parseFloat(depositAmount);
+    const min = parseFloat(minDeposit);
+
+    if (!depositAmount || isNaN(parsed) || isNaN(min) || parsed < min) {
       setInfoAlertState({
         type: "error",
         text: t("deposit.min_deposit_error", {
-          amount: minDeposit,
+          amount: minDeposit ?? "—",
           symbol: displaySymbol,
         }),
       });
@@ -162,14 +165,14 @@ const Deposit = () => {
             </View>
           </View>
 
-          <InfoAlert
-            {...infoAlertState}
-            visible={infoAlertVisible}
-            setVisible={setInfoAlertVisible}
-            onDismiss={() => {}}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
+      <InfoAlert
+        {...infoAlertState}
+        visible={infoAlertVisible}
+        setVisible={setInfoAlertVisible}
+        onDismiss={() => {}}
+      />
     </View>
   );
 };

@@ -1,12 +1,12 @@
 name: Deploy iOS
 
-on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        type: string
-        description: Branch to build from
-        default: master
+"on":
+  workflow_dispatch: {}
+  push:
+    branches:
+      - release
+    paths:
+      - mobile/**
 
 jobs:
   build_ios:

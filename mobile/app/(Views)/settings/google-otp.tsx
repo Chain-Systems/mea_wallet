@@ -1,6 +1,6 @@
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import useUser from "@/hooks/api/useUser";
-import QRCodeStyled from "react-native-qrcode-styled";
+import QRCode from "react-native-qrcode-svg";
 import { setTwoFAData } from "@/src/features/user/userSlice";
 import { RootState } from "@/src/store";
 import { useAppDispatch } from "@/src/store/hooks";
@@ -128,7 +128,7 @@ const GoogleOTP = () => {
             <View className="w-full">
               {/* QR Code */}
               <View className="items-center">
-                {twoFAData ? (
+                {twoFAData && twoFAData.qrUrl ? (
                   twoFAData.qrUrl.startsWith("http") ? (
                     <Image
                       source={{ uri: twoFAData.qrUrl }}
@@ -136,18 +136,13 @@ const GoogleOTP = () => {
                       resizeMode="contain"
                     />
                   ) : (
-                    <QRCodeStyled
-                      data={twoFAData.qrUrl}
-                      style={{ backgroundColor: "white" }}
-                      padding={20}
+                    <QRCode
+                      value={twoFAData.qrUrl}
+                      size={200}
+                      backgroundColor="white"
                     />
                   )
-                ) : (
-                  <View className="w-[200px] h-[200px] border-2 border-gray-400 rounded-md justify-center items-center">
-                    {/* Optional placeholder text or icon */}
-                    <Text className="text-gray-400">QR Code</Text>
-                  </View>
-                )}
+                ) : null}
               </View>
 
               {/* Input with Copy Button */}
@@ -224,17 +219,17 @@ const GoogleOTP = () => {
             </View>
           </View>
         </View>
-        <InfoAlert
-          {...modalState}
-          visible={modalVisible}
-          setVisible={setModalVisible}
-          onDismiss={() => {
-            if (setUpCompleted) {
-              router.back();
-            }
-          }}
-        />
       </ScrollView>
+      <InfoAlert
+        {...modalState}
+        visible={modalVisible}
+        setVisible={setModalVisible}
+        onDismiss={() => {
+          if (setUpCompleted) {
+            router.back();
+          }
+        }}
+      />
     </View>
   );
 };

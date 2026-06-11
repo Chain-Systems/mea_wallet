@@ -1,12 +1,12 @@
 name: Android Preview Build
 
-on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        type: string
-        description: Branch to build from
-        default: master
+"on":
+  workflow_dispatch: {}
+  push:
+    branches:
+      - preview
+    paths:
+      - mobile/**
 
 jobs:
   build_android_preview:

@@ -11,10 +11,10 @@ import {
   View,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/src/store";
 import { setKycCompleted } from "@/src/features/user/userSlice";
+import { showInfo } from "@/src/features/infoOverLaySlice";
 import { BackButton } from "../../components/BackButton";
 import PrimaryButton from "../../components/PrimaryButton";
 import LabeledInput from "../../components/LabeledInput";
@@ -92,7 +92,7 @@ export default function KycReady() {
       server_error: "Server error. Please try again.",
     };
 
-    Toast.show({ type: "error", text1: msgs[status] ?? "Verification failed. Please try again." });
+    dispatch(showInfo({ type: "error", message: msgs[status] ?? "Verification failed. Please try again." }));
     setScreenState("form");
   };
 
@@ -111,7 +111,7 @@ export default function KycReady() {
         if (typeof res === "string") {
           stopPolling();
           await clearSession();
-          Toast.show({ type: "error", text1: "Verification error. Please try again." });
+          dispatch(showInfo({ type: "error", message: "Verification error. Please try again." }));
           setScreenState("form");
           return;
         }
@@ -169,15 +169,15 @@ export default function KycReady() {
 
   const handleSubmit = async () => {
     if (!name.trim()) {
-      Toast.show({ type: "error", text1: "Please enter your full name." });
+      dispatch(showInfo({ type: "error", message: "Please enter your full name." }));
       return;
     }
     if (!birth.trim()) {
-      Toast.show({ type: "error", text1: "Please enter your date of birth." });
+      dispatch(showInfo({ type: "error", message: "Please enter your date of birth." }));
       return;
     }
     if (!isValidBirth(birth.trim())) {
-      Toast.show({ type: "error", text1: "Date of birth must be YYYY-MM-DD format." });
+      dispatch(showInfo({ type: "error", message: "Date of birth must be YYYY-MM-DD format." }));
       return;
     }
 
@@ -189,7 +189,7 @@ export default function KycReady() {
           router.push("/(Views)/kyc/certification");
           return;
         }
-        Toast.show({ type: "error", text1: res || "Failed to save." });
+        dispatch(showInfo({ type: "error", message: res || "Failed to save." }));
         return;
       }
       if (res.status === "already_kyc_verified") {
@@ -198,7 +198,7 @@ export default function KycReady() {
       }
       router.push("/(Views)/kyc/certification");
     } catch {
-      Toast.show({ type: "error", text1: "An error occurred. Please try again." });
+      dispatch(showInfo({ type: "error", message: "An error occurred. Please try again." }));
     } finally {
       setSaving(false);
     }

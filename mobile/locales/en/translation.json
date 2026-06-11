@@ -245,6 +245,7 @@
     "invalid_address": "Please enter a valid withdrawal address.",
     "invalid_amount": "Please enter a valid withdrawal amount.",
     "insufficient_balance": "Insufficient balance. Available: {{balance}} {{symbol}}",
+    "kyc_required_above": "Withdrawals of $1,000 or more require KYC verification.",
     "next": "NEXT"
   },
   "lockup": {
