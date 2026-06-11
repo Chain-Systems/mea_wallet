@@ -22,9 +22,9 @@ const SelectToken2 = () => {
             </Text>
             <Pressable
               onPress={() => {}}
-              className="text-[17px] absolute group right-2 font-medium leading-[22px] text-gray-1200"
+              className="text-[17px] absolute right-2 font-medium leading-[22px] text-gray-1200"
             >
-              <Text className="text-gray-1200 font-medium group-active:text-pink-1100 ">
+              <Text className="text-gray-1200 font-medium">
                 Next
               </Text>
             </Pressable>
