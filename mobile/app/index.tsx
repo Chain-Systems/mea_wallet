@@ -19,7 +19,7 @@ export default function HomeScreen() {
   // Use the custom hook to check for updates
   useFocusEffect(
     React.useCallback(() => {
-      if (sessionTokenExists === "true" || sessionTokenExists === true) {
+      if (sessionTokenExists === "true") {
         router.replace("/(Tabs)/home");
       } else {
         router.replace("/get-started");
