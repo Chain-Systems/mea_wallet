@@ -6,9 +6,7 @@ on:
     branches: [main, preview, release]
     paths:
       - mobile/locales/**
-  pull_request:
-    paths:
-      - mobile/locales/**
+  pull_request: {}
 
 jobs:
   validate:
