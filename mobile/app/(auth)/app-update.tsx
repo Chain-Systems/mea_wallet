@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Linking, Platform, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Linking, Platform, Text, View } from "react-native";
 import * as Application from "expo-application";
-import InAppUpdates, { IAUUpdateKind } from "sp-react-native-in-app-updates";
+import InAppUpdates, {
+  IAUInstallStatus,
+  IAUUpdateKind,
+} from "sp-react-native-in-app-updates";
 import { useTranslation } from "react-i18next";
 import PrimaryButton from "../components/PrimaryButton";
 import {
@@ -24,6 +27,9 @@ const detectAndroidSource = async (): Promise<InstallSource> => {
 const UpdateAppPage = () => {
   const { t } = useTranslation();
   const [source, setSource] = useState<InstallSource | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -33,12 +39,47 @@ const UpdateAppPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    Animated.timing(progressAnim, {
+      toValue: progress,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [progress]);
+
   const handleUpdate = async () => {
     if (source === "play_store") {
       try {
         const inAppUpdates = new InAppUpdates(false);
+        setDownloading(true);
+
+        const listener = (downloadStatus: any) => {
+          switch (downloadStatus.status) {
+            case IAUInstallStatus.DOWNLOADING:
+              setProgress(
+                Math.floor(
+                  (downloadStatus.bytesDownloaded /
+                    downloadStatus.totalBytesToDownload) *
+                    100
+                )
+              );
+              break;
+            case IAUInstallStatus.DOWNLOADED:
+              inAppUpdates.installUpdate();
+              break;
+            case IAUInstallStatus.INSTALLED:
+            case IAUInstallStatus.CANCELED:
+            case IAUInstallStatus.FAILED:
+              setDownloading(false);
+              inAppUpdates.removeStatusUpdateListener(listener);
+              break;
+          }
+        };
+
+        inAppUpdates.addStatusUpdateListener(listener);
         inAppUpdates.startUpdate({ updateType: IAUUpdateKind.IMMEDIATE });
       } catch {
+        setDownloading(false);
         Linking.openURL(PLAY_STORE_URL);
       }
       return;
@@ -46,12 +87,12 @@ const UpdateAppPage = () => {
 
     if (source === "app_store") {
       const storeUrl = `itms-apps://itunes.apple.com/app/id${APP_STORE_ID}`;
-      const canOpen = APP_STORE_ID !== "123456789" && (await Linking.canOpenURL(storeUrl));
+      const canOpen =
+        APP_STORE_ID !== "123456789" && (await Linking.canOpenURL(storeUrl));
       Linking.openURL(canOpen ? storeUrl : WEBSITE_DOWNLOAD_URL);
       return;
     }
 
-    // sideloaded / direct website install
     Linking.openURL(WEBSITE_DOWNLOAD_URL);
   };
 
@@ -74,13 +115,32 @@ const UpdateAppPage = () => {
           </Text>
         </View>
 
-        <View className="w-full flex mt-8">
-          <PrimaryButton
-            className="p-4"
-            text={source ? updateLabel : t("update.button")}
-            onPress={handleUpdate}
-          />
-        </View>
+        {downloading ? (
+          <View className="w-full flex-col items-center mt-8">
+            <Text className="text-white text-base font-medium mb-2">
+              {t("update.downloading")} {progress}%
+            </Text>
+            <View className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+              <Animated.View
+                className="h-full bg-purple-500 rounded-full"
+                style={{
+                  width: progressAnim.interpolate({
+                    inputRange: [0, 100],
+                    outputRange: ["0%", "100%"],
+                  }),
+                }}
+              />
+            </View>
+          </View>
+        ) : (
+          <View className="w-full flex mt-8">
+            <PrimaryButton
+              className="p-4"
+              text={source ? updateLabel : t("update.button")}
+              onPress={handleUpdate}
+            />
+          </View>
+        )}
       </View>
     </View>
   );
