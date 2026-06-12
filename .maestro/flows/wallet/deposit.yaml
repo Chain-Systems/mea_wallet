@@ -1,0 +1,44 @@
+appId: com.meccain.ping
+tags:
+  - regression
+---
+# Flow: Deposit — tap token row from home, navigate to deposit/QR screen
+
+# Authenticate into the app (resets state, launches, signs in, waits for Home)
+- runFlow: ../_helpers/login.yaml
+
+# Confirm we are on the Home screen
+- extendedWaitUntil:
+    visible:
+      text: "Home"
+    timeout: 5000
+
+# Tap the "Receive" quick-action button on the home screen.
+# This navigates to the receive-items screen listing tokens with QR icons.
+- tapOn:
+    text: "Receive"
+
+# Wait for the Receive items screen to appear
+- extendedWaitUntil:
+    visible:
+      text: "Receive"
+    timeout: 8000
+
+# Tap the first token row in the list to open the QR/address screen.
+# The rows have a QR icon button — tap index 0.
+# Try by id first; if unavailable Maestro falls back to visible element.
+- tapOn:
+    id: "QRIcon"
+    index: 0
+
+# Wait for the deposit address / QR screen to appear
+# Screen header contains "Address" (e.g. "Your USDT Address")
+- extendedWaitUntil:
+    visible:
+      text: "Address"
+    timeout: 8000
+
+# Assert QR code view is loaded by checking for the "Share" button
+# which is always rendered adjacent to the QR code on the address screen
+- assertVisible:
+    text: "Share"

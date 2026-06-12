@@ -1,0 +1,39 @@
+appId: com.meccain.ping
+---
+# Helper: Resets state, launches app, navigates from Get Started → Sign In,
+# fills credentials and waits until the Home tab bar is visible.
+
+- launchApp:
+    clearState: true
+
+# Get Started screen: tap "Login" (i18n: auth.get_started.existing_wallet)
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+# Fill email
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+# Fill password
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+# Dismiss keyboard before submitting
+- hideKeyboard
+
+# Submit
+- tapOn:
+    text: "Sign In"
+
+# Wait for Home screen (bottom tab "Home" is the reliable anchor)
+- extendedWaitUntil:
+    visible:
+      text: "Home"
+    timeout: 15000

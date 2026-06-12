@@ -1,0 +1,110 @@
+appId: com.meccain.ping
+tags:
+  - smoke
+---
+# Flow: Sign In — covers three cases sequentially:
+#   Case 1: Happy path — valid credentials navigate to Home
+#   Case 2: Wrong password — error popup appears
+#   Case 3: Locked account — "Account Unlock" action visible in error popup
+
+# ─────────────────────────────────────────────
+# CASE 1: Valid login (happy path)
+# ─────────────────────────────────────────────
+
+- launchApp:
+    clearState: true
+
+# Navigate from Get Started to Sign In
+# i18n: auth.get_started.existing_wallet = "Login"
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+- hideKeyboard
+
+- tapOn:
+    text: "Sign In"
+
+- extendedWaitUntil:
+    visible:
+      text: "Home"
+    timeout: 15000
+
+# ─────────────────────────────────────────────
+# CASE 2: Wrong password — error popup
+# ─────────────────────────────────────────────
+
+- launchApp:
+    clearState: true
+
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Enter Password"
+# Intentionally wrong password to trigger error popup
+- inputText: "wrong_password_12345"
+
+- tapOn:
+    text: "Sign In"
+
+# Error popup (InfoPopup) should appear with a login error title
+# i18n: auth.signin.login_error = "Login Failed"
+- extendedWaitUntil:
+    visible:
+      text: "Login Failed"
+    timeout: 10000
+
+# ─────────────────────────────────────────────
+# CASE 3: Locked account — "Account Unlock" action in popup
+# Note: Requires a known-locked account. This verifies the unlock CTA appears.
+# ─────────────────────────────────────────────
+
+- launchApp:
+    clearState: true
+
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+- tapOn:
+    text: "Sign In"
+
+# When account is locked, the popup shows an "Account Unlock" action button (hardcoded text in signin.tsx)
+- extendedWaitUntil:
+    visible:
+      text: "Account Unlock"
+    timeout: 10000

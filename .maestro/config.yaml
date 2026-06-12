@@ -1,0 +1,10 @@
+appId: com.meccain.ping
+env:
+  API_BASE_URL: https://mapi.pingwallet.info
+  TEST_EMAIL: ${TEST_EMAIL}
+  TEST_PASSWORD: ${TEST_PASSWORD}
+  TEST_PIN: ${TEST_PIN}
+flows:
+  - flows/auth/**
+  - flows/wallet/**
+  - scenarios/**

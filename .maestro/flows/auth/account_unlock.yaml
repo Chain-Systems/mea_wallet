@@ -1,0 +1,123 @@
+appId: com.meccain.ping
+tags:
+  - regression
+---
+# Flow: Account Unlock — covers two region paths:
+#   Path A: CN (中文)  — uses email OTP via "Send verification code"
+#   Path B: GB (Global) — uses Google Authenticator OTP, no email send button
+
+# ─────────────────────────────────────────────
+# PATH A: CN (中文) — Email OTP unlock
+# ─────────────────────────────────────────────
+
+- launchApp:
+    clearState: true
+
+# Navigate from Get Started → Sign In
+# i18n: auth.get_started.existing_wallet = "Login"
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+# Tap "Account Unlock" link (hardcoded text in signin.tsx)
+- tapOn:
+    text: "Account Unlock"
+
+- extendedWaitUntil:
+    visible:
+      text: "Account Unlock"
+    timeout: 10000
+
+# Switch to CN region (label: "中文")
+- tapOn:
+    text: "中文"
+
+# Enter ID / email
+# Placeholder in account-unlock.tsx: "Enter ID"
+- tapOn:
+    text: "Enter ID"
+- inputText: ${TEST_EMAIL}
+
+# Trigger email OTP send (only visible in CN mode)
+- tapOn:
+    text: "Send verification code"
+
+# Countdown should start — wait for "Resend after" text to confirm OTP was sent
+- extendedWaitUntil:
+    visible:
+      text: "Resend after"
+    timeout: 10000
+
+# Enter the email OTP code
+# Placeholder: "Enter email verification code" (CN mode)
+- tapOn:
+    text: "Enter email verification code"
+- inputText: "123456"
+
+# Submit unlock
+- tapOn:
+    text: "Unlock Account"
+
+# Wait for success popup ("Unlocked") or redirect to signin
+- extendedWaitUntil:
+    visible:
+      text: "Sign In"
+    timeout: 15000
+
+# ─────────────────────────────────────────────
+# PATH B: GB (Global) — Google OTP unlock
+# ─────────────────────────────────────────────
+
+- launchApp:
+    clearState: true
+
+# Navigate from Get Started → Sign In
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+# Tap "Account Unlock" link
+- tapOn:
+    text: "Account Unlock"
+
+- extendedWaitUntil:
+    visible:
+      text: "Account Unlock"
+    timeout: 10000
+
+# "Global" (GB) is the default region
+- assertVisible:
+    text: "Global"
+
+# GB region does NOT show "Send verification code" button (CN-only feature)
+- assertNotVisible:
+    text: "Send verification code"
+
+# Enter ID / email
+- tapOn:
+    text: "Enter ID"
+- inputText: ${TEST_EMAIL}
+
+# Enter the Google Authenticator OTP
+# Placeholder: "Enter Google OTP code" (GB mode)
+- tapOn:
+    text: "Enter Google OTP code"
+- inputText: ${TEST_PIN}
+
+# Submit unlock
+- tapOn:
+    text: "Unlock Account"
+
+# Wait for success popup or redirect to signin
+- extendedWaitUntil:
+    visible:
+      text: "Sign In"
+    timeout: 15000
