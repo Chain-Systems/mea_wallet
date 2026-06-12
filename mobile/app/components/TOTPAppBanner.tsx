@@ -25,7 +25,9 @@ export default function TOTPAppBanner() {
         {t("settings.totp_any_app")}
       </Text>
       <Text className="text-xs font-normal leading-[18px] text-center text-gray-1000 mb-3">
-        {t("settings.totp_app_examples")}
+        {isChina
+          ? t("settings.totp_app_examples")
+          : "e.g. Google Authenticator, Microsoft Authenticator, or any other TOTP-compatible app from your phone's app store."}
       </Text>
 
       {isChina ? (
