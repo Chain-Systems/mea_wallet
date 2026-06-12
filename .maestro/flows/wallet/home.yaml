@@ -7,10 +7,10 @@ tags:
 # Authenticate (resets state, launches app, signs in, waits for Home)
 - runFlow: ../_helpers/login.yaml
 
-# Confirm Home tab is visible (bottom tab bar anchor)
+# Confirm Home screen content is visible (tab bar is icon-only, no "Home" label)
 - extendedWaitUntil:
     visible:
-      text: "Home"
+      text: "Receive"
     timeout: 5000
 
 # The total asset value is shown with a "$" prefix in the hero section
