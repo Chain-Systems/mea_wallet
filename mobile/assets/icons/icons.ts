@@ -544,7 +544,7 @@ export const icons = {
   `,
 
   otpIcon: (
-    color: string = "none",
+    color: string = "white",
     width: string = "20px",
     height: string = "22px"
   ) => `
