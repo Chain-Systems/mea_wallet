@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
 import { TokenBalances } from "@/src/types/balance";
 import { getDisplaySymbol, parseNumberForView } from "@/utils/ui";
-import { BackButton } from "../../../components/BackButton";
+import ScreenHeader from "../../../components/ScreenHeader";
 import { TransferHistoryItem } from "@/src/api/types/earn/transfer";
 import useEarn from "@/hooks/api/useEarn";
 import TransferHistoryList from "@/app/components/earn/TransferHistoryList";
@@ -71,12 +71,7 @@ const History = () => {
       <View className="w-full h-full mx-auto">
         <ScrollView>
           <View className="w-full ">
-            <View className="items-center relative ">
-              <BackButton />
-              <Text className="text-lg font-semibold text-white">
-                {t("earn.transfer.history.title")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("earn.transfer.history.title")} />
 
             <View className="relative mt-10 flex flex-col justify-between">
               <View>

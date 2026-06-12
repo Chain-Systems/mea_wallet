@@ -242,9 +242,14 @@ export default function HomeScreen() {
                 onPress={() => setShowEditProfile(true)}
                 className="bg-pink-1100 w-12 h-12 rounded-full items-center justify-center"
               >
-                <Text className="text-2xl font-medium text-white leading-[22px] tracking-[-0.36px]">
+                <AppText
+                  loading={!details}
+                  shimmerWidth={32}
+                  shimmerHeight={24}
+                  className="text-2xl font-medium text-white leading-[22px] tracking-[-0.36px]"
+                >
                   {details ? details.image : ""}
-                </Text>
+                </AppText>
               </Pressable>
               <View className="flex-1 items-start gap-2">
                 <Pressable
@@ -274,9 +279,14 @@ export default function HomeScreen() {
 
             <View className="items-center mt-[46px] mb-10">
               {/* <SvgIcon name="spaceman" width="74" height="74" /> */}
-              <Text className="text-white text-[37px] mt-2 font-semibold">
+              <AppText
+                loading={loading}
+                shimmerWidth={200}
+                shimmerHeight={36}
+                className="text-white text-[37px] mt-2 font-semibold"
+              >
                 ${parseNumberForView(totalAssetValue)}
-              </Text>
+              </AppText>
               {/* <View className="flex-row items-center justify-center gap-1.5">
                 <Text className="text-base font-medium text-pink-1200">
                   ${parseFloat(totalAssetValue || "0") * 1.0}
@@ -387,11 +397,16 @@ export default function HomeScreen() {
                       />
                       <View>
                         <View className="flex flex-row items-center gap-2">
-                          <Text className="text-[17px] font-medium leading-5 text-white">
+                          <AppText
+                            loading={loading}
+                            shimmerWidth={100}
+                            shimmerHeight={18}
+                            className="text-[17px] font-medium leading-5 text-white"
+                          >
                             {token === "usdt_savings"
                               ? "Balance Yield"
                               : getDisplaySymbol(token)}
-                          </Text>
+                          </AppText>
                           {token === "usdt_savings" && (
                             <View className="flex-row gap-2">
                               <TouchableOpacity
@@ -408,23 +423,38 @@ export default function HomeScreen() {
                           )}
                         </View>
 
-                        <Text className="text-[15px] font-normal leading-5 text-gray-1200">
+                        <AppText
+                          loading={loading}
+                          shimmerWidth={80}
+                          shimmerHeight={14}
+                          className="text-[15px] font-normal leading-5 text-gray-1200"
+                        >
                           {parseNumberForView(amount)} {getDisplaySymbol(token)}
-                        </Text>
+                        </AppText>
                       </View>
                     </View>
                     {token !== "usdt_savings" && (
                       <View>
-                        <Text className="text-[17px] font-medium leading-5 text-white text-right">
+                        <AppText
+                          loading={loading}
+                          shimmerWidth={70}
+                          shimmerHeight={18}
+                          className="text-[17px] font-medium leading-5 text-white text-right"
+                        >
                           $
                           {getTokensValue(
                             token === "usdt_savings" ? "usdt" : token,
                             amount
                           )}
-                        </Text>
-                        <Text className="text-[15px] font-normal leading-5 text-gray-1200 text-right">
+                        </AppText>
+                        <AppText
+                          loading={loading}
+                          shimmerWidth={60}
+                          shimmerHeight={14}
+                          className="text-[15px] font-normal leading-5 text-gray-1200 text-right"
+                        >
                           ${getPrice(token === "usdt_savings" ? "usdt" : token)}
-                        </Text>
+                        </AppText>
                       </View>
                     )}
                     {token === "usdt_savings" && (
@@ -477,21 +507,41 @@ export default function HomeScreen() {
                         className="w-12 h-12 rounded-full"
                       />
                       <View>
-                        <Text className="text-[17px] font-medium leading-5 text-white">
+                        <AppText
+                          loading={loading}
+                          shimmerWidth={100}
+                          shimmerHeight={18}
+                          className="text-[17px] font-medium leading-5 text-white"
+                        >
                           {token.toUpperCase()}
-                        </Text>
-                        <Text className="text-[15px] font-normal leading-5 text-gray-1200">
+                        </AppText>
+                        <AppText
+                          loading={loading}
+                          shimmerWidth={80}
+                          shimmerHeight={14}
+                          className="text-[15px] font-normal leading-5 text-gray-1200"
+                        >
                           {parseNumberForView(amount)} {token.toUpperCase()}
-                        </Text>
+                        </AppText>
                       </View>
                     </View>
                     <View>
-                      <Text className="text-[17px] font-medium leading-5 text-white text-right">
+                      <AppText
+                        loading={loading}
+                        shimmerWidth={70}
+                        shimmerHeight={18}
+                        className="text-[17px] font-medium leading-5 text-white text-right"
+                      >
                         ${getTokensValue(token, amount)}
-                      </Text>
-                      <Text className="text-[15px] font-normal leading-5 text-gray-1200 text-right">
+                      </AppText>
+                      <AppText
+                        loading={loading}
+                        shimmerWidth={60}
+                        shimmerHeight={14}
+                        className="text-[15px] font-normal leading-5 text-gray-1200 text-right"
+                      >
                         ${getPrice(token)}
-                      </Text>
+                      </AppText>
                     </View>
                     <View className="absolute flex top-2 h-full w-full items-center justify-start border-white rounded-2xl text-white">
                       <Text className="ml-8 border border-gray-600 text-gray-200 rounded-full px-3 py-1  leading-none">
@@ -528,9 +578,14 @@ export default function HomeScreen() {
               {details ? details.image : ""}
             </Text>
           </View>
-          <Text className="text-[22px] font-medium text-white mt-3 mb-6">
+          <AppText
+            loading={!email}
+            shimmerWidth={160}
+            shimmerHeight={24}
+            className="text-[22px] font-medium text-white mt-3 mb-6"
+          >
             {email}
-          </Text>
+          </AppText>
           <PrimaryButton
             onPress={() => {
               setShowEditProfile(false);

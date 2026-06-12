@@ -17,7 +17,7 @@ import { RootState } from "@/src/store";
 import { parseNumberForView, truncateAddress } from "@/utils/ui";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
 import useWithdrawl from "@/hooks/api/useWithdrawl";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
@@ -121,12 +121,7 @@ const ConfirmWithdraw = () => {
         <ScrollView className="h-full" keyboardShouldPersistTaps="handled">
           <View className="w-full h-full max-w-5xl mx-auto">
             <View className="w-full h-full">
-              <View className="items-center relative">
-                <BackButton />
-                <Text className="text-lg font-semibold text-white">
-                  {t("withdrawal.title")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("withdrawal.title")} />
 
               <View className="relative mt-10">
                 <View className="mb-4">

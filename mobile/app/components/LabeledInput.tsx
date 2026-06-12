@@ -38,11 +38,19 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
 }) => {
   const { t } = useTranslation();
   const [showSecure, setShowSecure] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   const isDob = type === "dob";
   const handleChangeText = isDob
     ? (raw: string) => onChangeText(formatDob(raw))
     : onChangeText;
+
+  // Border state: error > focus > default
+  const borderClass = errorText
+    ? "border-red-500"
+    : focused
+    ? "border-blue-500"
+    : "border-transparent";
 
   return (
     <View className="mb-4">
@@ -62,9 +70,10 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
           onChangeText={handleChangeText}
           secureTextEntry={isSecure && !showSecure}
           placeholderTextColor="#6b7280"
-          className={`text-[17px] text-white font-medium pl-8 pr-14 bg-black-1200 w-full h-[71px] rounded-[15px] border ${
-            errorText ? "border-red-500" : "border-transparent"
-          }`}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          className={`text-[17px] text-white font-medium pl-8 pr-14 bg-black-1200 w-full h-[71px] rounded-[15px] border ${borderClass}`}
+          style={{ includeFontPadding: false }}
         />
         {isSecure && (
           <TouchableOpacity

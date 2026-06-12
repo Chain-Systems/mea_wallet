@@ -4,12 +4,11 @@ import QRCode from "react-native-qrcode-svg";
 import { setTwoFAData } from "@/src/features/user/userSlice";
 import { RootState } from "@/src/store";
 import { useAppDispatch } from "@/src/store/hooks";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
-  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -20,7 +19,7 @@ import { useSelector } from "react-redux";
 import * as Clipboard from "expo-clipboard";
 import PrimaryButton from "@/app/components/PrimaryButton";
 import { useTranslation } from "react-i18next";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
 const GoogleOTP = () => {
@@ -117,12 +116,7 @@ const GoogleOTP = () => {
     <View className="flex-1 bg-black-1000">
       <ScrollView className="flex-1">
         <View className="w-full h-full max-w-5xl mx-auto justify-center">
-          <View className="items-center">
-            <BackButton />
-            <Text className="text-lg font-semibold text-white">
-              {t("settings.google_otp")}
-            </Text>
-          </View>
+          <ScreenHeader title={t("settings.google_otp")} />
 
           <View className="my-auto">
             <View className="w-full">

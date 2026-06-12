@@ -1,4 +1,3 @@
-import EyeIcon from "@/assets/images/eye-icon.svg";
 import InforIcon from "@/assets/images/info-icon.svg";
 import {
   Checkbox,
@@ -10,7 +9,6 @@ import {
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   Image,
   ScrollView,
   Text,
@@ -22,6 +20,7 @@ import { isValidPublicKey } from "@/utils/web3";
 import useAuth from "@/hooks/api/useAuth";
 import PrimaryButton from "../components/PrimaryButton";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
+import LabeledInput from "../components/LabeledInput";
 import { STORAGE_KEYS } from "@/storage/keys";
 import storage from "@/storage";
 import useDeposit from "@/hooks/api/useDeposit";
@@ -51,8 +50,6 @@ const Signup: React.FC = () => {
   const [wallet, setWallet] = useState("");
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showVerifyPassword, setShowVerifyPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
 
@@ -337,51 +334,23 @@ const Signup: React.FC = () => {
 
             {/* Password Field */}
             <View className="mb-2">
-              <View className="flex-row items-center gap-2 mb-3">
-                <View className="w-6 h-6 rounded-full bg-black-1200 border-[5px] border-gray-1100" />
-                <Text className="text-base font-medium text-white">
-                  {t("auth.signup.password")}{" "}
-                  <Text className="text-pink-1200">*</Text>
-                </Text>
-              </View>
-              <View className="relative">
-                <TextInput
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                  }}
-                  secureTextEntry={!showPassword}
-                  placeholder={t("auth.signup.enter_password")}
-                  placeholderTextColor="#6b7280"
-                  className="text-[17px] text-white font-medium pl-8 pr-14 bg-black-1200 w-full h-[71px] rounded-[15px]"
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword((prev) => !prev)}
-                  className="absolute p-2 top-1/2 right-4 -translate-y-1/2"
-                >
-                  {!showPassword && (
-                    <Image
-                      source={require("../../assets/images/eye.png")}
-                      className="w-6 h-6"
-                      tintColor={"white"}
-                    />
-                  )}
-                  {showPassword && (
-                    <Image
-                      source={require("../../assets/images/eye_close.png")}
-                      className="w-6 h-6"
-                      tintColor={"white"}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-              {inputError &&
-              (errorType === ErrorType.INVALID_PASSWORD ||
-                errorType === ErrorType.MISMATCH_PASS_REQ) ? (
-                <Text className="text-red-500 text-xs mt-1 ml-2">
-                  {inputError}
-                </Text>
-              ) : null}
+              <LabeledInput
+                label={t("auth.signup.password")}
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                }}
+                placeholder={t("auth.signup.enter_password")}
+                isSecure
+                required
+                errorText={
+                  inputError &&
+                  (errorType === ErrorType.INVALID_PASSWORD ||
+                    errorType === ErrorType.MISMATCH_PASS_REQ)
+                    ? inputError
+                    : null
+                }
+              />
               <Text className="text-[15px] mt-2 font-medium leading-[22px] text-gray-1200 px-8">
                 {t("auth.signup.password_hint")}
               </Text>
@@ -389,49 +358,21 @@ const Signup: React.FC = () => {
 
             {/* Match Password Field */}
             <View className="mb-2">
-              <View className="flex-row items-center gap-2 mb-3">
-                <View className="w-6 h-6 rounded-full bg-black-1200 border-[5px] border-gray-1100" />
-                <Text className="text-base font-medium text-white">
-                  {t("auth.signup.verify_password")}{" "}
-                  <Text className="text-pink-1200">*</Text>
-                </Text>
-              </View>
-              <View className="relative">
-                <TextInput
-                  value={verifyPassword}
-                  onChangeText={(text) => {
-                    setVerifyPassword(text);
-                  }}
-                  secureTextEntry={!showVerifyPassword}
-                  placeholder={t("auth.signup.enter_verify_password")}
-                  placeholderTextColor="#6b7280"
-                  className="text-[17px] text-white font-medium pl-8 pr-14 bg-black-1200 w-full h-[71px] rounded-[15px]"
-                />
-                <TouchableOpacity
-                  onPress={() => setShowVerifyPassword((prev) => !prev)}
-                  className="absolute p-2 top-1/2 right-4 -translate-y-1/2"
-                >
-                  {!showVerifyPassword && (
-                    <Image
-                      source={require("../../assets/images/eye.png")}
-                      className="w-6 h-6"
-                      tintColor={"white"}
-                    />
-                  )}
-                  {showVerifyPassword && (
-                    <Image
-                      source={require("../../assets/images/eye_close.png")}
-                      className="w-6 h-6"
-                      tintColor={"white"}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-              {inputError && errorType === ErrorType.MISMATCH_PASSWORD ? (
-                <Text className="text-red-500 text-xs mt-1 ml-2">
-                  {inputError}
-                </Text>
-              ) : null}
+              <LabeledInput
+                label={t("auth.signup.verify_password")}
+                value={verifyPassword}
+                onChangeText={(text) => {
+                  setVerifyPassword(text);
+                }}
+                placeholder={t("auth.signup.enter_verify_password")}
+                isSecure
+                required
+                errorText={
+                  inputError && errorType === ErrorType.MISMATCH_PASSWORD
+                    ? inputError
+                    : null
+                }
+              />
             </View>
 
             {/* Wallet Field */}

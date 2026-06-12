@@ -1,5 +1,3 @@
-import SvgIcon from "@/app/components/SvgIcon";
-import { useNavigation } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,10 +8,10 @@ import {
   TextInput,
   View,
 } from "react-native";
+import ScreenHeader from "../../components/ScreenHeader";
 
 const ContactForm = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation();
   const [message, setMessage] = useState("");
   const maxLength = 500;
 
@@ -29,17 +27,7 @@ const ContactForm = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       className="flex-1  bg-black-1000 pt-8 pb-10"
     >
-      <View className="items-center relative">
-        <Pressable
-          onPress={() => navigation.goBack()}
-          className="absolute -left-2 top-0 z-10 p-2"
-        >
-          <SvgIcon name="leftArrow" width="21" height="21" />
-        </Pressable>
-        <Text className="text-lg font-semibold text-white">
-          {t("settings.customer_support")}
-        </Text>
-      </View>
+      <ScreenHeader title={t("settings.customer_support")} />
       <View className="relative mt-6">
         <TextInput
           value={message}

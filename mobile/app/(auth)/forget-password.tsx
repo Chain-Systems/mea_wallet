@@ -2,16 +2,15 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Image,
-  Alert,
 } from "react-native";
 import SvgIcon from "../components/SvgIcon";
 import utils from "@/utils/index";
 import PrimaryButton from "../components/PrimaryButton";
 import InfoAlert from "../components/InfoAlert";
+import LabeledInput from "../components/LabeledInput";
 import { useTranslation } from "react-i18next";
 import useAuth from "@/hooks/api/useAuth";
 import * as Clipboard from "expo-clipboard";
@@ -97,60 +96,36 @@ const ForgetPassword: React.FC = () => {
             </Text>
 
             {/* Email Field */}
-            <View className="mt-3 mb-2">
-              <View className="flex-row items-center gap-2 mb-3">
-                <View className="w-6 h-6 rounded-full bg-black-1200 border-[5px] border-gray-1100" />
-                <Text className="text-base font-medium text-white">
-                  {t("auth.forgot_password.enter_email")}{" "}
-                  <Text className="text-pink-1200">*</Text>
-                </Text>
-              </View>
-              <TextInput
+            <View className="mt-3">
+              <LabeledInput
+                label={t("auth.forgot_password.enter_email")}
                 value={email}
                 onChangeText={(text) => {
                   setEmail(text);
                   if (emailError) setEmailError(null);
                 }}
                 placeholder={t("auth.forgot_password.placeholder_email")}
-                placeholderTextColor="#6b7280"
-                className="text-[17px] placeholder:text-gray-500 text-white font-medium px-8 bg-black-1200 w-full h-[71px] rounded-[15px]"
                 keyboardType="email-address"
                 autoCapitalize="none"
+                required
+                errorText={emailError}
               />
-              {emailError ? (
-                <Text className="text-red-500 text-xs mt-1 ml-2">
-                  {emailError}
-                </Text>
-              ) : null}
             </View>
 
             {/* OTP Field */}
-            <View className="mt-3 mb-2">
-              <View className="flex-row items-center gap-2 mb-3">
-                <View className="w-6 h-6 rounded-full bg-black-1200 border-[5px] border-gray-1100" />
-                <Text className="text-base font-medium text-white">
-                  {t("auth.forgot_password.google_otp_code")}{" "}
-                  <Text className="text-pink-1200">*</Text>
-                </Text>
-              </View>
-              <TextInput
-                value={otp}
-                onChangeText={(text) => {
-                  setOtp(text);
-                  if (otpError) setOtpError(null);
-                }}
-                placeholder={t("auth.forgot_password.placeholder_otp")}
-                placeholderTextColor="#6b7280"
-                className="text-[17px] placeholder:text-gray-500 text-white font-medium px-8 bg-black-1200 w-full h-[71px] rounded-[15px]"
-                keyboardType="numeric"
-                autoCapitalize="none"
-              />
-              {otpError ? (
-                <Text className="text-red-500 text-xs mt-1 ml-2">
-                  {otpError}
-                </Text>
-              ) : null}
-            </View>
+            <LabeledInput
+              label={t("auth.forgot_password.google_otp_code")}
+              value={otp}
+              onChangeText={(text) => {
+                setOtp(text);
+                if (otpError) setOtpError(null);
+              }}
+              placeholder={t("auth.forgot_password.placeholder_otp")}
+              keyboardType="numeric"
+              autoCapitalize="none"
+              required
+              errorText={otpError}
+            />
 
             {/* Notice */}
             <View className="w-full">

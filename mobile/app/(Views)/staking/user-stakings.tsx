@@ -22,7 +22,7 @@ import { Picker } from "@react-native-picker/picker";
 import StakingItem from "@/app/components/StakingItem";
 import WithdrawalModal from "@/app/components/WithdrawModel";
 import FilterIcon from "@/assets/images/double-arrow.svg";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
@@ -193,12 +193,7 @@ const UserStakings = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full max-w-5xl mx-auto pb-2">
-        <View className="items-center relative mt-4 mb-6">
-          <BackButton />
-          <Text className="text-lg font-semibold text-white">
-            {t("staking.my_staking")}
-          </Text>
-        </View>
+        <ScreenHeader title={t("staking.my_staking")} />
 
         <View className="flex flex-row justify-between items-center mb-2 mt-2">
           <View className="flex-row items-center gap-2">

@@ -10,7 +10,7 @@ import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import useUser from "@/hooks/api/useUser";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "@/src/features/user/userSlice";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 
 const MAX_IMAGE_SIZE_MB = 1; // 🔧 adjust limit as needed
 
@@ -110,12 +110,7 @@ const EditProfile = () => {
     <View className="bg-black-1000">
       <View className="w-full h-full max-w-5xl mx-auto">
         <View className="text-center relative">
-          <View className="items-center">
-            <BackButton />
-            <Text className="text-lg font-semibold text-white">
-              {t("settings.edit_profile")}
-            </Text>
-          </View>
+            <ScreenHeader title={t("settings.edit_profile")} />
 
           <View className="mt-10">
             <View className="w-[111px] mx-auto relative">

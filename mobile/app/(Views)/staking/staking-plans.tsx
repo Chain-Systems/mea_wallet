@@ -1,6 +1,6 @@
 // src/app/(staking)/StakingPlans.tsx
 
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import useStaking, { StakingPlan } from "@/hooks/api/useStaking";
 import { tokenImageMap } from "@/utils/ui";
@@ -217,12 +217,7 @@ const StakingPlans = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full max-w-5xl mx-auto">
-        <View className="items-center relative">
-          <BackButton />
-          <Text className="text-lg font-semibold text-white">
-            {t("staking.staking")}
-          </Text>
-        </View>
+        <ScreenHeader title={t("staking.staking")} />
         <View className="flex flex-row justify-between items-center mb-2 mt-6">
           <View className="flex-row items-center gap-2">
             <View className="w-6 h-6 rounded-full bg-black-1200 border-[5px] border-gray-1100" />

@@ -10,7 +10,7 @@ import {
 import dayjs from "dayjs";
 import useLoan, { LoanOverviewItem } from "@/hooks/api/useLoan";
 import { formatDecimal, parseNumberForView } from "@/utils/ui";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 import SvgIcon from "@/app/components/SvgIcon";
 import InfoPopup from "@/app/components/InfoPopup";
 import ActionPopup from "@/app/components/ActionPopup";
@@ -375,14 +375,7 @@ const LoanOverview = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full max-w-5xl mx-auto pb-2">
-        <View className="items-center relative mb-6">
-          <BackButton />
-          <View className="flex-row items-center gap-2 mt-2">
-            <Text className="text-xl font-semibold text-white">
-              {t("loan.overview")}
-            </Text>
-          </View>
-        </View>
+        <ScreenHeader title={t("loan.overview")} />
 
         <View className="flex flex-row justify-between items-center mb-2 mt-6 px-4">
           <View className="flex-row items-center gap-2">

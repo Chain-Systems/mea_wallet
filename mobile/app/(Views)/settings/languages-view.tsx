@@ -1,12 +1,11 @@
-import { useNavigation } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, Text, View } from "react-native";
 import SvgIcon from "../../components/SvgIcon";
+import ScreenHeader from "../../components/ScreenHeader";
 
 const Language = () => {
   const { t, i18n } = useTranslation();
-  const navigation = useNavigation();
 
   const switchLanguage = (lang: string) => {
     // i18n.changeLanguage(lang);
@@ -15,17 +14,7 @@ const Language = () => {
     <View className="bg-black-1000">
       <View className="w-full h-full max-w-5xl mx-auto  pt-8 pb-10">
         <View className="w-full">
-          <View className="items-center relative">
-            <Pressable
-              onPress={() => navigation.goBack()}
-              className="absolute -left-2 top-0 z-10 p-2"
-            >
-              <SvgIcon name="leftArrow" width="21" height="21" />
-            </Pressable>
-            <Text className="text-lg font-semibold text-white">
-              {t("settings.language")}
-            </Text>
-          </View>
+          <ScreenHeader title={t("settings.language")} />
 
           <View className="relative mt-10">
             {/* Korean Option */}

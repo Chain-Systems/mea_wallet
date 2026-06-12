@@ -30,7 +30,7 @@ import {
 } from "@/src/features/asset/depositSlice";
 import { setMinDeposit } from "@/src/features/token/tokenSlice";
 import { t } from "i18next";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import TokenPreview from "../components/TokenPreview";
 import { TokenQuotes } from "@/src/types/balance";
 import Decimal from "decimal.js";
@@ -104,13 +104,7 @@ const ReceiveItems = () => {
           }
         >
           <View className="w-full">
-            <View className="items-center relative">
-              <BackButton />
-
-              <Text className="text-lg font-semibold text-white">
-                {t("receive.title")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("receive.title")} />
 
             <View className="relative mt-10">
               {Object.entries(balances).map(([tokenSymbol, amount]) => {

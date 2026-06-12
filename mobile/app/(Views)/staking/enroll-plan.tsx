@@ -22,7 +22,7 @@ import Decimal from "decimal.js";
 import { RootState } from "@/src/store";
 import { useSelector } from "react-redux";
 import { TokenBalances } from "@/src/types/balance";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
@@ -177,13 +177,7 @@ const EnrollPlan = () => {
         <ScrollView className="flex-grow-0" keyboardShouldPersistTaps="handled">
           <View className="bg-black-1000 flex-1">
             <View className="w-full mx-auto ">
-              <View className="items-center relative">
-                <BackButton />
-
-                <Text className="text-lg font-semibold text-white">
-                  {t("staking.staking_list")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("staking.staking_list")} />
 
               {/* Plan Details */}
               <View className="mt-10">

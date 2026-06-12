@@ -1,29 +1,18 @@
-import { useNavigation } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import SvgIcon from "../../components/SvgIcon";
+import ScreenHeader from "../../components/ScreenHeader";
 import FAQList from "../faq/faqs-list";
 
 const FaqView = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation();
 
   return (
     <View className="bg-black-1000">
       <View className="w-full h-full max-w-5xl mx-auto pt-8 pb-10">
         <View className="w-full">
-          <View className="items-center relative">
-            <Pressable
-              onPress={() => navigation.goBack()}
-              className="absolute -left-2 top-0 z-10 p-2"
-            >
-              <SvgIcon name="leftArrow" width="21" height="21" />
-            </Pressable>
-            <Text className="text-lg font-semibold text-white">
-              {t("settings.faq")}
-            </Text>
-          </View>
+          <ScreenHeader title={t("settings.faq")} />
 
           <View className="relative mt-10">
             {/* Search Input */}

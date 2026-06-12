@@ -1,8 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
-import SvgIcon from '../../../components/SvgIcon';
+import { RefreshControl, ScrollView, Text, View } from 'react-native';
+import ScreenHeader from '../../../components/ScreenHeader';
 
 const faqs = [
   { 
@@ -63,15 +63,7 @@ export default function FAQDetail() {
     >
       <View className="w-full h-full max-w-5xl mx-auto px-4 pt-8 pb-10">
         <View className="w-full">
-          <View className="items-center relative">
-            <Pressable
-              onPress={() => router.back()}
-              className="absolute -left-2 top-0 z-10 p-2"
-            >
-              <SvgIcon name="leftArrow" width="21" height="21" />
-            </Pressable>
-            <Text className="text-lg font-semibold text-white">{t("faq.title")}</Text>
-          </View>
+          <ScreenHeader title={t("faq.title")} />
 
           <View className="mt-10">
             <Text className='text-[21px] font-semibold text-white'>{faq.id}. {faq.title}</Text>
