@@ -48,6 +48,7 @@ const ConfirmWithdraw = () => {
     {},
   );
   const [withdrawlSuccess, setWithdrawlSuccess] = useState(false);
+  const [kycRequired, setKycRequired] = useState(false);
   const dispatch = useDispatch();
 
   const processWithdraw = async () => {
@@ -84,6 +85,17 @@ const ConfirmWithdraw = () => {
       WithdrawFee: withdrawFees,
     });
     dispatch(hideLoading());
+
+    if (result === "kyc_required") {
+      setInfoAlertState({
+        type: "info",
+        text: t("withdrawal.kyc_verification_notice"),
+        primaryButtonText: t("kyc.verify_now") ?? "Verify Now",
+      });
+      setKycRequired(true);
+      setInfoAlertVisible(true);
+      return;
+    }
 
     if (typeof result === "string") {
       setInfoAlertState({
@@ -224,6 +236,10 @@ const ConfirmWithdraw = () => {
           visible={infoAlertVisible}
           setVisible={setInfoAlertVisible}
           onDismiss={() => {
+            if (kycRequired) {
+              router.replace("/(Views)/kyc/ready");
+              return;
+            }
             if (withdrawlSuccess) {
               if (router.canDismiss()) {
                 router.dismissAll();
