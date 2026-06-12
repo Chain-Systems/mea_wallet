@@ -34,8 +34,10 @@ tags:
 
 - hideKeyboard
 
+# index:1 skips the tab-switcher header (same "Sign In" text, not clickable)
 - tapOn:
     text: "Sign In"
+    index: 1
 
 - extendedWaitUntil:
     visible:
@@ -66,14 +68,17 @@ tags:
 # Intentionally wrong password to trigger error popup
 - inputText: "wrong_password_12345"
 
+- hideKeyboard
+
+# index:1 skips the tab-switcher header
 - tapOn:
     text: "Sign In"
+    index: 1
 
-# Error popup (InfoPopup) should appear with a login error title
-# i18n: auth.signin.login_error = "Login Failed"
+# Error popup — i18n: auth.signin.login_error = "Login Error"
 - extendedWaitUntil:
     visible:
-      text: "Login Failed"
+      text: "Login Error"
     timeout: 10000
 
 # ─────────────────────────────────────────────
@@ -100,10 +105,14 @@ tags:
     text: "Enter Password"
 - inputText: ${TEST_PASSWORD}
 
+- hideKeyboard
+
+# index:1 skips the tab-switcher header
 - tapOn:
     text: "Sign In"
+    index: 1
 
-# When account is locked, the popup shows an "Account Unlock" action button (hardcoded text in signin.tsx)
+# When account is locked, the popup shows an "Account Unlock" action button
 - extendedWaitUntil:
     visible:
       text: "Account Unlock"

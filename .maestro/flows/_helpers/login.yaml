@@ -28,9 +28,10 @@ appId: com.meccain.ping
 # Dismiss keyboard before submitting
 - hideKeyboard
 
-# Submit
+# Submit — index:1 skips the tab-switcher header (same text, not clickable)
 - tapOn:
     text: "Sign In"
+    index: 1
 
 # Wait for Home screen (bottom tab "Home" is the reliable anchor)
 - extendedWaitUntil:
