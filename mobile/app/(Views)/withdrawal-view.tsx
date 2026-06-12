@@ -51,6 +51,7 @@ const WithDrawal = () => {
   const minWithdrawl = useSelector(
     (state: RootState) => state.token.minWithdraw[symbol]
   );
+  const quotes = useSelector((state: RootState) => state.token.quotes || {});
 
   const dispatch = useDispatch();
 
@@ -157,10 +158,9 @@ const WithDrawal = () => {
         return;
       }
 
-      if (
-        amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) &&
-        !kycCompleted
-      ) {
+      const tokenPrice = new Decimal((quotes as any)[symbol] ?? 0);
+      const usdValue = amount.mul(tokenPrice);
+      if (usdValue.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
         router.replace("/(Views)/kyc/ready");
         return;
       }
