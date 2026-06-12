@@ -60,7 +60,7 @@ jobs:
           git checkout -b ${{ steps.ver.outputs.branch }}
           git add mobile/package.json mobile/app.json
           git commit -m "chore(release): bump ${{ inputs.bump }} version ${{ steps.ver.outputs.old }} → ${{ steps.ver.outputs.new }}"
-          git push origin ${{ steps.ver.outputs.branch }}
+          git push --force origin ${{ steps.ver.outputs.branch }}
 
       - name: Create Pull Request
         env:
@@ -70,4 +70,6 @@ jobs:
             --title "chore(release): bump ${{ inputs.bump }} version ${{ steps.ver.outputs.old }} → ${{ steps.ver.outputs.new }}" \
             --body "Automated ${{ inputs.bump }} version bump from \`${{ steps.ver.outputs.old }}\` to \`${{ steps.ver.outputs.new }}\`." \
             --base main \
-            --head ${{ steps.ver.outputs.branch }}
+            --head ${{ steps.ver.outputs.branch }} \
+          || gh pr edit ${{ steps.ver.outputs.branch }} \
+            --title "chore(release): bump ${{ inputs.bump }} version ${{ steps.ver.outputs.old }} → ${{ steps.ver.outputs.new }}"
