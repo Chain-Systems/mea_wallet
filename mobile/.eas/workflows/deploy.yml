@@ -37,22 +37,24 @@ jobs:
   notify_android_success:
     name: Notify Android Success
     needs: [build_android]
-    if: ${{ success() }}
+    if: ${{ needs.build_android.result == 'success' }}
     environment: production
     steps:
       - uses: eas/send_slack_message
         with:
           slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            Android production build completed.
+            Android production build is ready.
 
-            Workflow: ${{ workflow.name }}
-            Details: ${{ workflow.url }}
+            App: ${{ needs.build_android.outputs.app_identifier }}
+            Version: ${{ needs.build_android.outputs.app_version }}
+            Build number: ${{ needs.build_android.outputs.app_build_version }}
+            Build link: https://expo.dev/builds/${{ needs.build_android.outputs.build_id }}
 
   notify_android_failure:
     name: Notify Android Failure
-    after: [build_android]
-    if: ${{ failure() }}
+    needs: [build_android]
+    if: ${{ needs.build_android.result == 'failure' }}
     environment: production
     steps:
       - uses: eas/send_slack_message
@@ -66,23 +68,25 @@ jobs:
 
   notify_ios_success:
     name: Notify iOS Success
-    needs: [submit_ios]
-    if: ${{ success() }}
+    needs: [build_ios, submit_ios]
+    if: ${{ needs.build_ios.result == 'success' && needs.submit_ios.result == 'success' }}
     environment: production
     steps:
       - uses: eas/send_slack_message
         with:
           slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            iOS production deployment completed.
+            iOS production build submitted to App Store.
 
-            Workflow: ${{ workflow.name }}
-            Details: ${{ workflow.url }}
+            App: ${{ needs.build_ios.outputs.app_identifier }}
+            Version: ${{ needs.build_ios.outputs.app_version }}
+            Build number: ${{ needs.build_ios.outputs.app_build_version }}
+            Build link: https://expo.dev/builds/${{ needs.build_ios.outputs.build_id }}
 
   notify_ios_failure:
     name: Notify iOS Failure
-    after: [build_ios, submit_ios]
-    if: ${{ failure() }}
+    needs: [build_ios, submit_ios]
+    if: ${{ needs.build_ios.result == 'failure' || needs.submit_ios.result == 'failure' }}
     environment: production
     steps:
       - uses: eas/send_slack_message
