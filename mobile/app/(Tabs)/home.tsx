@@ -38,6 +38,7 @@ import { requestNotificationPermission } from "@/lib/notifications/requestPermis
 import ReceiveInstant from "../components/earn/ReceiveInstant";
 import BalanceYieldGuide from "../components/BalanceYieldGuide";
 import LabelBadge from "../components/LabelBadge";
+import AppText from "../components/AppText";
 import useSetting from "@/hooks/api/useSetting";
 import LoanIcon from "@/assets/images/hand-dollar.svg";
 import { setSettings } from "@/src/features/settings/settingsSlice";
@@ -250,13 +251,16 @@ export default function HomeScreen() {
                   onPress={() => setShowEditProfile(true)}
                   className="max-w-full"
                 >
-                  <Text
+                  <AppText
+                    loading={!email}
+                    shimmerWidth={180}
+                    shimmerHeight={28}
                     numberOfLines={1}
                     ellipsizeMode="tail"
                     className="text-[22px] text-white font-medium tracking-[-0.44px]"
                   >
                     {email}
-                  </Text>
+                  </AppText>
                 </Pressable>
                 <LabelBadge
                   loading={!kycFetched}
