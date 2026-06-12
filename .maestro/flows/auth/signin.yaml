@@ -39,9 +39,16 @@ tags:
     text: "Sign In"
     index: 1
 
+# Dismiss 2FA setup modal if it appears
+- optional:
+  - tapOn:
+      text: "OK"
+      index: 0
+
+# "Receive" is always visible on Home (tab bar is icon-only, no "Home" label)
 - extendedWaitUntil:
     visible:
-      text: "Home"
+      text: "Receive"
     timeout: 15000
 
 # ─────────────────────────────────────────────

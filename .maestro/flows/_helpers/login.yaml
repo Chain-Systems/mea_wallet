@@ -1,7 +1,7 @@
 appId: com.meccain.ping
 ---
 # Helper: Resets state, launches app, navigates from Get Started → Sign In,
-# fills credentials and waits until the Home tab bar is visible.
+# fills credentials and waits until the Home screen is visible.
 
 - launchApp:
     clearState: true
@@ -33,8 +33,14 @@ appId: com.meccain.ping
     text: "Sign In"
     index: 1
 
-# Wait for Home screen (bottom tab "Home" is the reliable anchor)
+# Dismiss 2FA setup modal if it appears (test account may not have 2FA configured)
+- optional:
+  - tapOn:
+      text: "OK"
+      index: 0
+
+# "Receive" button is always visible on the Home screen (tab bar is icon-only)
 - extendedWaitUntil:
     visible:
-      text: "Home"
+      text: "Receive"
     timeout: 15000
