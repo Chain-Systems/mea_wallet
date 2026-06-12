@@ -60,7 +60,8 @@ jobs:
           git checkout -b ${{ steps.ver.outputs.branch }}
           git add mobile/package.json mobile/app.json
           git commit -m "chore(release): bump ${{ inputs.bump }} version ${{ steps.ver.outputs.old }} → ${{ steps.ver.outputs.new }}"
-          git push --force origin ${{ steps.ver.outputs.branch }}
+          git push origin --delete ${{ steps.ver.outputs.branch }} 2>/dev/null || true
+          git push origin ${{ steps.ver.outputs.branch }}
 
       - name: Create Pull Request
         env:
