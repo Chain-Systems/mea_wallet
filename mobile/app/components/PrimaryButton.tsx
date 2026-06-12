@@ -21,17 +21,18 @@ const PrimaryButton = ({
         onPress={onPress}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
-        style={{ opacity: pressed && !disabled ? 0.85 : 1, transform: [{ scale: pressed && !disabled ? 0.97 : 1 }] }}
+        style={{
+          opacity: pressed && !disabled ? 0.85 : 1,
+          transform: [{ scale: pressed && !disabled ? 0.97 : 1 }],
+        }}
         className={`
           text-center w-full py-2.5 rounded-[15px]
           flex items-center justify-center
-          ${disabled ? "bg-gray-300 border-gray-300 opacity-50" : "bg-pink-1100 border-pink-1100"}
+          ${disabled ? "bg-gray-600" : "bg-pink-1100"}
           ${className}
         `}
       >
-        <Text
-          className={`text-base font-semibold ${disabled ? "text-gray-300" : "text-white"}`}
-        >
+        <Text className="text-base font-semibold text-white">
           {text}
         </Text>
       </Pressable>

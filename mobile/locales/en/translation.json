@@ -246,6 +246,7 @@
     "invalid_amount": "Please enter a valid withdrawal amount.",
     "insufficient_balance": "Insufficient balance. Available: {{balance}} {{symbol}}",
     "kyc_required_above": "Withdrawals of $1,000 or more require KYC verification.",
+    "kyc_required_to_withdraw": "KYC verification is required to process this withdrawal. Please complete identity verification to continue.",
     "next": "NEXT"
   },
   "lockup": {
@@ -351,6 +352,9 @@
     "exchanging_tokens": "Exchanging tokens within the app",
     "not_found": "FAQ not found",
     "update_time": "Update Time"
+  },
+  "kyc": {
+    "verify_now": "Verify Now"
   },
   "common": {
     "yes": "YES",
