@@ -363,8 +363,8 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   key={token}
                   className="flex flex-col border-2 mb-2 border-black-1200 bg-black-1200 rounded-2xl"
-                  disabled={token === "usdt_savings"}
-                  onPress={() => {
+                  activeOpacity={token === "usdt_savings" ? 1 : 0.7}
+                  onPress={token === "usdt_savings" ? undefined : () => {
                     router.navigate({
                       pathname: "/(Views)/chart-view",
                       params: {

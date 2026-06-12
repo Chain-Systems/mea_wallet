@@ -1,10 +1,8 @@
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -17,14 +15,9 @@ import PrimaryButton from "../components/PrimaryButton";
 import QRModal from "../components/QRModal";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
 import { isValidPublicKey } from "@/utils/web3";
-import { useAppDispatch } from "@/src/store/hooks";
 import { RootState } from "@/src/store";
 import { useSelector } from "react-redux";
-import { RootState as RS } from "@/src/store";
-import useAsset from "@/hooks/api/useAsset";
 import useUser from "@/hooks/api/useUser";
-import useKyc from "@/hooks/api/useKyc";
-import { setKycCompleted, setKycFetched } from "@/src/features/user/userSlice";
 import {
   setMinWithdraw,
   setWithdrawFees,
@@ -39,11 +32,8 @@ import {
   setLockupBalances,
 } from "@/src/features/balance/balanceSlice";
 
-const KYC_REQUIRED_THRESHOLD = 1000;
-
 const WithDrawal = () => {
   const navigation = useNavigation();
-  const kycCompleted = useSelector((state: RS) => state.user.kycCompleted);
   const { symbol } = useLocalSearchParams<{ symbol: keyof TokenBalances }>();
   const freeBalance = useSelector(
     (state: RootState) => state.balance.free[symbol]
@@ -51,7 +41,6 @@ const WithDrawal = () => {
   const minWithdrawl = useSelector(
     (state: RootState) => state.token.minWithdraw[symbol]
   );
-  const quotes = useSelector((state: RootState) => state.token.quotes || {});
 
   const dispatch = useDispatch();
 
@@ -158,13 +147,6 @@ const WithDrawal = () => {
         return;
       }
 
-      const tokenPrice = new Decimal((quotes as any)[symbol] ?? 0);
-      const usdValue = amount.mul(tokenPrice);
-      if (usdValue.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
-        router.replace("/(Views)/kyc/ready");
-        return;
-      }
-
       router.push({
         pathname: "/confirm-withdrawl",
         params: {
@@ -181,20 +163,7 @@ const WithDrawal = () => {
   useEffect(() => {
     syncData();
     syncBalance();
-    checkKyc();
   }, []);
-
-  const checkKyc = async () => {
-    try {
-      const res = await useKyc.getKycInfo();
-      if (typeof res !== "string") {
-        dispatch(setKycCompleted(res.kyc_yn === "Y"));
-        dispatch(setKycFetched(true));
-      }
-    } catch {
-      // silent — do not block page load if KYC check fails
-    }
-  };
 
   return (
     <View className="bg-black-1000 h-full">
@@ -307,14 +276,6 @@ const WithDrawal = () => {
                   </View>
                 </View>
               </View>
-
-              {!kycCompleted && (
-                <View className="mx-1 mb-3 px-4 py-3 rounded-[12px] bg-yellow-500/10 border border-yellow-500/30">
-                  <Text className="text-yellow-400 text-sm text-center">
-                    {t("withdrawal.kyc_required_above")}
-                  </Text>
-                </View>
-              )}
 
               <PrimaryButton text={t("withdrawal.next")} onPress={handleNext} />
             </View>
