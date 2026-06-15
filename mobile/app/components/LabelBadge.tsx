@@ -124,11 +124,11 @@ export default function LabelBadge({
       <View
         className={`w-3.5 h-3.5 rounded-full items-center justify-center ${styles.dot}`}
       >
-        <Text className="text-[9px] font-bold text-white text-center">
+        <Text className="text-[6px] font-bold text-white text-center">
           {glyph}
         </Text>
       </View>
-      <Text className={`text-[11px] font-bold tracking-[-0.2px] ${styles.text}`}>
+      <Text className={`text-[8px] font-bold tracking-[-0.2px] ${styles.text}`}>
         {label}
       </Text>
     </Container>

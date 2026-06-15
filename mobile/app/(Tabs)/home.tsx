@@ -240,13 +240,13 @@ export default function HomeScreen() {
             <View className="flex-row items-center gap-2.5">
               <Pressable
                 onPress={() => setShowEditProfile(true)}
-                className="bg-pink-1100 w-8 h-8 rounded-full items-center justify-center"
+                className="bg-pink-1100 w-9 h-9 rounded-full items-center justify-center"
               >
-                <Text className="text-base font-medium text-white leading-none tracking-[-0.36px]">
+                <Text className="text-[23px] font-medium text-white leading-none tracking-[-0.36px]">
                   {details ? details.image : ""}
                 </Text>
               </Pressable>
-              <View className="flex-1 items-start gap-1">
+              <View className="flex-1 items-start gap-0.5">
                 <Pressable
                   onPress={() => setShowEditProfile(true)}
                   className="max-w-full"
@@ -270,7 +270,7 @@ export default function HomeScreen() {
                   onPress={
                     kycCompleted
                       ? undefined
-                      : () => router.push("/(Views)/kyc/ready")
+                      : () => router.push("/(Views)/kyc/select")
                   }
                 />
               </View>
