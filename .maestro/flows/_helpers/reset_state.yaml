@@ -1,0 +1,7 @@
+appId: com.meccain.ping
+---
+# Helper: Clears all app state and relaunches to a clean unauthenticated state.
+# Use this at the start of any flow that needs a fresh start.
+
+- launchApp:
+    clearState: true
