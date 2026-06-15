@@ -36,8 +36,8 @@ jobs:
 
   notify_failure:
     name: Notify Android Preview Failure
-    after: [build_android_preview]
-    if: ${{ failure() }}
+    needs: [build_android_preview]
+    if: ${{ needs.build_android_preview.result == 'failure' }}
     environment: preview
     steps:
       - uses: eas/send_slack_message

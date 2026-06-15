@@ -40,8 +40,8 @@ jobs:
 
   notify_failure:
     name: Notify iOS Production Failure
-    after: [build_ios, submit_ios]
-    if: ${{ failure() }}
+    needs: [build_ios, submit_ios]
+    if: ${{ needs.build_ios.result == 'failure' || needs.submit_ios.result == 'failure' }}
     environment: production
     steps:
       - uses: eas/send_slack_message
