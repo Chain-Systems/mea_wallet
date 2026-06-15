@@ -106,11 +106,18 @@ tags:
     text: "Enter ID"
 - inputText: ${TEST_EMAIL}
 
+# Generate a fresh TOTP code right before the field is tapped.
+# secret is injected from TOTP_SECRET_GB env var passed to maestro --env.
+- runScript:
+    file: ../../../scripts/totp.js
+    env:
+      secret: ${TOTP_SECRET_GB}
+
 # Enter the Google Authenticator OTP
 # Placeholder: "Enter Google OTP code" (GB mode)
 - tapOn:
     text: "Enter Google OTP code"
-- inputText: ${TEST_PIN}
+- inputText: ${output.totp}
 
 # Submit unlock
 - tapOn:
