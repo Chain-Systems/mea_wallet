@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, Animated } from "react-native";
+import { Animated, Modal, Pressable, Text, View } from "react-native";
 import PrimaryButton from "./PrimaryButton";
-import { Portal } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 
 export interface InfoAlertProps {
@@ -26,64 +25,56 @@ const InfoAlert = ({
   primaryButtonText,
 }: InfoAlertProps) => {
   const { t } = useTranslation();
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
   useEffect(() => {
     if (visible) {
-      if (!showAnimation) {
-        scaleAnim.setValue(1);
-        opacityAnim.setValue(1);
-      }
-      Animated.parallel([
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityAnim, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      scaleAnim.setValue(showAnimation ? 0.95 : 1);
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        bounciness: 4,
+      }).start();
     } else {
-      opacityAnim.setValue(0);
-      scaleAnim.setValue(0.8);
+      scaleAnim.setValue(0.95);
     }
   }, [visible]);
 
-  if (!visible) return null;
+  const buttonText = primaryButtonText ?? t("common.ok");
 
-  const buttonText = primaryButtonText ? primaryButtonText : t("common.ok");
+  const dismiss = () => {
+    setVisible(false);
+    if (onDismiss) onDismiss();
+  };
 
   return (
-    <Portal>
-      <View
-        className="flex-1 items-center justify-center bg-[rgba(31,31,31,0.5)] px-3 absolute top-0 bottom-0 h-full w-full"
-        style={{ zIndex: 1000 }}
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={cancellable ? dismiss : undefined}
+      statusBarTranslucent
+    >
+      <Pressable
+        className="flex-1 items-center justify-center px-3"
+        style={{ backgroundColor: "rgba(31,31,31,0.6)" }}
+        onPress={cancellable ? dismiss : undefined}
       >
         <Animated.View
-          style={{
-            transform: [{ scale: scaleAnim }],
-            opacity: opacityAnim,
-          }}
+          style={{ transform: [{ scale: scaleAnim }] }}
           className="bg-[#191919] rounded-[16px] px-4 pb-8 pt-10 w-full"
         >
-          <View className="flex gap-4">
-            <Text className="text-white text-center text-lg">{text}</Text>
-            {cancellable && (
-              <PrimaryButton
-                text={buttonText}
-                onPress={() => {
-                  setVisible(false);
-                  if (onDismiss) onDismiss();
-                }}
-              />
-            )}
-          </View>
+          <Pressable onPress={() => {}}>
+            <View className="flex gap-4">
+              <Text className="text-white text-center text-lg">{text}</Text>
+              {cancellable && (
+                <PrimaryButton text={buttonText} onPress={dismiss} />
+              )}
+            </View>
+          </Pressable>
         </Animated.View>
-      </View>
-    </Portal>
+      </Pressable>
+    </Modal>
   );
 };
 

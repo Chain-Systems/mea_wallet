@@ -81,7 +81,7 @@ export default function SettingsScreen() {
           >
             <View className="w-8 h-8 rounded-full bg-gray-1500 flex items-center justify-center">
               <View className="mt-1">
-                <SvgIcon name="googleIcon1" width="16" />
+                <SvgIcon name="otpIcon" width="16" color="white" />
               </View>
             </View>
             <Text className="text-base font-semibold text-white">

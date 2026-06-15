@@ -261,7 +261,7 @@ const ActionButton = ({
   onPress: () => void;
 }) => (
   <Pressable onPress={onPress}>
-    <View className="bg-black-1300 rounded-2xl items-center p-[18px] py-[17px] flex-1 w-28">
+    <View className="bg-black-1300 rounded-2xl items-center p-[18px] py-[17px] w-28">
       {/** @ts-ignore */}
       <SvgIcon name={icon} width="24" height="24" />
       <Text className="text-[13px] font-semibold mt-1 text-gray-1000">

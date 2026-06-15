@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import messaging from "@react-native-firebase/messaging";
 import { AppDispatch, RootState } from "@/src/store";
@@ -38,6 +38,7 @@ import { requestNotificationPermission } from "@/lib/notifications/requestPermis
 import ReceiveInstant from "../components/earn/ReceiveInstant";
 import BalanceYieldGuide from "../components/BalanceYieldGuide";
 import LabelBadge from "../components/LabelBadge";
+import AppText from "../components/AppText";
 import useSetting from "@/hooks/api/useSetting";
 import LoanIcon from "@/assets/images/hand-dollar.svg";
 import { setSettings } from "@/src/features/settings/settingsSlice";
@@ -61,8 +62,7 @@ export default function HomeScreen() {
   const email = useSelector((state: RootState) => state.user.email);
   const details = useSelector((state: RootState) => state.user.details);
   const [showAlert, setShowAlert] = useState(false);
-  const [showKycAlert, setShowKycAlert] = useState(false);
-  const [kycFetched, setKycFetched] = useState(false);
+  const [kycFetched, setLocalKycFetched] = useState(false);
   const kycCompleted = useSelector((state: RootState) => state.user.kycCompleted);
   const featuresEnabled = useSelector((state: RootState) => {
     if (Platform.OS === "ios") {
@@ -121,7 +121,7 @@ export default function HomeScreen() {
     } catch {
       // silent — KYC is non-blocking
     } finally {
-      setKycFetched(true);
+      setLocalKycFetched(true);
       dispatch(setKycFetched(true));
     }
   };
@@ -151,15 +151,6 @@ export default function HomeScreen() {
       setShowAlert(true);
     }
   }, [details]);
-
-  useEffect(() => {
-    if (!kycFetched) return;
-    if (kycCompleted === false && details?.twoFACompleted) {
-      setShowKycAlert(true);
-    } else {
-      setShowKycAlert(false);
-    }
-  }, [kycCompleted, details, kycFetched]);
 
   const totalAssetValue = useMemo(() => {
     let totalValue = new Decimal(0);
@@ -260,13 +251,16 @@ export default function HomeScreen() {
                   onPress={() => setShowEditProfile(true)}
                   className="max-w-full"
                 >
-                  <Text
+                  <AppText
+                    loading={!email}
+                    shimmerWidth={180}
+                    shimmerHeight={28}
                     numberOfLines={1}
                     ellipsizeMode="tail"
                     className="text-[22px] text-white font-medium tracking-[-0.44px]"
                   >
                     {email}
-                  </Text>
+                  </AppText>
                 </Pressable>
                 <LabelBadge
                   loading={!kycFetched}
@@ -299,24 +293,20 @@ export default function HomeScreen() {
               } mx-auto gap-[7px]`}
             >
               <View className="bg-black-1300 rounded-2xl items-center  flex-1">
-                <Link href="/receive-items">
-                  <View className="w-full items-center p-[18px] py-[17px]">
-                    <SvgIcon name="receiceIcon" width="24" height="24" />
-                    <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
-                      {t("home.receive")}
-                    </Text>
-                  </View>
-                </Link>
+                <TouchableOpacity className="w-full items-center p-[18px] py-[17px]" onPress={() => router.push("/receive-items")}>
+                  <SvgIcon name="receiceIcon" width="24" height="24" />
+                  <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
+                    {t("home.receive")}
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View className="bg-black-1300 rounded-2xl items-center  flex-1">
-                <Link href="/transfer-token">
-                  <View className="w-full items-center p-[18px] py-[17px]">
-                    <SvgIcon name="sendIcon" width="24" height="24" />
-                    <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
-                      {t("home.send")}
-                    </Text>
-                  </View>
-                </Link>
+                <TouchableOpacity className="w-full items-center p-[18px] py-[17px]" onPress={() => router.push("/transfer-token")}>
+                  <SvgIcon name="sendIcon" width="24" height="24" />
+                  <Text className="text-[13px] font-semibold mt-1 text-gray-1000">
+                    {t("home.send")}
+                  </Text>
+                </TouchableOpacity>
               </View>
               {featuresEnabled && (
                 <View className="bg-black-1300 rounded-2xl items-center  flex-1">
@@ -377,8 +367,8 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   key={token}
                   className="flex flex-col border-2 mb-2 border-black-1200 bg-black-1200 rounded-2xl"
-                  disabled={token === "usdt_savings"}
-                  onPress={() => {
+                  activeOpacity={token === "usdt_savings" ? 1 : 0.7}
+                  onPress={token === "usdt_savings" ? undefined : () => {
                     router.navigate({
                       pathname: "/(Views)/chart-view",
                       params: {
@@ -524,14 +514,6 @@ export default function HomeScreen() {
         onDismiss={() => {
           router.push("/settings/google-otp"); // navigate after OK
         }}
-      />
-      <InfoAlert
-        visible={showKycAlert}
-        setVisible={setShowKycAlert}
-        text="Complete KYC verification to enable withdrawals."
-        type="info"
-        primaryButtonText="Verify Now"
-        onDismiss={() => router.push("/(Views)/kyc/ready")}
       />
       <BalanceYieldGuide
         visible={showGuide}

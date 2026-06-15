@@ -1,10 +1,8 @@
-import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -17,14 +15,9 @@ import PrimaryButton from "../components/PrimaryButton";
 import QRModal from "../components/QRModal";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
 import { isValidPublicKey } from "@/utils/web3";
-import { useAppDispatch } from "@/src/store/hooks";
 import { RootState } from "@/src/store";
 import { useSelector } from "react-redux";
-import { RootState as RS } from "@/src/store";
-import useAsset from "@/hooks/api/useAsset";
 import useUser from "@/hooks/api/useUser";
-import useKyc from "@/hooks/api/useKyc";
-import { setKycCompleted, setKycFetched } from "@/src/features/user/userSlice";
 import {
   setMinWithdraw,
   setWithdrawFees,
@@ -38,18 +31,22 @@ import {
   setFreeBalances,
   setLockupBalances,
 } from "@/src/features/balance/balanceSlice";
+import useKyc from "@/hooks/api/useKyc";
+import { setKycCompleted, setKycFetched } from "@/src/features/user/userSlice";
 
 const KYC_REQUIRED_THRESHOLD = 1000;
 
 const WithDrawal = () => {
   const navigation = useNavigation();
-  const kycCompleted = useSelector((state: RS) => state.user.kycCompleted);
   const { symbol } = useLocalSearchParams<{ symbol: keyof TokenBalances }>();
   const freeBalance = useSelector(
     (state: RootState) => state.balance.free[symbol]
   );
   const minWithdrawl = useSelector(
     (state: RootState) => state.token.minWithdraw[symbol]
+  );
+  const kycCompleted = useSelector(
+    (state: RootState) => state.user.kycCompleted
   );
 
   const dispatch = useDispatch();
@@ -118,64 +115,61 @@ const WithDrawal = () => {
     setWithdrawAmount(amount.toString());
   };
 
+  const showError = (text: string) => {
+    setInfoAlertState({ type: "error", text });
+    setInfoAlertVisible(true);
+  };
+
   const handleNext = () => {
     if (!withdrawalAddress || !isValidPublicKey(withdrawalAddress)) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.invalid_address"),
-      });
-      setInfoAlertVisible(true);
+      showError(t("withdrawal.invalid_address"));
       return;
     }
 
     if (!withdrawAmount || isNaN(Number(withdrawAmount))) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.invalid_amount"),
+      showError(t("withdrawal.invalid_amount"));
+      return;
+    }
+
+    try {
+      const amount = new Decimal(withdrawAmount);
+
+      if (minWithdrawl != null && amount.lessThan(minWithdrawl)) {
+        showError(
+          t("withdrawal.min_amount_error", {
+            amount: minWithdrawl,
+            symbol: displaySymbol,
+          })
+        );
+        return;
+      }
+
+      if (freeBalance != null && amount.greaterThan(freeBalance)) {
+        showError(
+          t("withdrawal.insufficient_balance", {
+            balance: freeBalance,
+            symbol: displaySymbol,
+          })
+        );
+        return;
+      }
+
+      if (amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
+        router.replace("/(Views)/kyc/select");
+        return;
+      }
+
+      router.push({
+        pathname: "/confirm-withdrawl",
+        params: {
+          symbol: symbol,
+          amount: amount.toString(),
+          address: withdrawalAddress,
+        },
       });
-      setInfoAlertVisible(true);
-      return;
+    } catch {
+      showError(t("withdrawal.invalid_amount"));
     }
-
-    const amount = new Decimal(withdrawAmount);
-
-    if (amount.lessThan(minWithdrawl)) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.min_amount_error", {
-          amount: minWithdrawl,
-          symbol: displaySymbol,
-        }),
-      });
-      setInfoAlertVisible(true);
-      return;
-    }
-
-    if (amount.greaterThan(freeBalance)) {
-      setInfoAlertState({
-        type: "error",
-        text: t("withdrawal.insufficient_balance", {
-          balance: freeBalance,
-          symbol: displaySymbol,
-        }),
-      });
-      setInfoAlertVisible(true);
-      return;
-    }
-
-    if (amount.greaterThanOrEqualTo(KYC_REQUIRED_THRESHOLD) && !kycCompleted) {
-      router.replace("/(Views)/kyc/select");
-      return;
-    }
-
-    router.push({
-      pathname: "/confirm-withdrawl",
-      params: {
-        symbol: symbol,
-        amount: amount.toString(),
-        address: withdrawalAddress,
-      },
-    });
   };
 
   useEffect(() => {
@@ -317,14 +311,14 @@ const WithDrawal = () => {
               <PrimaryButton text={t("withdrawal.next")} onPress={handleNext} />
             </View>
           </View>
-          <QRModal visible={qrScanVisible} onClose={handleQRData} />
-          <InfoAlert
-            {...infoAlertState}
-            visible={infoAlertVisible}
-            setVisible={setInfoAlertVisible}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
+      <QRModal visible={qrScanVisible} onClose={handleQRData} />
+      <InfoAlert
+        {...infoAlertState}
+        visible={infoAlertVisible}
+        setVisible={setInfoAlertVisible}
+      />
     </View>
   );
 };

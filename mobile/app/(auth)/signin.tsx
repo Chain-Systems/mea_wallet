@@ -1,4 +1,4 @@
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Image,
@@ -238,30 +238,30 @@ const Signin: React.FC = () => {
           <View className="items-center mt-6">
             <PrimaryButton
               onPress={handleSignIn}
-              className="mb-[9px] w-full h-[45px] group bg-pink-1100 border border-pink-1100 active:text-pink-1100 active:bg-transparent hover:text-pink-1100 hover:bg-transparent rounded-[15px] flex items-center justify-center"
+              className="mb-[9px]"
               text={t("auth.signin.sign_in")}
               disabled={inputError !== null}
             />
             <View className="my-2">
-              <Link href="/forget-password">
+              <TouchableOpacity onPress={() => router.push("/forget-password")}>
                 <Text className="text-[15px] text-gray-400">
                   {t("auth.signin.forgot_password")}
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </View>
             <View className="my-2">
-              <Link href="/account-unlock">
+              <TouchableOpacity onPress={() => router.push("/account-unlock")}>
                 <Text className="text-[15px] text-gray-400">
                   Account Unlock
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </View>
             <View className="my-2">
-              <Link href="/get-started">
+              <TouchableOpacity onPress={() => router.push("/get-started")}>
                 <Text className="text-[15px] text-gray-400">
                   {t("auth.info.other_ways_to_sign_in")}
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </View>
             {/* <View>
               <TouchableOpacity onPress={() => router.replace("/signup")}>

@@ -1,7 +1,7 @@
 {
   "name": "mecca-native",
   "main": "expo-router/entry",
-  "version": "1.0.44",
+  "version": "1.1.4",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -79,7 +79,7 @@
     "react-native-css-interop": "^0.1.22",
     "react-native-gesture-handler": "~2.31.1",
     "react-native-get-random-values": "~1.11.0",
-    "react-native-gifted-charts": "^1.4.61",
+    "react-native-gifted-charts": "^1.4.77",
     "react-native-graph": "^1.1.0",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-paper": "^5.14.5",
