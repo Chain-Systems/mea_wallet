@@ -534,7 +534,10 @@
     "title": "A New Version is Available",
     "subtitle": "Please update your app to access the latest features and improvements.",
     "downloading": "Downloading update...",
-    "button": "Update App"
+    "button": "Update App",
+    "button_play_store": "Update on Google Play",
+    "button_app_store": "Update on App Store",
+    "button_website": "Download Latest Version"
   },
   "token_metrics": {
     "deposits": "Deposits",

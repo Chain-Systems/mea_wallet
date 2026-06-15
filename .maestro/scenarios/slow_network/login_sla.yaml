@@ -1,0 +1,34 @@
+appId: com.meccain.ping
+tags:
+  - slow-network
+---
+# Scenario: Sign-in must complete within 5 seconds on a slow network.
+# Run this flow with network throttled externally (e.g. ADB network emulation).
+
+- launchApp
+
+# Navigate from Get Started to Sign In
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+- tapOn:
+    text: "Sign In"
+
+# SLA assertion: Home screen must appear within 5000ms
+- extendedWaitUntil:
+    visible:
+      text: "Home"
+    timeout: 5000

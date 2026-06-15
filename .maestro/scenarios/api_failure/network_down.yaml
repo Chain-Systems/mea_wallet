@@ -1,0 +1,39 @@
+appId: com.meccain.ping
+tags:
+  - api-failure
+---
+# Scenario: App displays a graceful error when network is unavailable.
+# Prerequisite: disable network on the test device/emulator before running this flow.
+
+- launchApp:
+    clearState: true
+
+# Navigate from Get Started to Sign In
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+- tapOn:
+    text: "Sign In"
+
+# Wait for graceful error message (any error popup/alert, not a crash)
+# Update the text value once the exact network error string is confirmed in the app
+- extendedWaitUntil:
+    visible:
+      text: "Login Failed"
+    timeout: 8000
+
+- assertVisible:
+    text: "Login Failed"

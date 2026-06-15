@@ -1,0 +1,27 @@
+appId: com.meccain.ping
+tags:
+  - smoke
+---
+# Flow: Home screen — verifies balance display and token list after sign-in
+
+# Authenticate (resets state, launches app, signs in, waits for Home)
+- runFlow: ../_helpers/login.yaml
+
+# Confirm Home screen content is visible (tab bar is icon-only, no "Home" label)
+- extendedWaitUntil:
+    visible:
+      text: "Receive"
+    timeout: 5000
+
+# The total asset value is shown with a "$" prefix in the hero section
+- assertVisible:
+    text: "$"
+
+# Confirm at least one token-list section header is mounted
+# "Native" is rendered as the section header above the free-balance list
+- assertVisible:
+    text: "Native"
+
+# Quick-action "Receive" button is always visible regardless of feature flags
+- assertVisible:
+    text: "Receive"

@@ -1,0 +1,28 @@
+appId: com.meccain.ping
+tags:
+  - smoke
+---
+# Flow: Get Started screen navigation
+# Verifies the Get Started screen renders and can navigate to the Sign In screen.
+
+- launchApp:
+    clearState: true
+
+# Verify the Get Started screen buttons are visible
+# i18n: auth.get_started.existing_wallet = "Login"
+- assertVisible:
+    text: "Login"
+
+# i18n: auth.get_started.create_wallet = "Join The Membership"
+- assertVisible:
+    text: "Join The Membership"
+
+# Navigate to the existing-wallet (sign-in) flow
+- tapOn:
+    text: "Login"
+
+# Wait for the Sign In screen to appear (email placeholder is the key indicator)
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000

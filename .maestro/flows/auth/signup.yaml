@@ -1,0 +1,83 @@
+appId: com.meccain.ping
+tags:
+  - regression
+---
+# Flow: Sign Up — happy path registration.
+# i18n keys: auth.signup.*
+
+- launchApp:
+    clearState: true
+
+# Navigate from Get Started to Sign Up
+# i18n: auth.get_started.create_wallet = "Join The Membership"
+- tapOn:
+    text: "Join The Membership"
+
+- extendedWaitUntil:
+    visible:
+      text: "Sign Up"
+    timeout: 10000
+
+# ── Email field with inline "Check" button ──
+# i18n: auth.signup.enter_email = "Enter Email Address"
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+# Tap inline Check button to validate email uniqueness
+- tapOn:
+    text: "Check"
+
+# Wait for validation to complete (check icon appears, email field still visible)
+- extendedWaitUntil:
+    visible:
+      text: "Enter Password"
+    timeout: 8000
+
+# ── Password field ──
+# i18n: auth.signup.enter_password = "Enter Password"
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+# ── Verify password field ──
+# i18n: auth.signup.enter_verify_password = "Enter Password" (same placeholder)
+# Use index 1 to pick the second password input
+- tapOn:
+    text: "Enter Password"
+    index: 1
+- inputText: ${TEST_PASSWORD}
+
+# ── Wallet address field with inline "Check" button ──
+# i18n: auth.signup.enter_wallet = "Wallet Address"
+- tapOn:
+    text: "Wallet Address"
+- inputText: "11111111111111111111111111111111"
+
+- tapOn:
+    text: "Check"
+    index: 1
+
+# Scroll down to reach checkboxes
+- scroll
+
+# ── Terms of Service checkbox ──
+# i18n: auth.signup.agree_terms (checkbox label)
+- tapOn:
+    text: "I agree to the Terms of Service"
+
+# ── Privacy Policy checkbox ──
+# i18n: auth.signup.agree_privacy (checkbox label)
+- tapOn:
+    text: "I agree to the Privacy Policy"
+
+# ── Submit ──
+- tapOn:
+    text: "Sign Up"
+
+# After successful signup, app redirects to signin screen
+# i18n: auth.signup.registered_successfully shown in alert, then routes to signin
+- extendedWaitUntil:
+    visible:
+      text: "Sign In"
+    timeout: 15000
