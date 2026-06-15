@@ -20,7 +20,7 @@ jobs:
   notify_success:
     name: Share Android Preview Link
     needs: [build_android_preview]
-    if: ${{ success() }}
+    if: ${{ needs.build_android_preview.result == 'success' }}
     environment: preview
     steps:
       - uses: eas/send_slack_message

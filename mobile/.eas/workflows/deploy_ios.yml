@@ -24,7 +24,7 @@ jobs:
   notify_success:
     name: Share iOS Production Link
     needs: [build_ios, submit_ios]
-    if: ${{ success() }}
+    if: ${{ needs.build_ios.result == 'success' && needs.submit_ios.result == 'success' }}
     environment: production
     steps:
       - uses: eas/send_slack_message
