@@ -1,0 +1,215 @@
+appId: com.meccain.ping
+tags:
+  - smoke
+---
+# Flow: Withdrawal >= $1,000 routes to KYC country-selection for unverified accounts
+#
+# Scenario: An account that has NOT completed KYC attempts to withdraw 1,000 MEA.
+#   Expected path: Home → chart-view (MEA) → withdrawal-view → kyc/select
+#                  → kyc/guide (Other countries / EN) → kyc/ready
+#
+# If the test account IS KYC-verified (badge shows "Verified" on Home), the app
+# routes to confirm-withdrawl instead of kyc/select.  In that case assert
+# "Confirm Withdrawal" is visible (see comment at the end of this file).
+#
+# Test account: test@korea2.com  |  large MEA balance (~100,000,000 MEA)
+# Withdrawal address: 7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU  (valid Solana pubkey)
+# Amount: 1000  (exactly at the KYC threshold — >= KYC_REQUIRED_THRESHOLD)
+
+# ─── 1. AUTHENTICATE ────────────────────────────────────────────────────────────
+# login.yaml: clearState → launchApp → Get Started → Sign In → wait for "Receive"
+- runFlow: ../_helpers/login.yaml
+
+# Confirm we landed on the Home screen.
+# "Receive" is always in the quick-action bar on Home.
+- extendedWaitUntil:
+    visible:
+      text: "Receive"
+    timeout: 15000
+
+# ─── 2. CHECK KYC BADGE ON HOME ─────────────────────────────────────────────────
+# The LabelBadge component below the email address shows either:
+#   "Unverified"  (tone: warning)  — account has NOT completed KYC
+#   "Verified"    (tone: success)  — account has completed KYC
+#
+# This flow is written for the UNVERIFIED path (expected for a fresh test account).
+# If the badge shows "Verified" instead, skip to the NOTE at the bottom of this file.
+- assertVisible:
+    text: "Unverified"
+
+# ─── 3. NAVIGATE TO MEA CHART VIEW ──────────────────────────────────────────────
+# Each token row in the Home free-balance list is a TouchableOpacity that navigates
+# to chart-view with the token symbol as a param.  The row text rendered by
+# getDisplaySymbol("mea") = "MEA".  Scroll down in case the list is long.
+- scrollUntilVisible:
+    element:
+      text: "MEA"
+    direction: DOWN
+    timeout: 10000
+
+- tapOn:
+    text: "MEA"
+    # index 0 — the first occurrence is the token name label in the free-balance list.
+    # (The sub-label also shows "MEA" as the unit, so we target the bolder name.)
+    index: 0
+
+# Wait for chart-view to load.  The page renders the token symbol in a header area
+# and the action buttons (Receive / Send) underneath.
+- extendedWaitUntil:
+    visible:
+      text: "Send"
+    timeout: 12000
+
+# ─── 4. OPEN WITHDRAWAL VIEW ────────────────────────────────────────────────────
+# The "Send" button (t("token_overview.send") = "Send") in chart-view calls
+# router.push("/(Views)/withdrawal-view", { symbol }).
+- tapOn:
+    text: "Send"
+
+# Wait for withdrawal-view header: t("withdrawal.title") = "Withdrawal"
+- extendedWaitUntil:
+    visible:
+      text: "Withdrawal"
+    timeout: 12000
+
+# Confirm the amber KYC notice is rendered on the page.
+# t("withdrawal.kyc_required_above") = "Withdrawals of $1,000 or more require KYC verification."
+- assertVisible:
+    text: "Withdrawals of $1,000 or more require KYC verification."
+
+# ─── 5. FILL IN WITHDRAWAL ADDRESS ──────────────────────────────────────────────
+# The address TextInput has placeholder t("withdrawal.withdrawal_address") = "Withdrawal Address".
+- tapOn:
+    text: "Withdrawal Address"
+
+- inputText: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+
+- hideKeyboard
+
+# ─── 6. FILL IN WITHDRAWAL AMOUNT ───────────────────────────────────────────────
+# The amount TextInput placeholder is t("withdrawal.enter_amount_min", { amount, symbol })
+# which resolves to something like "Enter Amount Min X MEA" once the API loads.
+# We tap by the amount TextInput's distinctive border style (it uses border border-gray-1200
+# unlike the address field which uses bg-black-1200).
+# Safest selector: tap on the withdrawal quantity section header, then the input below it.
+- tapOn:
+    text: "Withdrawal Quantity"
+
+- tapOn:
+    text: "Enter Amount"
+    optional: true
+
+- inputText: "1000"
+
+- hideKeyboard
+
+# ─── 7. TAP NEXT ────────────────────────────────────────────────────────────────
+# PrimaryButton with t("withdrawal.next") = "NEXT"
+# handleNext() checks: valid address ✓ | valid amount ✓ | amount >= 1000 ✓ | !kycCompleted ✓
+# → router.replace("/(Views)/kyc/select")
+- tapOn:
+    text: "NEXT"
+
+# ─── 8. ASSERT KYC COUNTRY-SELECTION PAGE ───────────────────────────────────────
+# kyc/select renders the header "Select your country" and four country cards.
+- extendedWaitUntil:
+    visible:
+      text: "Select your country"
+    timeout: 12000
+
+- assertVisible:
+    text: "Select your country"
+
+# Confirm the four country cards are rendered in the 2×2 grid.
+- assertVisible:
+    text: "Việt Nam"
+
+- assertVisible:
+    text: "中国"
+
+- assertVisible:
+    text: "대한민국"
+
+- assertVisible:
+    text: "Other countries"
+
+# "Passport" is the doc subtitle for "Other countries" card.
+- assertVisible:
+    text: "Passport"
+
+# ─── 9. TAP "OTHER COUNTRIES" → KYC GUIDE (EN) ──────────────────────────────────
+# Tapping "Other countries" calls router.push("/(Views)/kyc/guide", { country: "en" })
+- tapOn:
+    text: "Other countries"
+
+# kyc/guide loads with country=en, so lang defaults to "en".
+# Header: DATA["en"].title = "KYC Guide"
+- extendedWaitUntil:
+    visible:
+      text: "KYC Guide"
+    timeout: 12000
+
+- assertVisible:
+    text: "KYC Guide"
+
+# Language tab bar should show VI / EN / KO / ZH — EN is active (highlighted).
+- assertVisible:
+    text: "VI"
+
+- assertVisible:
+    text: "EN"
+
+- assertVisible:
+    text: "KO"
+
+- assertVisible:
+    text: "ZH"
+
+# Agreement checkbox text for EN: "I understand how to enter my name and date of birth."
+- assertVisible:
+    text: "I understand how to enter my name and date of birth."
+
+# "Continue KYC" button is DISABLED until the checkbox is tapped.
+# Maestro cannot assert disabled state directly, but we verify it is rendered.
+- assertVisible:
+    text: "Continue KYC"
+
+# ─── 10. TAP AGREEMENT CHECKBOX ─────────────────────────────────────────────────
+# The Pressable wrapping the checkbox and label calls setAgreed(v => !v).
+# Tapping the label text triggers the parent Pressable and toggles agreed = true.
+# Only after this is agreed=true does PrimaryButton become enabled (disabled={!agreed}).
+- tapOn:
+    text: "I understand how to enter my name and date of birth."
+
+# ─── 11. TAP "CONTINUE KYC" (NOW ENABLED) ───────────────────────────────────────
+# router.replace("/(Views)/kyc/ready")
+- tapOn:
+    text: "Continue KYC"
+
+# ─── 12. ASSERT KYC READY PAGE ───────────────────────────────────────────────────
+# kyc/ready renders the header "KYC Verification" (hard-coded string, not i18n).
+- extendedWaitUntil:
+    visible:
+      text: "KYC Verification"
+    timeout: 12000
+
+- assertVisible:
+    text: "KYC Verification"
+
+# ─── NOTE: KYC-VERIFIED BRANCH ───────────────────────────────────────────────────
+# If the test account IS KYC-verified (badge showed "Verified" on Home), the
+# handleNext() branch at withdrawal-view takes the else path:
+#   router.push("/confirm-withdrawl", { symbol, amount, address })
+# In that case, replace steps 8–12 above with:
+#
+#   - extendedWaitUntil:
+#       visible:
+#         text: "Confirm Withdrawal"    # t("withdrawal.confirm_withdrawal")
+#       timeout: 12000
+#   - assertVisible:
+#       text: "Confirm Withdrawal"
+#
+# That branch applies only when kycCompleted === true (kyc_yn === "Y"): the
+# amount >= KYC_REQUIRED_THRESHOLD guard is bypassed and the normal
+# confirm-withdrawal flow continues. The flow above exercises the UNVERIFIED
+# branch (kycCompleted === false → redirect to kyc/select).

@@ -1,0 +1,50 @@
+appId: com.meccain.ping
+---
+# Helper: Resets state, launches app, navigates from Get Started → Sign In,
+# fills credentials and waits until the Home screen is visible.
+
+- launchApp:
+    clearState: true
+
+# Get Started screen: tap "Login" (i18n: auth.get_started.existing_wallet)
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+# Fill email
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+# Fill password
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+# Dismiss keyboard before submitting
+- hideKeyboard
+
+# Submit — index:1 skips the tab-switcher header (same text, not clickable)
+- tapOn:
+    text: "Sign In"
+    index: 1
+
+# Dismiss 2FA setup modal if it appears (test account may not have 2FA configured)
+- tapOn:
+    text: "OK"
+    index: 0
+    optional: true
+
+# If the Google OTP setup screen appears (forced 2FA enrollment for test account),
+# press Back to skip it and return to the Home screen.
+- pressKey: Back
+
+# "Receive" button is always visible on the Home screen (tab bar is icon-only)
+- extendedWaitUntil:
+    visible:
+      text: "Receive"
+    timeout: 15000
