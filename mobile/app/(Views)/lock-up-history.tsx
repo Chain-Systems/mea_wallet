@@ -15,7 +15,7 @@ import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
 import { LockUpBalances, TokenBalances } from "@/src/types/balance";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import {
   setFreeBalances,
   setLockupBalances,
@@ -102,13 +102,7 @@ const LockUpHistory = () => {
       <View className="w-full h-full mx-auto">
         <ScrollView>
           <View className="w-full">
-            <View className="items-center relative ">
-              <BackButton />
-
-              <Text className="text-lg font-semibold text-white">
-                {t("lockup.title")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("lockup.title")} />
 
             <View
               style={{

@@ -9,7 +9,7 @@ import {
 import dayjs from "dayjs";
 import useLoan, { LoanHistoryItem } from "@/hooks/api/useLoan";
 import { parseNumberForView } from "@/utils/ui";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 
 const LoanHistory = () => {
   const { t } = useTranslation();
@@ -101,12 +101,7 @@ const LoanHistory = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full max-w-6xl mx-auto pb-2">
-        <View className="items-center relative mb-6">
-          <BackButton />
-          <Text className="text-xl font-semibold text-white mt-2">
-            {t("loan.transaction_history")}
-          </Text>
-        </View>
+        <ScreenHeader title={t("loan.transaction_history")} />
 
         <View className="flex flex-row justify-between items-center mb-2 mt-6 ">
           <View className="flex-row items-center gap-2">

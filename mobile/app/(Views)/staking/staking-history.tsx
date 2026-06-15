@@ -22,7 +22,7 @@ import { StakingHistoryItem } from "@/src/api/types/staking";
 import { parseNumberForView, tokenImageMap } from "@/utils/ui";
 // Remove FilterModal import as it's no longer needed for direct filtering
 // import FilterModal, { IFilterState } from "@/app/components/FilterModal";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 
 // Define IFilterState if not already defined globally
 interface IFilterState {
@@ -181,12 +181,7 @@ const StakingHistory = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full max-w-5xl mx-auto pb-2">
-        <View className="items-center relative mb-6">
-          <BackButton />
-          <Text className="text-xl font-semibold text-white">
-            {t("staking.staking")}
-          </Text>
-        </View>
+        <ScreenHeader title={t("staking.staking")} />
 
         <View className="flex flex-row justify-between my-2">
           {/* Added px-4 for consistency */}

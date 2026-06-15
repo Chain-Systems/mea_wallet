@@ -26,7 +26,7 @@ import { useDispatch } from "react-redux";
 import Decimal from "decimal.js";
 import { t } from "i18next";
 import { updateIfValid } from "@/utils/ui";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import {
   setFreeBalances,
   setLockupBalances,
@@ -174,12 +174,7 @@ const WithDrawal = () => {
         <ScrollView className="flex-grow-0" keyboardShouldPersistTaps="handled">
           <View className="w-full h-full max-w-5xl mx-auto">
             <View className="w-full h-full">
-              <View className="items-center relative">
-                <BackButton />
-                <Text className="text-lg font-semibold text-white">
-                  {t("withdrawal.title")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("withdrawal.title")} />
               <View className="relative mt-10">
                 <View className="mt-2.5 mb-2">
                   <View className="flex flex-row items-center gap-2 mb-3">

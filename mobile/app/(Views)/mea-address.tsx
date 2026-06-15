@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { Image, Share, Text, TouchableOpacity, View } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import SvgIcon from "../components/SvgIcon";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import { truncateAddress } from "@/utils/ui";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
@@ -28,12 +28,7 @@ const MeaAddress = () => {
   return (
     <View className="bg-black-1000">
       <View className="w-full h-full max-w-5xl mx-auto flex-col justify-between">
-        <View className="items-center relative">
-          <BackButton />
-          <Text className="text-lg font-semibold text-white">
-            Your {displaySymbol} Address
-          </Text>
-        </View>
+        <ScreenHeader title={`Your ${displaySymbol} Address`} />
         <View className="relative mt-10">
           <View className="items-center">
             <View className="bg-white p-4 border rounded-2xl mb-14">

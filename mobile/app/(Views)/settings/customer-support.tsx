@@ -8,12 +8,11 @@ import {
   Linking,
 } from "react-native";
 import { router } from "expo-router";
-import SvgIcon from "@/app/components/SvgIcon";
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import useSetting from "@/hooks/api/useSetting";
 import { useTranslation } from "react-i18next";
 import LabeledInput from "@/app/components/LabeledInput";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 
 const CustomerSupport = () => {
   const { t } = useTranslation();
@@ -60,12 +59,7 @@ const CustomerSupport = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full mx-auto">
-        <View className="items-center relative mb-6">
-          <BackButton />
-          <Text className="text-lg font-semibold text-white">
-            {t("customer_support.title")}
-          </Text>
-        </View>
+        <ScreenHeader title={t("customer_support.title")} />
 
         {loading ? (
           <ActivityIndicator size="large" color="#fff" className="mt-10" />

@@ -12,7 +12,7 @@ import {
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "@/app/components/ScreenHeader";
 import useLoan from "@/hooks/api/useLoan";
 import useUser from "@/hooks/api/useUser";
 import InfoAlert from "@/app/components/InfoAlert";
@@ -243,12 +243,7 @@ const LoanApplication = () => {
   return (
     <View className="bg-black-1000 flex-1">
       <View className="w-full max-w-3xl mx-auto pb-2">
-        <View className="items-center relative mb-10 px-4">
-          <BackButton />
-          <Text className="text-lg font-semibold text-white">
-            {t("loan.loan") || "Loan"}
-          </Text>
-        </View>
+        <ScreenHeader title={t("loan.loan") || "Loan"} />
 
         <ScrollView
           className=""

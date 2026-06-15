@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import SvgIcon from "../../components/SvgIcon";
 import { avatarEmojis } from "@/lib/constants";
 import useUser from "@/hooks/api/useUser";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +9,7 @@ import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import PrimaryButton from "@/app/components/PrimaryButton";
 import { setUserDetails } from "@/src/features/user/userSlice";
 import { router } from "expo-router";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 
 const SelectAvatar = () => {
   const { t } = useTranslation();
@@ -71,12 +70,7 @@ const SelectAvatar = () => {
     <View className="flex-1 bg-black-1000">
       <View className="flex-1">
         <View className="w-full">
-          <View className="items-center">
-            <BackButton />
-            <Text className="text-lg font-semibold text-white">
-              {t("edit_profile.select_avatar")}
-            </Text>
-          </View>
+          <ScreenHeader title={t("edit_profile.select_avatar")} />
 
           <View className="mt-10">
             <View className="w-[111px] mx-auto">

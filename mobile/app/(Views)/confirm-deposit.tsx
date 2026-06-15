@@ -19,7 +19,7 @@ import { TokenBalances } from "@/src/types/balance";
 import PrimaryButton from "../components/PrimaryButton";
 import { truncateAddress } from "@/utils/ui";
 import useDeposit from "@/hooks/api/useDeposit";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
@@ -110,13 +110,7 @@ const Deposit2 = () => {
     <View className="bg-black-1000">
       <View className="w-full h-full max-w-5xl mx-auto pb-1">
         <View className="w-full h-full">
-          <View className="items-center relative">
-            <BackButton />
-
-            <Text className="text-lg font-semibold text-white">
-              {t("deposit.title")}
-            </Text>
-          </View>
+          <ScreenHeader title={t("deposit.title")} />
 
           <View className="relative mt-10 flex-1 pb-4">
             <ScrollView showsVerticalScrollIndicator={false}>

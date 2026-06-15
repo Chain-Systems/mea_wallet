@@ -14,7 +14,7 @@ import SvgIcon from "../components/SvgIcon";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
 import { parseNumberForView, tokenImageMap } from "@/utils/ui";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 import TokenPreview from "../components/TokenPreview";
 import { TokenQuotes } from "@/src/types/balance";
 
@@ -41,13 +41,7 @@ const SelectToken = () => {
           className=""
         >
           <View className="w-full ">
-            <View className="items-center relative">
-              <BackButton />
-
-              <Text className="text-lg font-semibold text-white">
-                {t("swap.select_token")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("swap.select_token")} />
             <View className="relative mt-10">
               {/* <View className="relative mb-8">
                 <TextInput

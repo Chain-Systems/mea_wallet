@@ -1,23 +1,19 @@
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
 import PrimaryButton from "@/app/components/PrimaryButton";
-import SvgIcon from "@/app/components/SvgIcon";
-import LabelInput from "@/app/components/LabeledInput";
-import { router, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import LabeledInput from "@/app/components/LabeledInput";
+import { router } from "expo-router";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import useAuth from "@/hooks/api/useAuth";
 import OtpModal from "@/app/components/OTPModal";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
@@ -36,7 +32,6 @@ const ChangePassword: React.FC = () => {
   const [inputError, setInputError] = useState<string | null>(null);
   const [errorType, setErrorType] = useState<ErrorType | null>(null);
 
-  const navigation = useNavigation();
   const [popUpVisible, setPopUpVisible] = useState(false);
   const [modalState, setModalState] = useState<Partial<InfoAlertProps>>({});
 
@@ -125,16 +120,11 @@ const ChangePassword: React.FC = () => {
         <ScrollView className="flex-grow-0" keyboardShouldPersistTaps="handled">
           <View className="w-full h-full max-w-5xl mx-auto justify-between">
             <View>
-              <View className="items-center">
-                <BackButton />
-                <Text className="text-lg font-semibold text-white">
-                  {t("settings.password")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("settings.password")} />
 
               <View className="mt-10 mb-2">
                 {/* Old Password Field */}
-                <LabelInput
+                <LabeledInput
                   label={t("settings.old_password")}
                   required
                   isSecure
@@ -158,7 +148,7 @@ const ChangePassword: React.FC = () => {
                 />
 
                 {/* New Password Field */}
-                <LabelInput
+                <LabeledInput
                   label={t("settings.new_password")}
                   required
                   isSecure
@@ -179,7 +169,7 @@ const ChangePassword: React.FC = () => {
                 />
 
                 {/* Confirm Password Field */}
-                <LabelInput
+                <LabeledInput
                   label={t("settings.confirm_new_password")}
                   required
                   isSecure

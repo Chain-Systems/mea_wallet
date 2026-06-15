@@ -1,4 +1,3 @@
-import { useNavigation } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,10 +9,10 @@ import {
   View,
 } from "react-native";
 import SvgIcon from "../../components/SvgIcon";
+import ScreenHeader from "../../components/ScreenHeader";
 
 const RecentActivity = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation();
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -34,17 +33,7 @@ const RecentActivity = () => {
           className="px-4 pt-8"
         >
           <View className="w-full pb-20">
-            <View className="items-center relative">
-              <Pressable
-                onPress={() => navigation.goBack()}
-                className="absolute left-0 top-2"
-              >
-                <SvgIcon name="leftArrow" />
-              </Pressable>
-              <Text className="text-lg font-semibold text-white">
-                {t("settings.recent_activity")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("settings.recent_activity")} />
             <View className="relative mt-8 h-full">
               <Text className="text-[17px] font-semibold text-gray-1200 mb-2">
                 Jan 6, 2025

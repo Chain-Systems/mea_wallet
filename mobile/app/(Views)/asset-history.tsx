@@ -22,7 +22,8 @@ import {
   truncateAddress,
 } from "@/utils/ui";
 import AssetHistoryList from "../components/AssetHistoryList";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
+import AppText from "../components/AppText";
 import { useDispatch } from "react-redux";
 import useUser from "@/hooks/api/useUser";
 import {
@@ -49,6 +50,7 @@ const AssetHistory = () => {
   const [history, setHistory] = useState<AssetHistoryItem[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [balanceLoading, setBalanceLoading] = useState(true);
   const [totalBlock, setTotalBlock] = useState(0);
 
   const [infoAlertVisible, setInfoAlertVisible] = useState(false);
@@ -57,14 +59,16 @@ const AssetHistory = () => {
   );
 
   const syncBalance = async () => {
+    setBalanceLoading(true);
     const res = await useUser.getBalance();
     if (typeof res === "string") {
       console.log(res, "fetch balance");
-      return;
+    } else {
+      console.log(res);
+      dispatch(setFreeBalances(res.free));
+      dispatch(setLockupBalances(res.lockup));
     }
-    console.log(res);
-    dispatch(setFreeBalances(res.free));
-    dispatch(setLockupBalances(res.lockup));
+    setBalanceLoading(false);
   };
 
   const performCopy = async (data: string) => {
@@ -109,12 +113,7 @@ const AssetHistory = () => {
       <View className="w-full h-full mx-auto">
         <ScrollView>
           <View className="w-full ">
-            <View className="items-center relative ">
-              <BackButton />
-              <Text className="text-lg font-semibold text-white">
-                {t("asset_history.title")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("asset_history.title")} />
 
             <View className="relative mt-10 flex flex-col justify-between">
               <View>
@@ -127,11 +126,23 @@ const AssetHistory = () => {
               </View>
 
               {/* Available Balance */}
-              <View className="flex items-center justify-center text-center px-8 bg-black-1200 w-full h-[71px] rounded-[15px] mb-6">
-                <Text className="text-white font-medium text-[15px]">
-                  {parseNumberForView(freeBalance)}{" "}
-                  <Text className="text-gray-1200">{displaySymbol}</Text>
-                </Text>
+              <View className="flex-row items-center justify-center px-8 bg-black-1200 w-full h-[71px] rounded-[15px] mb-6">
+                <AppText
+                  loading={balanceLoading}
+                  shimmerWidth={80}
+                  shimmerHeight={16}
+                  className="text-white font-medium text-[15px]"
+                >
+                  {parseNumberForView(freeBalance)}
+                </AppText>
+                <AppText
+                  loading={balanceLoading}
+                  shimmerWidth={40}
+                  shimmerHeight={16}
+                  className="text-gray-1200 text-[15px] ml-1"
+                >
+                  {displaySymbol}
+                </AppText>
               </View>
 
               {/* Activity Details */}

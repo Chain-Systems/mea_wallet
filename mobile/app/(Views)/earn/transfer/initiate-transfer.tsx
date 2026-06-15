@@ -26,7 +26,7 @@ import {
   parseNumberForView,
   updateIfValid,
 } from "@/utils/ui";
-import { BackButton } from "../../../components/BackButton";
+import ScreenHeader from "../../../components/ScreenHeader";
 import useUser from "@/hooks/api/useUser";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 import {
@@ -120,12 +120,7 @@ const InitiateTransfer = () => {
         <ScrollView className="h-full" keyboardShouldPersistTaps="handled">
           <View className="w-full h-full max-w-5xl mx-auto pb-0 ">
             <View className="w-full h-full">
-              <View className="items-center relative">
-                <BackButton />
-                <Text className="text-lg font-semibold text-white">
-                  {t("earn.transfer.title")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("earn.transfer.title")} />
 
               <View className="relative mt-10">
                 <View className="mt-2.5 mb-2">

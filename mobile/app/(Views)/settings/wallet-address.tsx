@@ -1,7 +1,6 @@
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 import DepositAddressList from "@/app/components/DepositAddressList";
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
-import SvgIcon from "@/app/components/SvgIcon";
 import useDeposit from "@/hooks/api/useDeposit";
 import {
   setRegisteredAddresses,
@@ -115,12 +114,7 @@ const WalletAddress = () => {
       >
         <View className="flex-1 bg-black-1000 h-full">
           <View className="w-full max-w-5xl mx-auto justify-between">
-            <View className="items-center">
-              <BackButton />
-              <Text className="text-lg font-semibold text-white">
-                {t("settings.wallet_address")}
-              </Text>
-            </View>
+            <ScreenHeader title={t("settings.wallet_address")} />
 
             <View className="mt-10 mb-2">
               <View className="w-full">

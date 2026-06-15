@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 import * as Clipboard from "expo-clipboard";
 import PrimaryButton from "@/app/components/PrimaryButton";
 import { useTranslation } from "react-i18next";
-import { BackButton } from "@/app/components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 
 const GoogleOTP = () => {
@@ -92,74 +92,71 @@ const GoogleOTP = () => {
   return (
     <View className="flex-1 bg-black-1000">
       <ScrollView className="flex-1">
-        <View className="w-full max-w-5xl mx-auto px-4 py-8">
-          <View className="items-center relative mb-8">
-            <BackButton />
-            <Text className="text-lg font-semibold text-white">
-              {t("settings.google_otp")}
-            </Text>
+        <View className="w-full max-w-5xl mx-auto">
+          <ScreenHeader title={t("settings.google_otp")} />
+
+          <View className="px-4 py-4">
+            {twoFAData?.isRegistered ? (
+              <View>
+                <TextInput
+                  placeholder={t("components.enter_otp")}
+                  placeholderTextColor="#6b7280"
+                  className="text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px] mb-3"
+                  value={otp}
+                  onChangeText={setOtp}
+                  keyboardType="numeric"
+                  autoComplete="off"
+                />
+                <OTPInstructionList
+                  instructions={[t("settings.otp_registered_hint")]}
+                />
+              </View>
+            ) : (
+              <View>
+                {twoFAData?.qrUrl ? (
+                  <View className="items-center mb-6">
+                    {twoFAData.qrUrl.startsWith("http") ? (
+                      <Image
+                        source={{ uri: twoFAData.qrUrl }}
+                        className="w-[200px] h-[200px]"
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <QRCode
+                        value={twoFAData.qrUrl}
+                        size={200}
+                        backgroundColor="white"
+                      />
+                    )}
+                  </View>
+                ) : null}
+
+                <SecretKeyCard
+                  secretCode={twoFAData?.secretCode ?? null}
+                  onCopy={handleCopy}
+                />
+
+                <TOTPAppBanner />
+
+                <OTPInstructionList instructions={instructions} />
+
+                <TextInput
+                  placeholder={t("components.enter_otp")}
+                  placeholderTextColor="#6b7280"
+                  className="mt-5 text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px]"
+                  value={otp}
+                  onChangeText={setOtp}
+                  keyboardType="numeric"
+                  autoComplete="off"
+                />
+                <PrimaryButton
+                  text={t("settings.verify")}
+                  onPress={validateTwoFABackup}
+                  className="mt-4"
+                />
+              </View>
+            )}
           </View>
-
-          {twoFAData?.isRegistered ? (
-            <View>
-              <TextInput
-                placeholder={t("components.enter_otp")}
-                placeholderTextColor="#6b7280"
-                className="text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px] mb-3"
-                value={otp}
-                onChangeText={setOtp}
-                keyboardType="numeric"
-                autoComplete="off"
-              />
-              <OTPInstructionList
-                instructions={[t("settings.otp_registered_hint")]}
-              />
-            </View>
-          ) : (
-            <View>
-              {twoFAData?.qrUrl ? (
-                <View className="items-center mb-6">
-                  {twoFAData.qrUrl.startsWith("http") ? (
-                    <Image
-                      source={{ uri: twoFAData.qrUrl }}
-                      className="w-[200px] h-[200px]"
-                      resizeMode="contain"
-                    />
-                  ) : (
-                    <QRCode
-                      value={twoFAData.qrUrl}
-                      size={200}
-                      backgroundColor="white"
-                    />
-                  )}
-                </View>
-              ) : null}
-
-              <SecretKeyCard
-                secretCode={twoFAData?.secretCode ?? null}
-                onCopy={handleCopy}
-              />
-
-              <TOTPAppBanner />
-
-              <OTPInstructionList instructions={instructions} />
-
-              <TextInput
-                placeholder={t("components.enter_otp")}
-                placeholderTextColor="#6b7280"
-                className="mt-5 text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px]"
-                value={otp}
-                onChangeText={setOtp}
-                keyboardType="numeric"
-                autoComplete="off"
-              />
-              <PrimaryButton
-                text={t("settings.verify")}
-                onPress={validateTwoFABackup}
-                className="mt-4"
-              />
-            </View>
-          )}
         </View>
       </ScrollView>
 

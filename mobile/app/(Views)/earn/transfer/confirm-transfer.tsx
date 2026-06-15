@@ -15,7 +15,7 @@ import { TokenBalances } from "@/src/types/balance";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/store";
 import InfoAlert, { InfoAlertProps } from "../../../components/InfoAlert";
-import { BackButton } from "../../../components/BackButton";
+import ScreenHeader from "../../../components/ScreenHeader";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 import useEarn from "@/hooks/api/useEarn";
@@ -91,12 +91,7 @@ const ConfirmTransfer = () => {
         <ScrollView className="h-full" keyboardShouldPersistTaps="handled">
           <View className="w-full h-full max-w-5xl mx-auto">
             <View className="w-full h-full">
-              <View className="items-center relative">
-                <BackButton />
-                <Text className="text-lg font-semibold text-white">
-                  {t("earn.transfer.title")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("earn.transfer.title")} />
 
               <View className="relative mt-10">
                 <View className="mb-4">

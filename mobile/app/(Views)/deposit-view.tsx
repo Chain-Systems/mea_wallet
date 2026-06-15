@@ -14,6 +14,7 @@ import {
 import SvgIcon from "../components/SvgIcon";
 import PrimaryButton from "../components/PrimaryButton";
 import InfoAlert, { InfoAlertProps } from "../components/InfoAlert";
+import AppText from "../components/AppText";
 import { useAppDispatch } from "@/src/store/hooks";
 import { setMinDeposit } from "@/src/features/token/tokenSlice"; // adjust slice import
 import useDeposit from "@/hooks/api/useDeposit";
@@ -26,7 +27,7 @@ import {
   setTokenDepositAddress,
 } from "@/src/features/asset/depositSlice";
 import { parseNumberForView, updateIfValid } from "@/utils/ui";
-import { BackButton } from "../components/BackButton";
+import ScreenHeader from "../components/ScreenHeader";
 
 const Deposit = () => {
   const { t } = useTranslation();
@@ -102,12 +103,7 @@ const Deposit = () => {
         <ScrollView className="h-full" keyboardShouldPersistTaps="handled">
           <View className="w-full h-full max-w-5xl mx-auto pb-0 ">
             <View className="w-full h-full">
-              <View className="items-center relative">
-                <BackButton />
-                <Text className="text-lg font-semibold text-white">
-                  {t("deposit.title")}
-                </Text>
-              </View>
+              <ScreenHeader title={t("deposit.title")} />
 
               <View className="relative mt-10">
                 <View className="mt-2.5 mb-2">
@@ -120,12 +116,19 @@ const Deposit = () => {
 
                   <View className="relative">
                     <View className="text-[15px] flex flex-row items-center justify-center text-center text-white font-medium px-8 bg-black-1200 w-full h-[71px] rounded-[15px]">
-                      <Text className="text-white">
+                      <AppText
+                        loading={!freeBalance}
+                        shimmerWidth={80}
+                        shimmerHeight={16}
+                        className="text-[15px] text-white font-medium"
+                      >
                         {parseNumberForView(freeBalance)}
-                      </Text>
-                      <Text className="text-gray-1200 ml-1">
+                      </AppText>
+                      <AppText
+                        className="text-[15px] text-gray-1200 font-medium ml-1"
+                      >
                         {displaySymbol}
-                      </Text>
+                      </AppText>
                     </View>
                   </View>
 

@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/src/store";
 import { setKycCompleted } from "@/src/features/user/userSlice";
 import { showInfo } from "@/src/features/infoOverLaySlice";
-import { BackButton } from "../../components/BackButton";
+import ScreenHeader from "../../components/ScreenHeader";
 import PrimaryButton from "../../components/PrimaryButton";
 import LabeledInput from "../../components/LabeledInput";
 import storage from "@/storage";
@@ -216,12 +216,7 @@ export default function KycReady() {
         <View className="flex-1 w-full mx-auto justify-between">
 
           {/* Header */}
-          <View className="items-center relative mb-6">
-            <BackButton />
-            <Text className="text-lg font-semibold text-white text-center">
-              KYC Verification
-            </Text>
-          </View>
+          <ScreenHeader title="KYC Verification" />
 
           {/* Loading */}
           {screenState === "loading" && (
