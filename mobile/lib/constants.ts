@@ -7,8 +7,8 @@ export const apiKey = "450692dcc1664131acaaf3c58ff2d51a";
 
 export const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.meccain.ping";
-// TODO: replace with the real numeric App Store ID once published
-export const APP_STORE_ID = "123456789";
+export const APP_STORE_ID =
+  process.env.EXPO_PUBLIC_APP_STORE_ID ?? "6752386869";
 // TODO: confirm the official website download page URL
 export const WEBSITE_DOWNLOAD_URL = "https://pingwallet.info/download";
 export const defaultTokenList: DefaultToken[] = [
