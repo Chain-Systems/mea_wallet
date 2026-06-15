@@ -52,10 +52,19 @@ jobs:
       - name: Resolve bump level
         id: level
         run: |
-          MAIN_VER=$(node -p "require('./mobile/package.json').version")
+          set -euo pipefail
+          MAIN_VER=$(node -p "require('./mobile/package.json').version || ''")
           git fetch origin release --depth=1
-          RELEASE_VER=$(git show origin/release:mobile/package.json \
-            | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).version")
+          # Read release version via a temp file (robust — no piped stdin to node -p)
+          git show origin/release:mobile/package.json > /tmp/release-package.json
+          RELEASE_VER=$(node -p "require('/tmp/release-package.json').version || ''")
+
+          if [ -z "$MAIN_VER" ] || [ "$MAIN_VER" = "undefined" ]; then
+            echo "::error::could not read version from mobile/package.json on main"; exit 1
+          fi
+          if [ -z "$RELEASE_VER" ] || [ "$RELEASE_VER" = "undefined" ]; then
+            echo "::error::could not read version from mobile/package.json on release"; exit 1
+          fi
 
           INPUT="${{ inputs.bump }}"
           if [ "$INPUT" = "auto" ]; then
@@ -77,7 +86,11 @@ jobs:
           OLD: ${{ steps.level.outputs.main_ver }}
           LEVEL: ${{ steps.level.outputs.level }}
         run: |
+          set -euo pipefail
           NEW=$(npx --yes semver "$OLD" -i "$LEVEL")
+          if [ -z "$NEW" ]; then
+            echo "::error::semver produced an empty version from OLD=$OLD LEVEL=$LEVEL"; exit 1
+          fi
           export NEW
           node -e "
             const fs = require('fs');
