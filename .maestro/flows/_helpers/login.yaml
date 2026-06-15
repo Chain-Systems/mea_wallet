@@ -33,16 +33,6 @@ appId: com.meccain.ping
     text: "Sign In"
     index: 1
 
-# Dismiss 2FA setup modal if it appears (test account may not have 2FA configured)
-- tapOn:
-    text: "OK"
-    index: 0
-    optional: true
-
-# If the Google OTP setup screen appears (forced 2FA enrollment for test account),
-# press Back to skip it and return to the Home screen.
-- pressKey: Back
-
 # "Receive" button is always visible on the Home screen (tab bar is icon-only)
 - extendedWaitUntil:
     visible:
