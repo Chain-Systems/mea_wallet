@@ -89,7 +89,7 @@ const ConfirmWithdraw = () => {
     if (result === "kyc_required") {
       setInfoAlertState({
         type: "info",
-        text: t("withdrawal.kyc_required_to_withdraw"),
+        text: t("withdrawal.kyc_verification_notice"),
         primaryButtonText: t("kyc.verify_now") ?? "Verify Now",
       });
       setKycRequired(true);

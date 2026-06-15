@@ -63,9 +63,9 @@ export default function SettingsScreen() {
             onPress={() => router.push("/(Views)/settings/wallet-address")}
           />
 
-          {/* Google OTP */}
+          {/* 2FA Verification */}
           <SettingsRow
-            icon={<SvgIcon name="googleIcon1" width="16" />}
+            icon={<SvgIcon name="otpIcon" width="16" color="white" />}
             label={t("settings.google_otp")}
             onPress={() => router.push("/(Views)/settings/google-otp")}
           />

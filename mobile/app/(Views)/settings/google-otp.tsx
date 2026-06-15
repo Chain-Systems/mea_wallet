@@ -1,4 +1,7 @@
 import InfoAlert, { InfoAlertProps } from "@/app/components/InfoAlert";
+import OTPInstructionList from "@/app/components/OTPInstructionList";
+import SecretKeyCard from "@/app/components/SecretKeyCard";
+import TOTPAppBanner from "@/app/components/TOTPAppBanner";
 import useUser from "@/hooks/api/useUser";
 import QRCode from "react-native-qrcode-svg";
 import { setTwoFAData } from "@/src/features/user/userSlice";
@@ -12,7 +15,6 @@ import {
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useSelector } from "react-redux";
@@ -35,11 +37,7 @@ const GoogleOTP = () => {
 
   const validateTwoFABackup = async () => {
     if (!otp) {
-      setModalState({
-        ...modalState,
-        type: "error",
-        text: t("settings.otp_required"),
-      });
+      setModalState({ type: "error", text: t("settings.otp_required") });
       setModalVisible(true);
       return;
     }
@@ -47,62 +45,33 @@ const GoogleOTP = () => {
     let result = await useUser.validate2FABackup(otp);
     dispatch(hideLoading());
     if (typeof result === "string") {
-      //show error
-      setModalState({
-        ...modalState,
-        type: "error",
-        text: result,
-      });
+      setModalState({ type: "error", text: result });
       setModalVisible(true);
       return;
     }
-    setModalState({
-      ...modalState,
-      type: "success",
-      text: t("settings.otp_setup_completed"),
-    });
+    setModalState({ type: "success", text: t("settings.otp_setup_completed") });
     setSetUpCompleted(true);
     setModalVisible(true);
-    dispatch(
-      setTwoFAData({
-        isRegistered: true,
-        qrUrl: "",
-        secretCode: "",
-      })
-    );
+    dispatch(setTwoFAData({ isRegistered: true, qrUrl: "", secretCode: "" }));
   };
+
   const syncTwoFAData = async () => {
     let result = await useUser.getTwoFAData();
     if (typeof result === "string") {
-      //show error
-      setModalState({
-        ...modalState,
-        type: "error",
-        text: result,
-      });
+      setModalState({ type: "error", text: result });
       setModalVisible(true);
       return;
     }
     if (result.isRegistered) {
-      setModalState({
-        ...modalState,
-        type: "success",
-        text: t("settings.otp_already_setup"),
-      });
+      setModalState({ type: "success", text: t("settings.otp_already_setup") });
       setSetUpCompleted(true);
       setModalVisible(true);
-      dispatch(
-        setTwoFAData({
-          isRegistered: true,
-          qrUrl: "",
-          secretCode: "",
-        })
-      );
+      dispatch(setTwoFAData({ isRegistered: true, qrUrl: "", secretCode: "" }));
       return;
     }
-    console.log(result);
     dispatch(setTwoFAData(result));
   };
+
   const handleCopy = async () => {
     if (!twoFAData) return;
     await Clipboard.setStringAsync(twoFAData.secretCode);
@@ -112,116 +81,91 @@ const GoogleOTP = () => {
   useEffect(() => {
     syncTwoFAData();
   }, []);
+
+  const instructions = [
+    t("settings.otp_instruction_1"),
+    t("settings.otp_instruction_2"),
+    t("settings.otp_instruction_3"),
+    t("settings.otp_instruction_4"),
+  ];
+
   return (
     <View className="flex-1 bg-black-1000">
       <ScrollView className="flex-1">
-        <View className="w-full h-full max-w-5xl mx-auto justify-center">
+        <View className="w-full max-w-5xl mx-auto">
           <ScreenHeader title={t("settings.google_otp")} />
 
-          <View className="my-auto">
-            <View className="w-full">
-              {/* QR Code */}
-              <View className="items-center">
-                {twoFAData && twoFAData.qrUrl ? (
-                  twoFAData.qrUrl.startsWith("http") ? (
-                    <Image
-                      source={{ uri: twoFAData.qrUrl }}
-                      className="max-w-[390px] w-[200px] h-[200px]"
-                      resizeMode="contain"
-                    />
-                  ) : (
-                    <QRCode
-                      value={twoFAData.qrUrl}
-                      size={200}
-                      backgroundColor="white"
-                    />
-                  )
+          <View className="px-4 py-4">
+            {twoFAData?.isRegistered ? (
+              <View>
+                <TextInput
+                  placeholder={t("components.enter_otp")}
+                  placeholderTextColor="#6b7280"
+                  className="text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px] mb-3"
+                  value={otp}
+                  onChangeText={setOtp}
+                  keyboardType="numeric"
+                  autoComplete="off"
+                />
+                <OTPInstructionList
+                  instructions={[t("settings.otp_registered_hint")]}
+                />
+              </View>
+            ) : (
+              <View>
+                {twoFAData?.qrUrl ? (
+                  <View className="items-center mb-6">
+                    {twoFAData.qrUrl.startsWith("http") ? (
+                      <Image
+                        source={{ uri: twoFAData.qrUrl }}
+                        className="w-[200px] h-[200px]"
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <QRCode
+                        value={twoFAData.qrUrl}
+                        size={200}
+                        backgroundColor="white"
+                      />
+                    )}
+                  </View>
                 ) : null}
-              </View>
 
-              {/* Input with Copy Button */}
-              <View className="relative my-8">
-                <View className="bg-black-1200 mb-8 flex-row rounded-md py-4 px-3 mt-2 items-center">
-                  <Text className="text-base font-semibold text-white">
-                    {t("settings.secret_key")}
-                  </Text>
-                  <Text className="text-[15px] text-gray-1000 inline-block ml-2 flex-1">
-                    {twoFAData ? twoFAData.secretCode : "---"}
-                  </Text>
+                <SecretKeyCard
+                  secretCode={twoFAData?.secretCode ?? null}
+                  onCopy={handleCopy}
+                />
 
-                  <TouchableOpacity
-                    onPress={handleCopy}
-                    className="right-3 bg-pink-1100 py-[4px] px-[8px] rounded-2xl "
-                  >
-                    <Text className="text-white text-[14px] font-medium leading-[22px]">
-                      {t("common.copy")}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                {/* Instruction List */}
-                <View className="pl-6 pr-10">
-                  <View className="flex-row items-center mb-1 gap-2.5">
-                    <View className="w-5 h-5 border border-white !rounded-full items-center justify-center">
-                      <Text className="text-white flex text-xs">1</Text>
-                    </View>
-                    <Text className="text-[15px] font-normal leading-5 text-gray-1000">
-                      {t("settings.otp_instruction_1")}
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center mb-1 gap-2.5">
-                    <View className="w-5 h-5 border border-white !rounded-full items-center justify-center">
-                      <Text className="text-white flex text-xs">2</Text>
-                    </View>
-                    <Text className="text-[15px] font-normal leading-5 text-gray-1000">
-                      {t("settings.otp_instruction_2")}
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center mb-1 gap-2.5">
-                    <View className="w-5 h-5 border border-white !rounded-full items-center justify-center">
-                      <Text className="text-white flex text-xs">3</Text>
-                    </View>
-                    <Text className="text-[15px] font-normal leading-5 text-gray-1000">
-                      {t("settings.otp_instruction_3")}
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center mb-1 gap-2.5">
-                    <View className="w-5 h-5 border border-white !rounded-full items-center justify-center">
-                      <Text className="text-white flex text-xs">4</Text>
-                    </View>
-                    <Text className="text-[15px] font-normal leading-5 text-gray-1000">
-                      {t("settings.otp_instruction_4")}
-                    </Text>
-                  </View>
-                </View>
-                {twoFAData && twoFAData.isRegistered === false && (
-                  <View>
-                    <TextInput
-                      placeholder={t("components.enter_otp")}
-                      placeholderTextColor="#6b7280"
-                      className="mt-5 text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px]"
-                      value={otp}
-                      onChangeText={setOtp}
-                    />
-                    <PrimaryButton
-                      text={t("settings.verify")}
-                      onPress={validateTwoFABackup}
-                      className="mt-6"
-                    />
-                  </View>
-                )}
+                <TOTPAppBanner />
+
+                <OTPInstructionList instructions={instructions} />
+
+                <TextInput
+                  placeholder={t("components.enter_otp")}
+                  placeholderTextColor="#6b7280"
+                  className="mt-5 text-base text-white font-semibold px-3 border border-gray-1000 w-full h-[53px] rounded-[6px]"
+                  value={otp}
+                  onChangeText={setOtp}
+                  keyboardType="numeric"
+                  autoComplete="off"
+                />
+                <PrimaryButton
+                  text={t("settings.verify")}
+                  onPress={validateTwoFABackup}
+                  className="mt-4"
+                />
               </View>
-            </View>
+            )}
           </View>
         </View>
       </ScrollView>
+
       <InfoAlert
         {...modalState}
         visible={modalVisible}
         setVisible={setModalVisible}
         onDismiss={() => {
-          if (setUpCompleted) {
-            router.back();
-          }
+          if (setUpCompleted) router.back();
         }}
       />
     </View>
