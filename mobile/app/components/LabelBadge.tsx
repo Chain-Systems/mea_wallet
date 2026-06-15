@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, Easing, Pressable, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-export type LabelBadgeTone = "success" | "danger";
+export type LabelBadgeTone = "success" | "danger" | "warning";
 
 const toneStyles: Record<
   LabelBadgeTone,
@@ -18,11 +18,16 @@ const toneStyles: Record<
     dot: "bg-red-1000",
     text: "text-red-1000",
   },
+  warning: {
+    pill: "bg-yellow-500/15 border-yellow-500/50",
+    dot: "bg-yellow-500",
+    text: "text-yellow-400",
+  },
 };
 
 /** Width/height of the skeleton shown while `loading`. */
-const SKELETON_WIDTH = 118;
-const SKELETON_HEIGHT = 26;
+const SKELETON_WIDTH = 90;
+const SKELETON_HEIGHT = 20;
 
 /**
  * Shimmer skeleton rendered in place of the badge while its data loads.
@@ -114,16 +119,16 @@ export default function LabelBadge({
       onPress={onPress}
       accessibilityRole={onPress ? "button" : "text"}
       accessibilityLabel={label}
-      className={`flex-row items-center gap-1.5 rounded-full border px-3 py-1 ${styles.pill}`}
+      className={`flex-row items-center gap-1 rounded-full border px-2 py-0.5 ${styles.pill}`}
     >
       <View
-        className={`w-4 h-4 rounded-full items-center justify-center ${styles.dot}`}
+        className={`w-3.5 h-3.5 rounded-full items-center justify-center ${styles.dot}`}
       >
-        <Text className="text-[10px] font-bold text-white text-center">
+        <Text className="text-[9px] font-bold text-white text-center">
           {glyph}
         </Text>
       </View>
-      <Text className={`text-[12px] font-bold tracking-[-0.2px] ${styles.text}`}>
+      <Text className={`text-[11px] font-bold tracking-[-0.2px] ${styles.text}`}>
         {label}
       </Text>
     </Container>
