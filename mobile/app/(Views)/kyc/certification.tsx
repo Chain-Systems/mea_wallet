@@ -130,7 +130,7 @@ export default function KycCertification() {
               <SvgIcon name="leftArrow" width="21" height="21" />
             </View>
           </Pressable>
-          <Text className="text-xl font-semibold text-white text-center">
+          <Text className="text-lg font-semibold text-white text-center">
             KYC Verification
           </Text>
         </View>

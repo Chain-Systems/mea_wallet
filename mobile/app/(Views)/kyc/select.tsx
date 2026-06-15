@@ -74,17 +74,18 @@ export default function KycSelect() {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="w-full max-w-5xl mx-auto px-[18px] pt-6 pb-8">
+        <View className="w-full max-w-5xl mx-auto px-5 pb-8">
           {/* Header */}
-          <View className="relative items-center min-h-[42px] justify-center mb-2">
+          <View className="items-center relative min-h-[44px] justify-center mb-4">
             <BackButton />
-            <Text className="text-xl font-extrabold text-white">
+            <Text className="text-lg font-semibold text-white text-center">
               Select your country
             </Text>
           </View>
 
-          <Text className="text-center text-[13px] font-semibold text-blue-400 mb-6">
-            Chọn quốc gia của bạn · 국가를 선택하세요 · 选择您的国家
+          <Text className="text-center text-[13px] font-semibold text-blue-400 mb-6 leading-[20px]">
+            Chọn quốc gia của bạn · 국가를 선택하세요{"\n"}
+            选择您的国家 · Select your country
           </Text>
 
           {/* 2×2 grid */}

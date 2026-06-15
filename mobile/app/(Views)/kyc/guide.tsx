@@ -13,10 +13,10 @@ import PrimaryButton from "../../components/PrimaryButton";
 type Lang = "vi" | "en" | "ko" | "zh";
 const LANGS: Lang[] = ["vi", "en", "ko", "zh"];
 const LANG_LABELS: Record<Lang, string> = {
-  vi: "VI",
-  en: "EN",
-  ko: "KO",
-  zh: "ZH",
+  vi: "Tiếng Việt",
+  en: "English",
+  ko: "한국어",
+  zh: "中文",
 };
 
 const COUNTRY_TO_LANG: Record<string, Lang> = {
@@ -174,31 +174,34 @@ export default function KycGuide() {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="w-full max-w-5xl mx-auto px-[18px] pt-6 pb-10">
-          {/* Header row */}
-          <View className="relative items-center min-h-[42px] justify-center mb-1">
+        <View className="w-full max-w-5xl mx-auto px-5 pb-10">
+          {/* Header */}
+          <View className="items-center relative min-h-[44px] justify-center mb-4">
             <BackButton />
-            <Text className="text-xl font-extrabold text-white">{d.title}</Text>
-            {/* Language tabs */}
-            <View className="absolute right-0 flex-row gap-1">
-              {LANGS.map((l) => (
-                <Pressable
-                  key={l}
-                  onPress={() => setLang(l)}
-                  className={`px-2 py-[3px] rounded-full ${
-                    lang === l ? "bg-pink-1100" : "bg-black-1200"
+            <Text className="text-lg font-semibold text-white text-center">
+              {d.title}
+            </Text>
+          </View>
+
+          {/* Language tabs — own row below the title */}
+          <View className="flex-row flex-wrap justify-center gap-2 mb-4">
+            {LANGS.map((l) => (
+              <Pressable
+                key={l}
+                onPress={() => setLang(l)}
+                className={`px-3 py-[5px] rounded-full ${
+                  lang === l ? "bg-pink-1100" : "bg-black-1200"
+                }`}
+              >
+                <Text
+                  className={`text-[12px] font-bold ${
+                    lang === l ? "text-white" : "text-gray-400"
                   }`}
                 >
-                  <Text
-                    className={`text-[11px] font-bold ${
-                      lang === l ? "text-white" : "text-gray-400"
-                    }`}
-                  >
-                    {LANG_LABELS[l]}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
+                  {LANG_LABELS[l]}
+                </Text>
+              </Pressable>
+            ))}
           </View>
 
           <Text className="text-[13px] text-gray-400 text-center mb-5 leading-[18px]">
@@ -206,7 +209,7 @@ export default function KycGuide() {
           </Text>
 
           {/* Document card */}
-          <Animated.View style={{ opacity: fadeAnim }}>
+          <Animated.View key={lang} style={{ opacity: fadeAnim }}>
             <View className="bg-[#e8e4d8] rounded-[14px] p-4 mb-5">
               <Text className="text-[10px] font-bold text-[#555] text-center mb-2 tracking-wider">
                 {d.docHeader}
