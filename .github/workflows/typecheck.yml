@@ -28,5 +28,40 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # `experiments.typedRoutes` is enabled in app.json, but the generated
+      # route types live in `.expo/types/router.d.ts`, which is gitignored and
+      # therefore absent in CI. Without it, Expo Router's `Href` type degrades
+      # to `string` and bogus route literals (e.g. router.push("/does/not/exist"))
+      # pass tsc silently. We generate the types by briefly booting the Expo
+      # dev server offline (the only path that emits `.expo/types`; note that
+      # `expo export` does NOT generate these). The server is killed as soon as
+      # the file appears, and the step fails if it never does.
+      - name: Generate Expo Router types
+        env:
+          CI: "1"
+          EXPO_NO_TELEMETRY: "1"
+        run: |
+          set -euo pipefail
+          npx expo start --offline --port 8097 > /tmp/expo-typegen.log 2>&1 &
+          EXPO_PID=$!
+          cleanup() { kill -9 "$EXPO_PID" 2>/dev/null || true; }
+          trap cleanup EXIT
+
+          deadline=$(( $(date +%s) + 120 ))
+          until [ -f .expo/types/router.d.ts ]; do
+            if ! kill -0 "$EXPO_PID" 2>/dev/null; then
+              echo "::error::Expo dev server exited before generating route types"
+              cat /tmp/expo-typegen.log || true
+              exit 1
+            fi
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "::error::Timed out waiting for .expo/types/router.d.ts"
+              cat /tmp/expo-typegen.log || true
+              exit 1
+            fi
+            sleep 1
+          done
+          echo "Generated .expo/types/router.d.ts"
+
       - name: Run TypeScript compiler
         run: npx tsc --noEmit
