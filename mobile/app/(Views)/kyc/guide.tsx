@@ -145,15 +145,10 @@ export default function KycGuide() {
   const animName = useTypewriter(d.nameChips.map((c) => c.split("\n")[1]).join(" "), 55);
   const animDob = useTypewriter(d.dobConverted, 65);
 
-  // Fade-in for the document card
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  // Card is visible on first paint (no transparent->opaque pop). Reset the
+  // agreement when the language changes so the checkbox state stays in sync.
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   useEffect(() => {
-    fadeAnim.setValue(0);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 350,
-      useNativeDriver: true,
-    }).start();
     setAgreed(false);
   }, [lang]);
 
@@ -177,7 +172,7 @@ export default function KycGuide() {
           </Text>
 
           {/* Document card */}
-          <Animated.View key={lang} style={{ opacity: fadeAnim }}>
+          <Animated.View style={{ opacity: fadeAnim }}>
             <View className="bg-[#e8e4d8] rounded-[14px] p-4 mb-5">
               <Text className="text-[10px] font-bold text-[#555] text-center mb-2 tracking-wider">
                 {d.docHeader}
