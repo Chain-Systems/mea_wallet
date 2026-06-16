@@ -43,15 +43,16 @@ jobs:
 
       - name: Apply version to package.json and app.json
         working-directory: mobile
+        env:
+          NEW: ${{ steps.ver.outputs.new }}
         run: |
-          NEW=${{ steps.ver.outputs.new }}
           node -e "
             const fs = require('fs');
             ['package.json', 'app.json'].forEach(f => {
               const raw = fs.readFileSync(f, 'utf8');
               fs.writeFileSync(f, raw.replace(/\"version\": \"[^\"]+\"/, '\"version\": \"' + process.env.NEW + '\"'));
             });
-          " NEW=$NEW
+          "
 
       - name: Commit and push branch
         run: |
