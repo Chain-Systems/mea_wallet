@@ -37,7 +37,7 @@ jobs:
   notify_android_success:
     name: Notify Android Success
     needs: [build_android]
-    if: ${{ needs.build_android.result == 'success' }}
+    if: ${{ success() }}
     environment: production
     steps:
       - uses: eas/send_slack_message
@@ -53,8 +53,8 @@ jobs:
 
   notify_android_failure:
     name: Notify Android Failure
-    needs: [build_android]
-    if: ${{ needs.build_android.result == 'failure' }}
+    after: [build_android]
+    if: ${{ failure() }}
     environment: production
     steps:
       - uses: eas/send_slack_message
@@ -69,7 +69,7 @@ jobs:
   notify_ios_success:
     name: Notify iOS Success
     needs: [build_ios, submit_ios]
-    if: ${{ needs.build_ios.result == 'success' && needs.submit_ios.result == 'success' }}
+    if: ${{ success() }}
     environment: production
     steps:
       - uses: eas/send_slack_message
@@ -85,8 +85,8 @@ jobs:
 
   notify_ios_failure:
     name: Notify iOS Failure
-    needs: [build_ios, submit_ios]
-    if: ${{ needs.build_ios.result == 'failure' || needs.submit_ios.result == 'failure' }}
+    after: [build_ios, submit_ios]
+    if: ${{ failure() }}
     environment: production
     steps:
       - uses: eas/send_slack_message

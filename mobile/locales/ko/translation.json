@@ -18,7 +18,8 @@
       "email_required": "이메일은 필수입니다.",
       "password_required": "비밀번호는 필수입니다.",
       "login_error": "로그인 오류",
-      "account_unlock": "계정 잠금 해제"
+      "account_unlock": "계정 잠금 해제",
+      "generic_error": "지금 로그인할 수 없습니다. 다시 시도해 주세요."
     },
     "signup": {
       "title": "회원가입",
