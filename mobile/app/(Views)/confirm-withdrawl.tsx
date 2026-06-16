@@ -89,7 +89,7 @@ const ConfirmWithdraw = () => {
     if (result === "kyc_required") {
       setInfoAlertState({
         type: "info",
-        text: t("withdrawal.kyc_verification_notice"),
+        text: t("withdrawal.kyc_required_to_withdraw"),
         primaryButtonText: t("kyc.verify_now") ?? "Verify Now",
       });
       setKycRequired(true);
@@ -237,7 +237,7 @@ const ConfirmWithdraw = () => {
           setVisible={setInfoAlertVisible}
           onDismiss={() => {
             if (kycRequired) {
-              router.replace("/(Views)/kyc/ready");
+              router.replace("/(Views)/kyc/select");
               return;
             }
             if (withdrawlSuccess) {
