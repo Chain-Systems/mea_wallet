@@ -133,7 +133,9 @@ const Signin: React.FC = () => {
     } catch {
       pendingPopup = {
         title: t("auth.signin.login_error"),
-        content: "Unable to sign in right now. Please try again.",
+        content: t("auth.signin.generic_error", {
+          defaultValue: "Unable to sign in right now. Please try again.",
+        }),
         action: null,
       };
     } finally {
@@ -147,6 +149,9 @@ const Signin: React.FC = () => {
         });
       } else if (shouldNavigateHome) {
         runAfterLoadingHidden(() => {
+          if (router.canDismiss()) {
+            router.dismissAll();
+          }
           router.replace("/(Tabs)/home");
         });
       }
