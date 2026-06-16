@@ -1,0 +1,74 @@
+appId: com.meccain.ping
+tags:
+  - smoke
+---
+# Flow: Home KYC badge (Feature 2 - v1.1.5)
+#
+# Verifies that a LabelBadge is rendered below the user email on the Home screen
+# and that tapping it behaves correctly for the UNVERIFIED account state.
+#
+# Branch exercised: UNVERIFIED (expected for test@korea2.com, a fresh test account).
+# The LabelBadge in home.tsx renders:
+#   label="Unverified"  tone="warning"  onPress → router.push("/(Views)/kyc/ready")
+#
+# If this account ever becomes KYC-verified, the assertion on "Unverified" will fail
+# (intentionally — you must update this flow to the Verified branch described at the
+# bottom of this file).  This is preferable to masking regressions with optional: true.
+
+# ── 1. Authenticate ───────────────────────────────────────────────────────────
+# Resets state, launches app, signs in with ${TEST_EMAIL}/${TEST_PASSWORD},
+# dismisses optional modals, and waits until "Receive" is visible on Home.
+- runFlow: ../_helpers/login.yaml
+
+# ── 2. Wait for the KYC badge to resolve from shimmer to real text ────────────
+# LabelBadge shows a BadgeShimmer while loading=true (kycFetched=false).
+# The fetchKycStatus() call is fire-and-forget on Home mount. Allow 12 s.
+- extendedWaitUntil:
+    visible:
+      text: "Unverified"
+    timeout: 12000
+
+# ── 3. Assert the "Unverified" badge is visible ───────────────────────────────
+# This is a hard assertion — it confirms the badge rendered with the correct label
+# and tone for an unverified account.
+- assertVisible:
+    text: "Unverified"
+
+# ── 4. Tap the "Unverified" badge ─────────────────────────────────────────────
+# The Pressable wrapper has onPress → router.push("/(Views)/kyc/ready").
+# accessibilityLabel is set to "Unverified" so Maestro can locate it.
+- tapOn:
+    text: "Unverified"
+
+# ── 5. Assert navigation to KYC Verification page ─────────────────────────────
+# kyc/ready renders a header with the hard-coded string "KYC Verification".
+# Source: mobile/app/(Views)/kyc/ready.tsx line ~221
+- extendedWaitUntil:
+    visible:
+      text: "KYC Verification"
+    timeout: 10000
+
+- assertVisible:
+    text: "KYC Verification"
+
+# ─── NOTE: VERIFIED BRANCH ────────────────────────────────────────────────────
+# If the test account is KYC-verified (badge shows "Verified"), replace steps 2–5
+# with the following:
+#
+#   - extendedWaitUntil:
+#       visible:
+#         text: "Verified"
+#       timeout: 12000
+#
+#   - assertVisible:
+#       text: "Verified"
+#
+#   # "Verified" badge has NO onPress handler — tapping must NOT navigate away.
+#   - tapOn:
+#       text: "Verified"
+#
+#   # Home screen must still be visible ("Receive" quick-action is always present).
+#   - assertVisible:
+#       text: "Receive"
+#
+# Branch exercised: VERIFIED — no navigation on tap (kycCompleted === true).
