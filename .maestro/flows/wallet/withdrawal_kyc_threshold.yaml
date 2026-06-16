@@ -74,5 +74,7 @@ tags:
 - assertVisible:
     text: "Total withdrawal"
 
+# Country selection was removed; this sub-threshold withdrawal must NOT redirect
+# into the KYC guide (language-neutral marker from the guide's doc card).
 - assertNotVisible:
-    text: "Select your country"
+    text: "Name / 姓名 / 성명"

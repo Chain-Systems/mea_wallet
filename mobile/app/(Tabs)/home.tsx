@@ -270,7 +270,7 @@ export default function HomeScreen() {
                   onPress={
                     kycCompleted
                       ? undefined
-                      : () => router.push("/(Views)/kyc/select")
+                      : () => router.push("/(Views)/kyc/guide")
                   }
                 />
               </View>
