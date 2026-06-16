@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Keyboard,
@@ -30,6 +30,7 @@ const Signin: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Validation state
   const [inputError, setInputError] = useState<string | null>(null);
@@ -69,37 +70,51 @@ const Signin: React.FC = () => {
     return true;
   };
   const handleSignIn = async () => {
+    if (isSubmitting) {
+      return;
+    }
     Keyboard.dismiss();
     if (!validateForm()) {
       return;
     }
+    setIsSubmitting(true);
     dispatch(showLoading());
-    const result = await useAuth.login(email, password);
-    dispatch(hideLoading());
 
-    if (typeof result === "string") {
-      const msgKey = `api.response.login.${result}`;
-      const msg = t(msgKey, { defaultValue: result });
-      setLoginPopupTitle(t("auth.signin.login_error"));
-      setLoginPopupContent(msg);
-      if (result === "account_locked") {
-        setLoginPopupAction({
-          label: t("auth.signin.account_unlock"),
-          fn: () => router.push("/(auth)/account-unlock"),
-        });
-      } else {
-        setLoginPopupAction(null);
+    try {
+      const result = await useAuth.login(email, password);
+
+      if (typeof result === "string") {
+        const msgKey = `api.response.login.${result}`;
+        const msg = t(msgKey, { defaultValue: result });
+        setLoginPopupTitle(t("auth.signin.login_error"));
+        setLoginPopupContent(msg);
+        if (result === "account_locked") {
+          setLoginPopupAction({
+            label: t("auth.signin.account_unlock"),
+            fn: () => router.push("/(auth)/account-unlock"),
+          });
+        } else {
+          setLoginPopupAction(null);
+        }
+        setLoginPopupVisible(true);
+        return;
       }
-      setLoginPopupVisible(true);
-      return;
-    }
 
-    resetAuthToken();
-    await storage.save(STORAGE_KEYS.AUTH.TOKEN, result.token);
-    if (router.canDismiss()) {
-      router.dismissAll();
+      resetAuthToken();
+      await storage.save(STORAGE_KEYS.AUTH.TOKEN, result.token);
+      if (router.canDismiss()) {
+        router.dismissAll();
+      }
+      router.replace("/(Tabs)/home");
+    } catch {
+      setLoginPopupTitle(t("auth.signin.login_error"));
+      setLoginPopupContent("Unable to sign in right now. Please try again.");
+      setLoginPopupAction(null);
+      setLoginPopupVisible(true);
+    } finally {
+      dispatch(hideLoading());
+      setIsSubmitting(false);
     }
-    router.replace("/(Tabs)/home");
   };
 
   useEffect(() => {
@@ -240,7 +255,7 @@ const Signin: React.FC = () => {
               onPress={handleSignIn}
               className="mb-[9px]"
               text={t("auth.signin.sign_in")}
-              disabled={inputError !== null}
+              disabled={isSubmitting}
             />
             <View className="my-2">
               <TouchableOpacity onPress={() => router.push("/forget-password")}>
