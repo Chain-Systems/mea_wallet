@@ -1,7 +1,7 @@
 {
   "name": "mecca-native",
   "main": "expo-router/entry",
-  "version": "undefined",
+  "version": "1.1.6",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
