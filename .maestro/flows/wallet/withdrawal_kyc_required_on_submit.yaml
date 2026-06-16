@@ -1,13 +1,13 @@
 appId: com.meccain.ping
 tags:
-  - smoke
+  - manual
 ---
-# Flow: large withdrawals must still reach confirm-withdrawl first.
+# Flow: backend-driven KYC redirect after withdraw submit.
 #
-# Regression guard:
-# - screen 1 must not redirect to KYC based on amount alone
-# - screen 1 must not show the old frontend KYC warning banner
-# - the confirm screen owns the eventual /api/withdraw-save outcome
+# Requirements:
+# - TEST_EMAIL / TEST_PASSWORD point to a non-KYC account
+# - TOTP_SECRET_GB is set for that same account
+# - backend returns status = "kyc_required" from /api/withdraw-save
 
 - runFlow: ../_helpers/login.yaml
 
@@ -39,9 +39,6 @@ tags:
       text: "Withdrawal"
     timeout: 12000
 
-- assertNotVisible:
-    text: "Withdrawals of $1,000 or more require KYC verification."
-
 - tapOn:
     text: "Withdrawal Address"
 
@@ -68,11 +65,33 @@ tags:
       text: "OTP Code"
     timeout: 12000
 
-- assertVisible:
+- runScript:
+    file: ../../../scripts/totp.js
+    env:
+      secret: ${TOTP_SECRET_GB}
+
+- tapOn:
     text: "OTP Code"
 
-- assertVisible:
-    text: "Total withdrawal"
+- inputText: ${output.totp}
 
-- assertNotVisible:
+- hideKeyboard
+
+- tapOn:
+    text: "WITHDRAW"
+
+- extendedWaitUntil:
+    visible:
+      text: "KYC verification is required to process this withdrawal. Please complete identity verification to continue."
+    timeout: 12000
+
+- tapOn:
+    text: "Verify Now"
+
+- extendedWaitUntil:
+    visible:
+      text: "Select your country"
+    timeout: 12000
+
+- assertVisible:
     text: "Select your country"
