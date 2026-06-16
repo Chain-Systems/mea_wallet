@@ -15,7 +15,7 @@ jobs:
   notify_success:
     name: Share Android Production Link
     needs: [build_android]
-    if: ${{ needs.build_android.result == 'success' }}
+    if: ${{ success() }}
     environment: production
     steps:
       - uses: eas/send_slack_message
@@ -31,8 +31,8 @@ jobs:
 
   notify_failure:
     name: Notify Android Production Failure
-    needs: [build_android]
-    if: ${{ needs.build_android.result == 'failure' }}
+    after: [build_android]
+    if: ${{ failure() }}
     environment: production
     steps:
       - uses: eas/send_slack_message
@@ -41,7 +41,5 @@ jobs:
           message: |
             Android production build failed.
 
-            App: ${{ needs.build_android.outputs.app_identifier }}
-            Version: ${{ needs.build_android.outputs.app_version }}
-            Build number: ${{ needs.build_android.outputs.app_build_version }}
-            Build link: https://expo.dev/builds/${{ needs.build_android.outputs.build_id }}
+            Workflow: ${{ workflow.name }}
+            Details: ${{ workflow.url }}
