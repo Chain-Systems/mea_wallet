@@ -10,12 +10,14 @@ import { STORAGE_KEYS } from "@/storage/keys";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { resetAuthToken } from "@/hooks/api";
+import { useDeferredLoadingTransition } from "@/hooks/app/useDeferredLoadingTransition";
 
 const GoogleSSOButton = () => {
   const [popupVisible, setPopUpVisible] = useState(false);
   const [popupText, setPopupText] = useState("");
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const runAfterLoadingHidden = useDeferredLoadingTransition();
   const GoogleLogin = async () => {
     // check if users' device has google play services
     await GoogleSignin.hasPlayServices();
@@ -44,31 +46,39 @@ const GoogleSSOButton = () => {
         if (router.canDismiss()) {
           router.dismissAll();
         }
-        router.replace("/(Tabs)/home");
+        runAfterLoadingHidden(() => {
+          router.replace("/(Tabs)/home");
+        });
         return;
       }
 
       if (response === "need_link") {
-        setPopUpVisible(true);
         setPopupText(
           "Account uses email login , please continue with email login",
         );
+        runAfterLoadingHidden(() => {
+          setPopUpVisible(true);
+        });
         return;
       }
 
       if (response === "need_signup") {
         //todo : collect deposit address and proceed sign up
-        router.navigate({
-          pathname: "/(auth)/sign-up-google",
-          params: {
-            token: token,
-          },
+        runAfterLoadingHidden(() => {
+          router.navigate({
+            pathname: "/(auth)/sign-up-google",
+            params: {
+              token: token,
+            },
+          });
         });
         return;
       }
 
       setPopupText(t("auth.signin.login_error"));
-      setPopUpVisible(true);
+      runAfterLoadingHidden(() => {
+        setPopUpVisible(true);
+      });
       return;
     } catch (error) {
       console.log(error);
@@ -88,11 +98,14 @@ const GoogleSSOButton = () => {
         console.log("Received data from user ", idToken, user);
         // await processUserData(idToken, user); // Server call to validate the token & process the user data for signing In
       } else {
-        setPopUpVisible(true);
         setPopupText("Something went wrong , please try again ");
+        runAfterLoadingHidden(() => {
+          setPopUpVisible(true);
+        });
         //show something went wrong
       }
     } catch (error) {
+      dispatch(hideLoading());
       console.log("Error", error);
     }
   };

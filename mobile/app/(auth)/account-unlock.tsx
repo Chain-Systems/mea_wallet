@@ -16,6 +16,7 @@ import PrimaryButton from "../components/PrimaryButton";
 import SvgIcon from "../components/SvgIcon";
 import InfoPopup from "../components/InfoPopup";
 import useAuth from "@/hooks/api/useAuth";
+import { useDeferredLoadingTransition } from "@/hooks/app/useDeferredLoadingTransition";
 
 type Region = "GB" | "CN";
 
@@ -26,6 +27,7 @@ const REGIONS: { label: string; value: Region }[] = [
 
 export default function AccountUnlock() {
   const dispatch = useDispatch<AppDispatch>();
+  const runAfterLoadingHidden = useDeferredLoadingTransition();
 
   const [region, setRegion] = useState<Region>("GB");
   const [email, setEmail] = useState("");
@@ -57,7 +59,9 @@ export default function AccountUnlock() {
     setPopupType(type);
     setPopupTitle(title);
     setPopupContent(content);
-    setPopupVisible(true);
+    runAfterLoadingHidden(() => {
+      setPopupVisible(true);
+    });
   };
 
   const handleDismiss = () => {

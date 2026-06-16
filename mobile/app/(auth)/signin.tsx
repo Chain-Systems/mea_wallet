@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Image,
   Keyboard,
@@ -13,13 +13,13 @@ import {
 import { useTranslation } from "react-i18next";
 import PrimaryButton from "../components/PrimaryButton";
 import useAuth from "@/hooks/api/useAuth";
-import InfoAlert from "../components/InfoAlert";
 import InfoPopup from "../components/InfoPopup";
 import storage from "@/storage";
 import { STORAGE_KEYS } from "@/storage/keys";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
 import { resetAuthToken } from "@/hooks/api";
+import { useDeferredLoadingTransition } from "@/hooks/app/useDeferredLoadingTransition";
 
 enum ErrorType {
   INVALID_EMAIL,
@@ -35,16 +35,23 @@ const Signin: React.FC = () => {
   // Validation state
   const [inputError, setInputError] = useState<string | null>(null);
   const [errorType, setErrorType] = useState<ErrorType | null>(null);
-  const [popUpVisible, setPopUpVisible] = useState(false);
 
   // Login error popup
   const [loginPopupVisible, setLoginPopupVisible] = useState(false);
   const [loginPopupTitle, setLoginPopupTitle] = useState("");
   const [loginPopupContent, setLoginPopupContent] = useState("");
-  const [loginPopupAction, setLoginPopupAction] = useState<{ label: string; fn: () => void } | null>(null);
+  const [loginPopupAction, setLoginPopupAction] = useState<{
+    label: string;
+    fn: () => void;
+  } | null>(null);
 
   const dispatch = useDispatch();
+  const runAfterLoadingHidden = useDeferredLoadingTransition();
+
   const validateForm = () => {
+    setInputError(null);
+    setErrorType(null);
+
     // Email validation
     if (!email) {
       setInputError(t("auth.signin.email_required"));
@@ -69,6 +76,18 @@ const Signin: React.FC = () => {
     // }
     return true;
   };
+
+  const showLoginPopup = (
+    title: string,
+    content: string,
+    action: { label: string; fn: () => void } | null = null
+  ) => {
+    setLoginPopupTitle(title);
+    setLoginPopupContent(content);
+    setLoginPopupAction(action);
+    setLoginPopupVisible(true);
+  };
+
   const handleSignIn = async () => {
     if (isSubmitting) {
       return;
@@ -77,6 +96,15 @@ const Signin: React.FC = () => {
     if (!validateForm()) {
       return;
     }
+    let pendingPopup:
+      | {
+          title: string;
+          content: string;
+          action: { label: string; fn: () => void } | null;
+        }
+      | null = null;
+    let shouldNavigateHome = false;
+
     setIsSubmitting(true);
     dispatch(showLoading());
 
@@ -85,43 +113,45 @@ const Signin: React.FC = () => {
 
       if (typeof result === "string") {
         const msgKey = `api.response.login.${result}`;
-        const msg = t(msgKey, { defaultValue: result });
-        setLoginPopupTitle(t("auth.signin.login_error"));
-        setLoginPopupContent(msg);
-        if (result === "account_locked") {
-          setLoginPopupAction({
-            label: t("auth.signin.account_unlock"),
-            fn: () => router.push("/(auth)/account-unlock"),
-          });
-        } else {
-          setLoginPopupAction(null);
-        }
-        setLoginPopupVisible(true);
+        pendingPopup = {
+          title: t("auth.signin.login_error"),
+          content: t(msgKey, { defaultValue: result }),
+          action:
+            result === "account_locked"
+              ? {
+                  label: t("auth.signin.account_unlock"),
+                  fn: () => router.push("/(auth)/account-unlock"),
+                }
+              : null,
+        };
         return;
       }
 
       resetAuthToken();
       await storage.save(STORAGE_KEYS.AUTH.TOKEN, result.token);
-      if (router.canDismiss()) {
-        router.dismissAll();
-      }
-      router.replace("/(Tabs)/home");
+      shouldNavigateHome = true;
     } catch {
-      setLoginPopupTitle(t("auth.signin.login_error"));
-      setLoginPopupContent("Unable to sign in right now. Please try again.");
-      setLoginPopupAction(null);
-      setLoginPopupVisible(true);
+      pendingPopup = {
+        title: t("auth.signin.login_error"),
+        content: "Unable to sign in right now. Please try again.",
+        action: null,
+      };
     } finally {
       dispatch(hideLoading());
       setIsSubmitting(false);
+
+      if (pendingPopup) {
+        const popup = pendingPopup;
+        runAfterLoadingHidden(() => {
+          showLoginPopup(popup.title, popup.content, popup.action);
+        });
+      } else if (shouldNavigateHome) {
+        runAfterLoadingHidden(() => {
+          router.replace("/(Tabs)/home");
+        });
+      }
     }
   };
-
-  useEffect(() => {
-    if (inputError) {
-      setPopUpVisible(true);
-    }
-  }, [inputError]);
 
   return (
     <KeyboardAvoidingView
@@ -287,11 +317,6 @@ const Signin: React.FC = () => {
             </View> */}
           </View>
         </View>
-        <InfoAlert
-          visible={popUpVisible}
-          setVisible={setPopUpVisible}
-          text={inputError ?? ""}
-        />
       </View>
       <InfoPopup
         visible={loginPopupVisible}
