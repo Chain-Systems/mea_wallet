@@ -28,6 +28,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Cache the generated route types keyed on the route FILE STRUCTURE — the
+      # sorted list of file *paths* under app/ (names only, not contents) plus
+      # app.json. Expo Router derives routes from the file tree, so content-only
+      # edits don't change routes; we only re-run typegen when files are added,
+      # renamed, or removed. Exact-match key only (no restore-keys) so a miss
+      # always regenerates rather than restoring stale types.
+      - name: Hash route structure
+        id: routes
+        run: |
+          STRUCT=$(find app -type f | sort | sha256sum | cut -d' ' -f1)
+          APPJSON=$(sha256sum app.json | cut -d' ' -f1)
+          echo "key=${STRUCT}-${APPJSON}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Expo Router types
+        id: expo-types-cache
+        uses: actions/cache@v4
+        with:
+          path: mobile/.expo/types
+          key: expo-router-types-${{ steps.routes.outputs.key }}
+
       # `experiments.typedRoutes` is enabled in app.json, but the generated
       # route types live in `.expo/types/router.d.ts`, which is gitignored and
       # therefore absent in CI. Without it, Expo Router's `Href` type degrades
@@ -37,6 +57,7 @@ jobs:
       # `expo export` does NOT generate these). The server is killed as soon as
       # the file appears, and the step fails if it never does.
       - name: Generate Expo Router types
+        if: steps.expo-types-cache.outputs.cache-hit != 'true'
         env:
           CI: "1"
           EXPO_NO_TELEMETRY: "1"
