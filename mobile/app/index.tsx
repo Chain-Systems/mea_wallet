@@ -9,10 +9,11 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 configureReanimatedLogger({ strict: false });
 
 GoogleSignin.configure({
-  scopes: ["email"], // what pAPI you want to access on behalf of the user, default is email and profile
-  offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  scopes: ["email"],
+  offlineAccess: false,
   forceCodeForRefreshToken: false,
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
 });
 export default function HomeScreen() {
   const { sessionTokenExists } = useLocalSearchParams();
