@@ -88,10 +88,13 @@ tags:
 - tapOn:
     text: "Verify Now"
 
+# Country selection was removed — KYC now goes straight to the guide.
+# The guide's document-card label is hard-coded multilingual, so it is a
+# language-neutral marker that the guide screen is shown.
 - extendedWaitUntil:
     visible:
-      text: "Select your country"
+      text: "Name / 姓名 / 성명"
     timeout: 12000
 
 - assertVisible:
-    text: "Select your country"
+    text: "Name / 姓名 / 성명"
