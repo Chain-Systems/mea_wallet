@@ -2,23 +2,45 @@ appId: com.meccain.ping
 tags:
   - smoke
 ---
-# Flow: Home screen — verifies balance display and token list after sign-in
+# Flow: Home screen — verifies balance display and token list after sign-in.
+# Inlines login steps to avoid runFlow + clearState gRPC driver disconnect issue.
 
-# Authenticate (resets state, launches app, signs in, waits for Home)
-- runFlow: ../_helpers/login.yaml
+- launchApp:
+    clearState: true
 
-# Confirm Home screen content is visible (tab bar is icon-only, no "Home" label)
+- tapOn:
+    text: "Login"
+
+- extendedWaitUntil:
+    visible:
+      text: "Enter Email Address"
+    timeout: 10000
+
+- tapOn:
+    text: "Enter Email Address"
+- inputText: ${TEST_EMAIL}
+
+- tapOn:
+    text: "Enter Password"
+- inputText: ${TEST_PASSWORD}
+
+- hideKeyboard
+
+- tapOn:
+    text: "Sign In"
+    index: 1
+
+# Wait for Home screen
 - extendedWaitUntil:
     visible:
       text: "Receive"
-    timeout: 5000
+    timeout: 15000
 
 # The total asset value is shown with a "$" prefix in the hero section
 - assertVisible:
     text: "$"
 
-# Confirm at least one token-list section header is mounted
-# "Native" is rendered as the section header above the free-balance list
+# "Native" is the section header above the free-balance token list
 - assertVisible:
     text: "Native"
 
