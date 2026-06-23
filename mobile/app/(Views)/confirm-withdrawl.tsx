@@ -237,7 +237,7 @@ const ConfirmWithdraw = () => {
           setVisible={setInfoAlertVisible}
           onDismiss={() => {
             if (kycRequired) {
-              router.replace("/(Views)/kyc/select");
+              router.replace("/(Views)/kyc/guide");
               return;
             }
             if (withdrawlSuccess) {

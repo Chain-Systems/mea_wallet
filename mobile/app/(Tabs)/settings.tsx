@@ -111,7 +111,7 @@ export default function SettingsScreen() {
           <Pressable
             onPress={() =>
               router.push(
-                kycCompleted ? "/(Views)/kyc/ready" : "/(Views)/kyc/select"
+                kycCompleted ? "/(Views)/kyc/ready" : "/(Views)/kyc/guide"
               )
             }
             className="flex-row items-center gap-3 px-3 py-5 mb-2 rounded-2xl border-2 border-transparent active:border-pink-1200 bg-black-1200 transition-all duration-500"

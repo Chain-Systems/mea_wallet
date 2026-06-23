@@ -15,7 +15,7 @@ export interface GoogleSignUpResponse extends AuthResponse {
 }
 
 export interface GoogleLogInResponse extends AuthResponse {
-  status: "succ" | "need_signup" | "need_link";
+  status: "succ" | "need_signup" | "need_link" | "stop" | "withdrawn" | "invalid_request" | "invalid_google_token";
   token: string;
 }
 
