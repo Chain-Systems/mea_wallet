@@ -80,7 +80,7 @@ export const networkRequest = async <T>(
       return "invalid body type";
     }
     let body = new URLSearchParams(init.body ?? {});
-    body.append("apikey", apiKey);
+    body.set("apikey", apiKey);
     init.body = body.toString();
 
     //set default
