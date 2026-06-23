@@ -10,14 +10,12 @@ import { STORAGE_KEYS } from "@/storage/keys";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { resetAuthToken } from "@/hooks/api";
-import { useDeferredLoadingTransition } from "@/hooks/app/useDeferredLoadingTransition";
 
 const GoogleSSOButton = () => {
   const [popupVisible, setPopUpVisible] = useState(false);
   const [popupText, setPopupText] = useState("");
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const runAfterLoadingHidden = useDeferredLoadingTransition();
   const GoogleLogin = async () => {
     // check if users' device has google play services
     await GoogleSignin.hasPlayServices();
@@ -29,13 +27,11 @@ const GoogleSSOButton = () => {
 
   const handleOAuthToken = async (token: string) => {
     try {
-      //try login
-      let loginInResult = await useAuth.signInWithGoogle(
+      const loginInResult = await useAuth.signInWithGoogle(
         token,
         Platform.OS === "android" ? "android" : "ios",
       );
-      console.log("error here", loginInResult);
-      let response =
+      const response =
         typeof loginInResult === "string"
           ? loginInResult
           : loginInResult.status;
@@ -46,42 +42,56 @@ const GoogleSSOButton = () => {
         if (router.canDismiss()) {
           router.dismissAll();
         }
-        runAfterLoadingHidden(() => {
-          router.replace("/(Tabs)/home");
+        router.replace("/(Tabs)/home");
+        return;
+      }
+
+      if (response === "need_signup") {
+        router.navigate({
+          pathname: "/(auth)/sign-up-google",
+          params: { token },
         });
         return;
       }
 
       if (response === "need_link") {
-        setPopupText(
-          "Account uses email login , please continue with email login",
-        );
-        runAfterLoadingHidden(() => {
-          setPopUpVisible(true);
-        });
+        setPopupText("This account already exists. Please login with ID/password.");
+        setPopUpVisible(true);
         return;
       }
 
-      if (response === "need_signup") {
-        //todo : collect deposit address and proceed sign up
-        runAfterLoadingHidden(() => {
-          router.navigate({
-            pathname: "/(auth)/sign-up-google",
-            params: {
-              token: token,
-            },
-          });
-        });
+      if (response === "stop") {
+        setPopupText("Your account has been suspended.");
+        setPopUpVisible(true);
+        return;
+      }
+
+      if (response === "withdrawn") {
+        setPopupText("This account has been withdrawn.");
+        setPopUpVisible(true);
+        return;
+      }
+
+      if (response === "invalid_request") {
+        setPopupText("Invalid login request.");
+        setPopUpVisible(true);
+        return;
+      }
+
+      if (response === "invalid_google_token") {
+        setPopupText("Google token verification failed. Please try again.");
+        setPopUpVisible(true);
         return;
       }
 
       setPopupText(t("auth.signin.login_error"));
-      runAfterLoadingHidden(() => {
-        setPopUpVisible(true);
-      });
-      return;
+      setPopUpVisible(true);
     } catch (error) {
       console.log(error);
+      setPopupText(t("auth.signin.login_error"));
+      setPopUpVisible(true);
+    } finally {
+      dispatch(hideLoading());
     }
   };
 
@@ -90,19 +100,13 @@ const GoogleSSOButton = () => {
       dispatch(showLoading());
       await GoogleSignin.signOut();
       const response = await GoogleLogin();
-      dispatch(hideLoading());
-      // retrieve user data
-      const { idToken, user } = response.data ?? {};
+      const { idToken } = response.data ?? {};
       if (idToken) {
-        handleOAuthToken(idToken);
-        console.log("Received data from user ", idToken, user);
-        // await processUserData(idToken, user); // Server call to validate the token & process the user data for signing In
+        await handleOAuthToken(idToken);
       } else {
-        setPopupText("Something went wrong , please try again ");
-        runAfterLoadingHidden(() => {
-          setPopUpVisible(true);
-        });
-        //show something went wrong
+        dispatch(hideLoading());
+        setPopUpVisible(true);
+        setPopupText("Something went wrong, please try again.");
       }
     } catch (error) {
       dispatch(hideLoading());

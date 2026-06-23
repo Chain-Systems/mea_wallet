@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "@/lib/constants";
+import { apiBaseUrl, apiKey } from "@/lib/constants";
 import { networkRequest } from ".";
 
 import {
@@ -47,7 +47,8 @@ export default {
         body: new URLSearchParams({
           id_token: token,
           deposit_address: deposit_address,
-          device: '',
+          device: device,
+          apikey: apiKey,
         }).toString(),
       }
     );
@@ -60,7 +61,8 @@ export default {
         method: "POST",
         body: new URLSearchParams({
           id_token: token,
-          device: '',
+          device: device,
+          apikey: apiKey,
         }).toString(),
       }
     );
