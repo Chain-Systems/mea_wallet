@@ -1,9 +1,14 @@
 name: Release
 
-# Promotes main → release. Optionally bumps the app version first (auto = patch
-# only when main and release are on the same version), opens the release PR, and
-# enables auto-merge so it lands once required checks (typecheck, i18n) pass.
-# Merging into `release` triggers the EAS deploy workflow.
+# Promotes main → preview AND main → release. Optionally bumps the app version
+# first (auto = patch only when main and release are on the same version), opens
+# a promotion PR for each branch, and — when auto_merge is on — waits for the
+# required checks (typecheck, i18n) to pass and then merges each PR directly.
+# Merging into `preview` triggers the EAS preview workflow; merging into
+# `release` triggers the EAS deploy workflow.
+#
+# Note: this merges manually (`gh pr merge`, no `--auto`) so it does NOT require
+# the repo-level "Allow auto-merge" setting (enablePullRequestAutoMerge).
 
 on:
   workflow_dispatch:
@@ -20,7 +25,7 @@ on:
           - minor
           - major
       auto_merge:
-        description: "Auto-merge the release PR once checks pass"
+        description: "Wait for checks and merge the preview + release PRs (off = just open them)"
         required: true
         default: true
         type: boolean
@@ -126,41 +131,55 @@ jobs:
             echo "version=${{ steps.bump.outputs.new }}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Open or reuse release PR (main → release)
-        id: pr
+      - name: Promote main → preview and release
+        # For each target branch: open (or reuse) a main → <branch> PR, then —
+        # when auto_merge is on — wait for required checks and merge it directly.
+        # No `--auto`, so the repo-level auto-merge feature is not needed.
+        timeout-minutes: 90
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.ver.outputs.version }}
+          AUTO_MERGE: ${{ inputs.auto_merge }}
         run: |
-          # Nothing to promote if release is already level with main.
-          git fetch origin main release
-          AHEAD=$(git rev-list --count origin/release..origin/main)
-          if [ "$AHEAD" = "0" ]; then
-            echo "::notice::release is already up to date with main — nothing to release"
-            echo "url=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          set -euo pipefail
+          git fetch origin main preview release
 
-          # Reuse an open main → release PR if one already exists.
-          EXISTING=$(gh pr list --base release --head main --state open \
-            --json url --jq '.[0].url // ""')
+          for BRANCH in preview release; do
+            echo "::group::Promote main → $BRANCH"
 
-          if [ -n "$EXISTING" ]; then
-            echo "Reusing existing PR: $EXISTING"
-            URL="$EXISTING"
-          else
-            URL=$(gh pr create \
-              --base release \
-              --head main \
-              --title "release v$VERSION" \
-              --body "Automated release of \`v$VERSION\` (main → release). Merging triggers the EAS deploy workflow.")
-          fi
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "::notice::Release PR: $URL"
+            # Nothing to promote if the branch is already level with main.
+            AHEAD=$(git rev-list --count "origin/$BRANCH..origin/main")
+            if [ "$AHEAD" = "0" ]; then
+              echo "::notice::$BRANCH is already up to date with main — skipping"
+              echo "::endgroup::"
+              continue
+            fi
 
-      - name: Enable auto-merge
-        if: ${{ inputs.auto_merge && steps.pr.outputs.url != '' }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr merge "${{ steps.pr.outputs.url }}" --auto --merge
+            # Reuse an open main → <branch> PR if one already exists.
+            URL=$(gh pr list --base "$BRANCH" --head main --state open \
+              --json url --jq '.[0].url // ""')
+            if [ -n "$URL" ]; then
+              echo "Reusing existing PR: $URL"
+            else
+              URL=$(gh pr create \
+                --base "$BRANCH" \
+                --head main \
+                --title "release v$VERSION → $BRANCH" \
+                --body "Automated promotion of \`v$VERSION\` (main → $BRANCH). Merging triggers the EAS workflow for \`$BRANCH\`.")
+            fi
+            echo "::notice::$BRANCH PR: $URL"
+
+            if [ "$AUTO_MERGE" = "true" ]; then
+              # Give GitHub a moment to register the PR's checks, then block
+              # until they finish. --watch exits non-zero if any check fails,
+              # which fails this step before we ever reach the merge.
+              sleep 15
+              gh pr checks "$URL" --watch --interval 15
+              gh pr merge "$URL" --merge
+              echo "::notice::Merged $BRANCH PR"
+            else
+              echo "::notice::auto_merge disabled — leaving $BRANCH PR open"
+            fi
+
+            echo "::endgroup::"
+          done
