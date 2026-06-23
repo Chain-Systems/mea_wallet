@@ -13,7 +13,6 @@ GoogleSignin.configure({
   offlineAccess: false,
   forceCodeForRefreshToken: false,
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-  androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
 });
 export default function HomeScreen() {
   const { sessionTokenExists } = useLocalSearchParams();
