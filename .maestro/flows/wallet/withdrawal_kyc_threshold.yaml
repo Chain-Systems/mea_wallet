@@ -1,0 +1,78 @@
+appId: com.meccain.ping
+tags:
+  - smoke
+---
+# Flow: large withdrawals must still reach confirm-withdrawl first.
+#
+# Regression guard:
+# - screen 1 must not redirect to KYC based on amount alone
+# - screen 1 must not show the old frontend KYC warning banner
+# - the confirm screen owns the eventual /api/withdraw-save outcome
+
+- runFlow: ../_helpers/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      text: "Receive"
+    timeout: 15000
+
+- scrollUntilVisible:
+    element:
+      text: "MEA"
+    direction: DOWN
+    timeout: 10000
+
+- tapOn:
+    text: "MEA"
+    index: 0
+
+- extendedWaitUntil:
+    visible:
+      text: "Send"
+    timeout: 12000
+
+- tapOn:
+    text: "Send"
+
+- extendedWaitUntil:
+    visible:
+      text: "Withdrawal"
+    timeout: 12000
+
+- assertNotVisible:
+    text: "Withdrawals of $1,000 or more require KYC verification."
+
+- tapOn:
+    text: "Withdrawal Address"
+
+- inputText: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+
+- hideKeyboard
+
+- tapOn:
+    text: "Withdrawal Quantity"
+
+- tapOn:
+    text: "Enter Amount"
+    optional: true
+
+- inputText: "1000"
+
+- hideKeyboard
+
+- tapOn:
+    text: "NEXT"
+
+- extendedWaitUntil:
+    visible:
+      text: "OTP Code"
+    timeout: 12000
+
+- assertVisible:
+    text: "OTP Code"
+
+- assertVisible:
+    text: "Total withdrawal"
+
+- assertNotVisible:
+    text: "Select your country"

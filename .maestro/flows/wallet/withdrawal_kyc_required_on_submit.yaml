@@ -1,0 +1,97 @@
+appId: com.meccain.ping
+tags:
+  - manual
+---
+# Flow: backend-driven KYC redirect after withdraw submit.
+#
+# Requirements:
+# - TEST_EMAIL / TEST_PASSWORD point to a non-KYC account
+# - TOTP_SECRET_GB is set for that same account
+# - backend returns status = "kyc_required" from /api/withdraw-save
+
+- runFlow: ../_helpers/login.yaml
+
+- extendedWaitUntil:
+    visible:
+      text: "Receive"
+    timeout: 15000
+
+- scrollUntilVisible:
+    element:
+      text: "MEA"
+    direction: DOWN
+    timeout: 10000
+
+- tapOn:
+    text: "MEA"
+    index: 0
+
+- extendedWaitUntil:
+    visible:
+      text: "Send"
+    timeout: 12000
+
+- tapOn:
+    text: "Send"
+
+- extendedWaitUntil:
+    visible:
+      text: "Withdrawal"
+    timeout: 12000
+
+- tapOn:
+    text: "Withdrawal Address"
+
+- inputText: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+
+- hideKeyboard
+
+- tapOn:
+    text: "Withdrawal Quantity"
+
+- tapOn:
+    text: "Enter Amount"
+    optional: true
+
+- inputText: "1000"
+
+- hideKeyboard
+
+- tapOn:
+    text: "NEXT"
+
+- extendedWaitUntil:
+    visible:
+      text: "OTP Code"
+    timeout: 12000
+
+- runScript:
+    file: ../../../scripts/totp.js
+    env:
+      secret: ${TOTP_SECRET_GB}
+
+- tapOn:
+    text: "OTP Code"
+
+- inputText: ${output.totp}
+
+- hideKeyboard
+
+- tapOn:
+    text: "WITHDRAW"
+
+- extendedWaitUntil:
+    visible:
+      text: "KYC verification is required to process this withdrawal. Please complete identity verification to continue."
+    timeout: 12000
+
+- tapOn:
+    text: "Verify Now"
+
+- extendedWaitUntil:
+    visible:
+      text: "Select your country"
+    timeout: 12000
+
+- assertVisible:
+    text: "Select your country"

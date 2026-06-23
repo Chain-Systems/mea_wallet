@@ -11,11 +11,16 @@ import useAuth from "@/hooks/api/useAuth";
 import { ShieldCheck, UserX } from "lucide-react-native";
 import Constants from "expo-constants";
 import { resetAuthToken } from "@/hooks/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/store";
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
   const [popupVisible, setPopUpVisible] = useState(false);
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  const kycCompleted = useSelector(
+    (state: RootState) => state.user.kycCompleted
+  );
 
   const performLogout = async () => {
     try {
@@ -81,7 +86,7 @@ export default function SettingsScreen() {
           <SettingsRow
             icon={<ShieldCheck size={16} color="white" />}
             label="KYC Verification"
-            onPress={() => router.push("/(Views)/kyc/ready")}
+            onPress={() => router.push(kycCompleted ? "/(Views)/kyc/ready" : "/(Views)/kyc/select")}
           />
 
           {/* Account Deletion in ios */}

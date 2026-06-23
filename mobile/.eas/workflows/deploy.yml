@@ -44,10 +44,12 @@ jobs:
         with:
           slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            Android production build completed.
+            Android production build is ready.
 
-            Workflow: ${{ workflow.name }}
-            Details: ${{ workflow.url }}
+            App: ${{ needs.build_android.outputs.app_identifier }}
+            Version: ${{ needs.build_android.outputs.app_version }}
+            Build number: ${{ needs.build_android.outputs.app_build_version }}
+            Build link: https://expo.dev/builds/${{ needs.build_android.outputs.build_id }}
 
   notify_android_failure:
     name: Notify Android Failure
@@ -66,7 +68,7 @@ jobs:
 
   notify_ios_success:
     name: Notify iOS Success
-    needs: [submit_ios]
+    needs: [build_ios, submit_ios]
     if: ${{ success() }}
     environment: production
     steps:
@@ -74,10 +76,12 @@ jobs:
         with:
           slack_hook_url: ${{ env.SLACK_HOOK_URL_SUCCESS }}
           message: |
-            iOS production deployment completed.
+            iOS production build submitted to App Store.
 
-            Workflow: ${{ workflow.name }}
-            Details: ${{ workflow.url }}
+            App: ${{ needs.build_ios.outputs.app_identifier }}
+            Version: ${{ needs.build_ios.outputs.app_version }}
+            Build number: ${{ needs.build_ios.outputs.app_build_version }}
+            Build link: https://expo.dev/builds/${{ needs.build_ios.outputs.build_id }}
 
   notify_ios_failure:
     name: Notify iOS Failure

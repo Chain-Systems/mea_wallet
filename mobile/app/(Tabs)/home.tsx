@@ -234,13 +234,13 @@ export default function HomeScreen() {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          className="w-full pt-10"
+          className="w-full pt-6"
         >
           <View className="pb-44 px-4">
-            <View className="flex-row items-center gap-2">
+            <View className="flex-row items-center gap-2.5">
               <Pressable
                 onPress={() => setShowEditProfile(true)}
-                className="bg-pink-1100 w-12 h-12 rounded-full items-center justify-center"
+                className="bg-pink-1100 w-9 h-9 rounded-full items-center justify-center"
               >
                 <AppText
                   loading={!details}
@@ -251,28 +251,32 @@ export default function HomeScreen() {
                   {details ? details.image : ""}
                 </AppText>
               </Pressable>
-              <View className="flex-1 items-start gap-2">
+              <View className="flex-1 items-start gap-0.5">
                 <Pressable
                   onPress={() => setShowEditProfile(true)}
                   className="max-w-full"
                 >
                   <AppText
                     loading={!email}
-                    shimmerWidth={180}
-                    shimmerHeight={28}
+                    shimmerWidth={160}
+                    shimmerHeight={18}
                     numberOfLines={1}
                     ellipsizeMode="tail"
-                    className="text-[22px] text-white font-medium tracking-[-0.44px]"
+                    className="text-[15px] text-white font-medium tracking-[-0.3px]"
                   >
                     {email}
                   </AppText>
                 </Pressable>
                 <LabelBadge
                   loading={!kycFetched}
-                  tone={kycCompleted ? "success" : "danger"}
+                  tone={kycCompleted ? "success" : "warning"}
                   glyph={kycCompleted ? "✓" : "!"}
-                  label={kycCompleted ? "KYC Verified" : "KYC Required"}
-                  onPress={() => router.push("/(Views)/kyc/ready")}
+                  label={kycCompleted ? "Verified" : "Unverified"}
+                  onPress={
+                    kycCompleted
+                      ? undefined
+                      : () => router.push("/(Views)/kyc/select")
+                  }
                 />
               </View>
             </View>

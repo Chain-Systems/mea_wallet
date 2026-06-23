@@ -29,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { validatePasswordWithReason } from "@/utils/ui";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "@/src/features/loadingSlice";
+import { useDeferredLoadingTransition } from "@/hooks/app/useDeferredLoadingTransition";
 
 function validateEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -68,6 +69,7 @@ const Signup: React.FC = () => {
 
   const [registrationSucess, setRegistrationSuccess] = useState(false);
   const dispatch = useDispatch();
+  const runAfterLoadingHidden = useDeferredLoadingTransition();
   const performEmailValidation = async () => {
     let result = await useAuth.isEmailAvailable(email);
     if (typeof result === "string") {
@@ -187,7 +189,9 @@ const Signup: React.FC = () => {
         type: "error",
         text: result,
       });
-      setInfoAlertVisible(true);
+      runAfterLoadingHidden(() => {
+        setInfoAlertVisible(true);
+      });
       return;
     }
     setRegistrationSuccess(true);
@@ -197,7 +201,9 @@ const Signup: React.FC = () => {
       text: t("auth.signup.registered_successfully"),
     });
     console.log("sign up completed");
-    setInfoAlertVisible(true);
+    runAfterLoadingHidden(() => {
+      setInfoAlertVisible(true);
+    });
   };
   useEffect(() => {
     if (inputError && errorType !== ErrorType.MISMATCH_PASS_REQ) {
