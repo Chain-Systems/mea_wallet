@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -7,24 +7,12 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 import { BackButton } from "../../components/BackButton";
 import PrimaryButton from "../../components/PrimaryButton";
 
 type Lang = "vi" | "en" | "ko" | "zh";
-const LANGS: Lang[] = ["vi", "en", "ko", "zh"];
-const LANG_LABELS: Record<Lang, string> = {
-  vi: "Tiếng Việt",
-  en: "English",
-  ko: "한국어",
-  zh: "中文",
-};
-
-const COUNTRY_TO_LANG: Record<string, Lang> = {
-  vi: "vi",
-  en: "en",
-  ko: "ko",
-  zh: "zh",
-};
+const SUPPORTED_LANGS: Lang[] = ["vi", "en", "ko", "zh"];
 
 interface GuideData {
   title: string;
@@ -146,25 +134,21 @@ function useTypewriter(target: string, delay = 40) {
 }
 
 export default function KycGuide() {
-  const { country } = useLocalSearchParams<{ country?: string }>();
-  const [lang, setLang] = useState<Lang>(
-    COUNTRY_TO_LANG[country ?? ""] ?? "vi"
-  );
+  // Country selection was removed — show the guide in the app's current
+  // language (fall back to English) instead of letting the user choose.
+  const { i18n } = useTranslation();
+  const base = (i18n.language || "en").split("-")[0] as Lang;
+  const lang: Lang = SUPPORTED_LANGS.includes(base) ? base : "en";
   const [agreed, setAgreed] = useState(false);
 
   const d = DATA[lang];
   const animName = useTypewriter(d.nameChips.map((c) => c.split("\n")[1]).join(" "), 55);
   const animDob = useTypewriter(d.dobConverted, 65);
 
-  // Fade-in for the document card
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  // Card is visible on first paint (no transparent->opaque pop). Reset the
+  // agreement when the language changes so the checkbox state stays in sync.
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   useEffect(() => {
-    fadeAnim.setValue(0);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 350,
-      useNativeDriver: true,
-    }).start();
     setAgreed(false);
   }, [lang]);
 
@@ -183,33 +167,12 @@ export default function KycGuide() {
             </Text>
           </View>
 
-          {/* Language tabs — own row below the title */}
-          <View className="flex-row flex-wrap justify-center gap-2 mb-4">
-            {LANGS.map((l) => (
-              <Pressable
-                key={l}
-                onPress={() => setLang(l)}
-                className={`px-3 py-[5px] rounded-full ${
-                  lang === l ? "bg-pink-1100" : "bg-black-1200"
-                }`}
-              >
-                <Text
-                  className={`text-[12px] font-bold ${
-                    lang === l ? "text-white" : "text-gray-400"
-                  }`}
-                >
-                  {LANG_LABELS[l]}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-
           <Text className="text-[13px] text-gray-400 text-center mb-5 leading-[18px]">
             {d.subtitle}
           </Text>
 
           {/* Document card */}
-          <Animated.View key={lang} style={{ opacity: fadeAnim }}>
+          <Animated.View style={{ opacity: fadeAnim }}>
             <View className="bg-[#e8e4d8] rounded-[14px] p-4 mb-5">
               <Text className="text-[10px] font-bold text-[#555] text-center mb-2 tracking-wider">
                 {d.docHeader}
