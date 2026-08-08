@@ -1,0 +1,64 @@
+name: EAS
+
+# Triggers the EAS Workflows defined in mobile/.eas/workflows/*.yml.
+# The actual build/submit runs on Expo's servers — this job just authenticates
+# with EXPO_TOKEN and kicks off the chosen EAS workflow.
+
+on:
+  push:
+    tags:
+      - "v*" # production deploy on a new version tag, e.g. v1.2.3
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      workflow:
+        description: EAS workflow file to run (from mobile/.eas/workflows)
+        type: choice
+        default: deploy.yml
+        options:
+          - deploy.yml
+          - deploy_ios.yml
+          - deploy_android.yml
+          - preview_android.yml
+          - create-production-builds.yml
+
+concurrency:
+  group: eas-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  trigger-eas:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_ACCESS_TOKEN }}
+
+      # Production deploy when a new version tag (v*) is pushed.
+      - name: Deploy (new tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: eas workflow:run deploy.yml
+
+      # Preview build for PRs, so reviewers get an installable Android build.
+      - name: Preview (pull request)
+        if: github.event_name == 'pull_request'
+        run: eas workflow:run preview_android.yml
+
+      # Manual run — pick any workflow from the dropdown.
+      - name: Manual dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: eas workflow:run ${{ inputs.workflow }}
